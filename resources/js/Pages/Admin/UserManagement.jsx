@@ -1,9 +1,11 @@
-import UserLayout from '@/Layout/UserLayout'
+import UserLayout from '@/Layout/Layout'
 import React from 'react'
 
-const UserManagement = () => {
+const UserManagement = ({ user }) => {
     return (
-        <div>UserManagement</div>
+        <UserLayout isAdmin={true} session={user}>
+            <div>UserManagement</div>
+        </UserLayout>
     )
 }
 

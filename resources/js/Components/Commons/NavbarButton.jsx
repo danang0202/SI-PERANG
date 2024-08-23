@@ -38,7 +38,7 @@ const NavbarButton = ({ menuItem, selectedKey }) => {
             <Group gap="xs" align="center">
                 {menuItem.icon && (
                     <ActionIcon
-                        color={"bluePrimary"}
+                    color={"bluePrimary"}
                         variant="light"
                         bg={lighten(theme.colors.secondaryBlue[0], 0.6)}
                         aria-label="Settings"
@@ -86,6 +86,7 @@ const NavbarButton = ({ menuItem, selectedKey }) => {
                     bg={backgroundColor}
                     style={{ borderRadius: "5px" }}
                     w="100%"
+                    variant="light"
                 >
                     <Link href={menuItem.route} onClick={() => setSelectedKey(menuItem.key)}>
                         {ButtonFill}

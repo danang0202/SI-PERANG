@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,46 +17,36 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
+Route::get('/', [HomeController::class, 'index'])->name('home');
+// Route::get('/', function () {
+//     return Inertia::render('User/Dashboard', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 //  Route group admin
-Route::get('/test', function () {
-    return Inertia::render('Test');
-});
-Route::prefix('admin')->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('Admin/Dashboard');
-    })->name('admin.dashboard');
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('dashboard', [AdminController::class, 'renderAdminDashboard'])->name('admin.dashboard');
 
-    Route::get('pengajuan/perlu-tindakan', function () {
-        return Inertia::render('Admin/Pengajuan/PerluTindakan');
-    })->name('admin.pengajuan.perlu-tindakan');
+    Route::get('pengajuan/perlu-tindakan',  [AdminController::class, 'renderAdminPengajuanPerluTindakan'])->name('admin.pengajuan.perlu-tindakan');
 
-    Route::get('pengajuan/riwayat-pengajuan', function () {
-        return Inertia::render('Admin/Pengajuan/RiwayatPengajuan');
-    })->name('admin.pengajuan.riwayat-pengajuan');
+    Route::get('pengajuan/riwayat-pengajuan',  [AdminController::class, 'renderAdminPengajuanRiwayatPengajuan'])->name('admin.pengajuan.riwayat-pengajuan');
 
-    Route::get('inventaris-barang', function () {
-        return Inertia::render('Admin/InventarisBarang');
-    })->name('admin.inventaris-barang');
+    Route::get('inventaris-barang',  [AdminController::class, 'renderAdminInventarisBarang'])->name('admin.inventaris-barang');
 
-    Route::get('user-management', function () {
-        return Inertia::render('Admin/UserManagement');
-    })->name('admin.user-management');
+    Route::get('user-management', [AdminController::class, 'renderAdminUserManagement'])->name('admin.user-management');
 });
 
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route grub user
+Route::middleware(['auth', 'user'])->group(function () {
+    Route::get('/dashboard', [UserController::class, 'index'])->name('user.dashboard');
+    Route::get('/pengajuan/tambah-pengajuan', [UserController::class, 'renderPengajuanTambahPengajuan'])->name('user.tambah-pengajuan');
+    Route::get('/pengajuan/riwayat-pengajuan', [UserController::class, 'renderPengajuanRiwayatPengajuan'])->name('user.riwayat-pengajuan');
+    Route::get('/daftar-barang', [UserController::class, 'renderDaftarBarang'])->name('user.daftar-barang');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

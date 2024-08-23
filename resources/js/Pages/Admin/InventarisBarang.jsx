@@ -1,9 +1,11 @@
-import UserLayout from '@/Layout/UserLayout'
+import UserLayout from '@/Layout/Layout'
 import React from 'react'
 
-const InventarisBarang = () => {
+const InventarisBarang = ({ user }) => {
     return (
-        <div>InventarisBarang</div>
+        <UserLayout isAdmin={true} session={user}>
+            <div>InventarisBarang</div>
+        </UserLayout>
     )
 }
 

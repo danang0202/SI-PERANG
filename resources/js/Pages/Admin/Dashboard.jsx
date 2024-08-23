@@ -1,10 +1,13 @@
-import UserLayout from '@/Layout/UserLayout'
+import UserLayout from '@/Layout/Layout'
+import { useMenuContext } from '@/Provider/Menu'
 import { Text } from '@mantine/core'
-import React from 'react'
+import React, { useEffect } from 'react'
 
-const Dashboard = () => {
+const Dashboard = ({ user }) => {
     return (
-        <Text> Halaman Dashboard</Text>
+        <UserLayout isAdmin={true} session={user}>
+            <Text> Halaman Dashboard</Text>
+        </UserLayout>
     )
 }
 

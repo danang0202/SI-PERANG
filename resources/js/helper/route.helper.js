@@ -1,5 +1,4 @@
 export const findSelectedKey = (menuItems, path) => {
-    console.log(menuItems);
     for (let menuItem of menuItems) {
         if (path.startsWith(menuItem.route)) {
             return menuItem.key;

@@ -13,8 +13,11 @@ import {
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { IconBell, IconMenu2, IconX } from '@tabler/icons-react';
 import NavbarMenu from '@/Components/Commons/NavbarMenu';
+import AvatarImage from '@/Components/Commons/AvatarImage';
+import { EXTENDED_COLOR } from '@/constan/mantine.constan';
+import AvatarPopOver from '@/Components/Commons/AvatarPopOver';
 
-const UserLayout = ({ children }) => {
+const UserLayout = ({ children, isAdmin, session, title }) => {
     const theme = useMantineTheme();
     const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
     const [isNavbarOpen, { toggle }] = useDisclosure(true);
@@ -31,13 +34,11 @@ const UserLayout = ({ children }) => {
         ),
         [toggle],
     );
-
     useEffect(() => {
         if (isMobile) {
             toggle();
         }
     }, [isMobile]);
-
     return (
         <AppShell
             layout="alt"
@@ -51,13 +52,19 @@ const UserLayout = ({ children }) => {
         >
             <AppShell.Header>
                 <Group h="100%" px="md">
-                    <Group justify="space-between" w="100%">
+                    <Group justify="space-between" w="100%" pr={{ base: "0", lg: 'lg' }}>
                         <Group>
                             {isMobile && !isNavbarOpen && HamburgerMenu}
                             {!isMobile && !isNavbarOpen && HamburgerMenu}
-                            <Title fz={24}>{'Dashboard'}</Title>
+                            <Text
+                                fw={"bold"}
+                                fz={24}
+                                variant="gradient"
+                                gradient={{ from: 'blue', to: 'cyan', deg: 65 }}
+                            >
+                                {title || 'Dashboard'}
+                            </Text>
                         </Group>
-
                         <Group>
                             <Popover
                                 width={300}
@@ -82,17 +89,17 @@ const UserLayout = ({ children }) => {
                             >
                                 <Popover.Target>
                                     <UnstyledButton>
-                                        {/* <AvatarImage
-                                            src={session.user.image}
-                                            name={session.user.name || ""}
+                                        <AvatarImage
+                                            src={""}
+                                            name={session.nama}
                                             alt="It's me"
                                             backgroundColorIfRandom={EXTENDED_COLOR.bluePrimary}
                                             colorIfRandom={EXTENDED_COLOR.white}
-                                        /> */}
+                                        />
                                     </UnstyledButton>
                                 </Popover.Target>
                                 <Popover.Dropdown>
-                                    {/* <AvatarPopOver session={session} /> */}
+                                    <AvatarPopOver session={session} />
                                 </Popover.Dropdown>
                             </Popover>
                         </Group>
@@ -104,7 +111,7 @@ const UserLayout = ({ children }) => {
                     <Group justify="space-between" pt={10}>
                         <Group pl={20}>
                             {/* <Logo h={40} /> */}
-                            <Text fw={'bold'}>SI PERANG</Text>
+                            <Text fw={'bold'} size='lg'>SI PERANG</Text>
                         </Group>
                         {!isMobile && isNavbarOpen && HamburgerMenu}
                         {isMobile && isNavbarOpen && (
@@ -118,7 +125,7 @@ const UserLayout = ({ children }) => {
                             </ActionIcon>
                         )}
                     </Group>
-                    <NavbarMenu />
+                    <NavbarMenu isAdmin={isAdmin} />
                 </Stack>
             </AppShell.Navbar>
             <AppShell.Main>{children}</AppShell.Main>

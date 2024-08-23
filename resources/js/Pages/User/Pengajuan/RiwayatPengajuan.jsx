@@ -3,11 +3,9 @@ import React from 'react'
 
 const RiwayatPengajuan = ({ user }) => {
     return (
-        <UserLayout isAdmin={true} session={user}>
-            <div>RiwayatPengajuan</div>
+        <UserLayout isAdmin={false} session={user}>
+            <div>RiawayatPengajuan</div>
         </UserLayout>
-
-
     )
 }
 
