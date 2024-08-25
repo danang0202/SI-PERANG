@@ -3,10 +3,10 @@ import React from 'react'
 
 const PerluTindakan = ({ user }) => {
     return (
-        <UserLayout isAdmin={true} session={user}>
-            <div>PerluTindakan</div>
-        </UserLayout>
+        <div>PerluTindakan</div>
     )
 }
+
+PerluTindakan.layout = page => <UserLayout children={page} session={page.props.user} title="Welcome" />
 
 export default PerluTindakan

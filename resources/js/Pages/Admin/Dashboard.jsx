@@ -5,10 +5,9 @@ import React, { useEffect } from 'react'
 
 const Dashboard = ({ user }) => {
     return (
-        <UserLayout isAdmin={true} session={user}>
-            <Text> Halaman Dashboard</Text>
-        </UserLayout>
+        <Text> Halaman Dashboard</Text>
     )
 }
 
+Dashboard.layout = page => <UserLayout children={page} session={page.props.user} title="Welcome" />
 export default Dashboard

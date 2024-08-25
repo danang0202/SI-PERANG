@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminActionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -29,14 +30,42 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 //  Route group admin
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+
+    // Dashboard
     Route::get('dashboard', [AdminController::class, 'renderAdminDashboard'])->name('admin.dashboard');
 
-    Route::get('pengajuan/perlu-tindakan',  [AdminController::class, 'renderAdminPengajuanPerluTindakan'])->name('admin.pengajuan.perlu-tindakan');
+    // Pengajuan
+    Route::prefix('pengajuan')->group(function () {
+        Route::get('perlu-tindakan',  [AdminController::class, 'renderAdminPengajuanPerluTindakan'])->name('admin.pengajuan.perlu-tindakan');
+        Route::get('riwayat-pengajuan',  [AdminController::class, 'renderAdminPengajuanRiwayatPengajuan'])->name('admin.pengajuan.riwayat-pengajuan');
+    });
 
-    Route::get('pengajuan/riwayat-pengajuan',  [AdminController::class, 'renderAdminPengajuanRiwayatPengajuan'])->name('admin.pengajuan.riwayat-pengajuan');
+    // Inventaris Barang
+    Route::prefix('inventaris-barang')->group(function () {
+        Route::get('/',  [AdminController::class, 'renderAdminInventarisBarang'])->name('admin.inventaris-barang');
 
-    Route::get('inventaris-barang',  [AdminController::class, 'renderAdminInventarisBarang'])->name('admin.inventaris-barang');
+        // Jenis Barang
+        Route::prefix('jenis-barang')->group(function () {
+            Route::get('/',  [AdminController::class, 'renderAdminInventarisBarangJenisBarang'])->name('admin.inventaris-barang.jenis');
+            Route::get('create',  [AdminController::class, 'renderAdminInventarisBarangJenisBarangCreate'])->name('admin.inventaris-barang.jenis.create');
+            Route::post('create/action',  [AdminController::class, 'createJenisBarangAction'])->name('admin.inventaris-barang.jenis.create.action');
+            Route::get('{id}/update', [AdminController::class, 'renderAdminInventarisBarangJenisBarangUpdate'])->name('admin.inventaris-barang.jenis.update');
+            Route::post('{id}/update/action', [AdminActionController::class, 'updateJenisBarangAction'])->name('admin.inventaris-barang.jenis.update.action');
+            Route::delete('{id}/delete', [AdminActionController::class, 'deleteJenisBarangAction'])->name('admin.inventaris-barang.jenis.delete');
+        });
 
+        // Satuan Barang
+        Route::prefix('satuan-barang')->group(function () {
+            Route::get('/',  [AdminController::class, 'renderAdminInventarisBarangSatuanBarang'])->name('admin.inventaris-barang.satuan');
+            Route::get('create',  [AdminController::class, 'renderAdminInventarisBarangSatuanBarangCreate'])->name('admin.inventaris-barang.satuan.create');
+            Route::post('create/action',  [AdminActionController::class, 'createSatuanBarangAction'])->name('admin.inventaris-barang.satuan.create.action');
+            Route::get('{id}/update', [AdminController::class, 'renderAdminInventarisBarangSatuanBarangUpdate'])->name('admin.inventaris-barang.satuan.update');
+            Route::post('{id}/update/action', [AdminActionController::class, 'updateSatuanBarangAction'])->name('admin.inventaris-barang.satuan.update.action');
+            Route::delete('{id}/delete', [AdminActionController::class, 'deleteSatuanBarangAction'])->name('admin.inventaris-barang.satuan.delete');
+        });
+    });
+
+    // User Management
     Route::get('user-management', [AdminController::class, 'renderAdminUserManagement'])->name('admin.user-management');
 });
 

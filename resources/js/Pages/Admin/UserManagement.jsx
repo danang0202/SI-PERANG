@@ -3,10 +3,11 @@ import React from 'react'
 
 const UserManagement = ({ user }) => {
     return (
-        <UserLayout isAdmin={true} session={user}>
-            <div>UserManagement</div>
-        </UserLayout>
+        <div>UserManagement</div>
     )
 }
+
+UserManagement.layout = page => <UserLayout children={page} session={page.props.user} title="Kelola User" />
+
 
 export default UserManagement

@@ -1,14 +1,17 @@
 import './bootstrap';
 import '../css/app.css';
 import '@mantine/core/styles.css';
+import '@mantine/core/styles.layer.css';
+import 'mantine-datatable/styles.layer.css';
+import '@mantine/notifications/styles.css';
 
 import { createRoot } from 'react-dom/client';
-import { createInertiaApp, usePage } from '@inertiajs/react';
+import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { MantineProvider } from '@mantine/core';
 import { mantineProviderProps } from './constan/mantine.constan';
 import { MenuProvider } from './Provider/Menu';
-
+import { Notifications } from '@mantine/notifications';
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -19,6 +22,7 @@ createInertiaApp({
         root.render(
             <MantineProvider {...mantineProviderProps} defaultColorScheme='light'>
                 <MenuProvider>
+                    <Notifications />
                     <App {...props} />
                 </MenuProvider>
             </MantineProvider>

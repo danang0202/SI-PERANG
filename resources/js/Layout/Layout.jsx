@@ -17,7 +17,7 @@ import AvatarImage from '@/Components/Commons/AvatarImage';
 import { EXTENDED_COLOR } from '@/constan/mantine.constan';
 import AvatarPopOver from '@/Components/Commons/AvatarPopOver';
 
-const UserLayout = ({ children, isAdmin, session, title }) => {
+const UserLayout = ({ children, session, title }) => {
     const theme = useMantineTheme();
     const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
     const [isNavbarOpen, { toggle }] = useDisclosure(true);
@@ -39,12 +39,21 @@ const UserLayout = ({ children, isAdmin, session, title }) => {
             toggle();
         }
     }, [isMobile]);
+
+    if (!session) {
+        return (
+            <>
+                {children}
+            </>
+        )
+    }
+
     return (
         <AppShell
             layout="alt"
             header={{ height: 70 }}
             navbar={{
-                width: 300,
+                width: 270,
                 breakpoint: "md",
                 collapsed: { mobile: !isNavbarOpen, desktop: !isNavbarOpen },
             }}
@@ -125,7 +134,7 @@ const UserLayout = ({ children, isAdmin, session, title }) => {
                             </ActionIcon>
                         )}
                     </Group>
-                    <NavbarMenu isAdmin={isAdmin} />
+                    <NavbarMenu isAdmin={session.role === 'ADMIN'} />
                 </Stack>
             </AppShell.Navbar>
             <AppShell.Main>{children}</AppShell.Main>

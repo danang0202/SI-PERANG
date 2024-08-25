@@ -4,9 +4,9 @@ const MenuContext = createContext(null);
 
 export const MenuProvider = ({ children }) => {
     const [selectedKey, setSelectedKey] = useState(null);
-    const [useLayout, setUseLayout] = useState(false);
+    const [loading, setLoading] = useState(false);
     return (
-        <MenuContext.Provider value={{ selectedKey, setSelectedKey,useLayout, setUseLayout}}>
+        <MenuContext.Provider value={{ selectedKey, setSelectedKey, loading, setLoading }}>
             {children}
         </MenuContext.Provider>
     );

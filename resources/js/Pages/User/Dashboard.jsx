@@ -3,9 +3,7 @@ import React from 'react'
 
 const Dashboard = ({ user }) => {
   return (
-    <UserLayout isAdmin={false} session={user}>
-      <div>Dashboard User</div>
-    </UserLayout>
+    <div>Dashboard User</div>
   )
 }
 

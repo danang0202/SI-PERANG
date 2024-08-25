@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('barang', function (Blueprint $table) {
             $table->id();
-            $table->string('kode', 6)->unique();
-            $table->foreignId('jenis_barang_id')->constrained('jenis_barang', 'id');
-            $table->foreignId('satuan_id')->constrained('satuan_barang', 'id');
+            $table->string('kode', 6); // unique nya saya hilangkan
+            $table->foreignId('jenis_barang_id')->constrained('jenis_barang');
+            $table->foreignId('satuan_id')->constrained('satuan_barang');
             $table->string('nama', 256);
             $table->integer('jumlah')->default(0);
             $table->timestamps();
