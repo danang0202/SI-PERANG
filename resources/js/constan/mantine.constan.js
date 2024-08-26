@@ -32,7 +32,7 @@ export const EXTENDED_COLOR = {
     accent9: "#FA8C16",
     bluePrimary: "#228be6",
     blueBackground: "#E7F5FF",
-    secondaryPurple: "#E599F7",
+    secondaryPurple: "#BE4BDB",
     secondaryBackground: "#F8F0FC",
     blueDark: "#11629A",
     secondaryBlue: "#CDEBFF",

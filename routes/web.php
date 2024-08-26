@@ -43,6 +43,12 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     // Inventaris Barang
     Route::prefix('inventaris-barang')->group(function () {
         Route::get('/',  [AdminController::class, 'renderAdminInventarisBarang'])->name('admin.inventaris-barang');
+        Route::get('create',  [AdminController::class, 'renderAdminInventarisBarangCreate'])->name('admin.inventaris-barang.create');
+        Route::post('create/action',  [AdminActionController::class, 'createBarangAction'])->name('admin.inventaris-barang.create.action');
+        Route::get('/{id}/update',  [AdminController::class, 'renderAdminInventarisBarangUpdate'])->name('admin.inventaris-barang.update');
+        Route::post('/{id}/update/action',  [AdminActionController::class, 'updateBarangAction'])->name('admin.inventaris-barang.update.action');
+        Route::delete('{id}/delete', [AdminActionController::class, 'deleteBarangAction'])->name('admin.inventaris-barang.delete');
+        Route::post('/{id}/tambah-stock',  [AdminActionController::class, 'tambahStockAction'])->name('admin.inventaris-barang.tambah-stock');
 
         // Jenis Barang
         Route::prefix('jenis-barang')->group(function () {

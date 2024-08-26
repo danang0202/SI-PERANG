@@ -38,9 +38,37 @@ class AdminController extends Controller
             'jenisBarang:id,nama',
             'satuanBarang:id,nama'
         ])->get();
+        $status = session('status');
         return Inertia::render('Admin/InventarisBarang/DaftarBarang', [
             'user' => auth()->user(),
             'barangs' => $barang,
+            'status' => $status
+        ]);
+    }
+
+    public function renderAdminInventarisBarangCreate()
+    {
+        $jenisBarangs = JenisBarang::select('id', 'nama')->get();
+        $satuanBarangs = SatuanBarang::select('id', 'nama')->get();
+        return Inertia::render('Admin/InventarisBarang/CreateBarang', [
+            'user' => auth()->user(),
+            'jenisBarangs' => $jenisBarangs,
+            'satuanBarangs' => $satuanBarangs,
+        ]);
+    }
+
+    public function renderAdminInventarisBarangUpdate($id)
+    {
+        $prevBarang = Barang::findOrFail($id);
+        $jenisBarangs = JenisBarang::select('id', 'nama')->get();
+        $satuanBarangs = SatuanBarang::select('id', 'nama')->get();
+        $status = session('status');
+        return Inertia::render('Admin/InventarisBarang/UpdateBarang', [
+            'user' => auth()->user(),
+            'jenisBarangs' => $jenisBarangs,
+            'satuanBarangs' => $satuanBarangs,
+            'prevBarang' => $prevBarang,
+            'status' => $status
         ]);
     }
 
@@ -115,6 +143,17 @@ class AdminController extends Controller
         $status = session('status');
         return Inertia::render('Admin/InventarisBarang/CreateSatuanBarang', [
             'user' => auth()->user(),
+            'status' => $status
+        ]);
+    }
+
+    public function renderAdminInventarisBarangSatuanBarangUpdate($id)
+    {
+        $satuanBarang = SatuanBarang::find($id);
+        $status = session('status');
+        return Inertia::render('Admin/InventarisBarang/UpdateSatuanBarang', [
+            'user' => auth()->user(),
+            'prevSatuanBarang' => $satuanBarang,
             'status' => $status
         ]);
     }

@@ -1,13 +1,19 @@
 import ButtonWithRoute from '@/Components/Commons/ButtonWithRoute'
+import ConfirmationModal from '@/Components/Commons/ConfirmationModal'
 import SearchInput from '@/Components/Commons/SearchInput'
+import { EXTENDED_COLOR } from '@/constan/mantine.constan'
+import { showFailNotification, showSuccesNotification } from '@/helper/notification.helper'
 import AdminInventarisBarangLayout from '@/Layout/AdminInventarisBarangLayout'
 import UserLayout from '@/Layout/Layout'
 import { useMenuContext } from '@/Provider/Menu'
-import { Badge, Group, MultiSelect, Stack } from '@mantine/core'
-import { IconPlus, IconSearch, IconX } from '@tabler/icons-react'
+import { Link } from '@inertiajs/react'
+import { ActionIcon, Badge, Group, Menu, MultiSelect, Stack, Text } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
+import { IconDots, IconEdit, IconPlus, IconSearch, IconTrash, IconX } from '@tabler/icons-react'
 import { sortBy } from 'lodash'
 import { DataTable, useDataTableColumns } from 'mantine-datatable'
 import React, { useEffect, useMemo, useState } from 'react'
+import TambahStockModal from './TambahStockModal'
 
 
 const PAGE_SIZES = [10, 15, 20];
@@ -17,18 +23,28 @@ const props = {
     sortable: true,
     draggable: true
 };
-const DaftarBarang = ({ barangs }) => {
+const DaftarBarang = ({ barangs, status }) => {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [records, setRecords] = useState([sortBy(barangs, 'name').slice(0, pageSize)]);
+    const [selectedRecord, setSelectedRecord] = useState();
     const [selectedJenisBarang, setSelectedJenisBarang] = useState([]);
     const [selectedSatuanBarang, setSelectedSatuanBarang] = useState([]);
     const [keyword, setKeyword] = useState('');
+    const [opened, { open, close }] = useDisclosure(false);
+    const [openedModalStock, { open: openModalStock, close: closeModalStock }] = useDisclosure(false);
+
+
 
     const { setLoading } = useMenuContext();
 
     useEffect(() => {
         setLoading(false)
+        if (status && status.type == 'success') {
+            showSuccesNotification(status.message)
+        } else if (status && status.type == 'fail') {
+            showFailNotification(status.message)
+        }
     }, [])
 
     const [sortStatus, setSortStatus] = useState({
@@ -113,7 +129,54 @@ const DaftarBarang = ({ barangs }) => {
                 ),
                 filtering: selectedSatuanBarang.length > 0,
             },
+            {
+                accessor: 'action', textAlign: 'center',
+                render: (record) => (
+                    <Menu shadow="md" width={110} position="bottom-end" offset={-5}>
+                        <Menu.Target>
+                            <ActionIcon variant="transparent" color="bluePrimary">
+                                <IconDots color={EXTENDED_COLOR.secondaryPurple} />
+                            </ActionIcon>
+                        </Menu.Target>
 
+                        <Menu.Dropdown>
+                            <Menu.Item
+                                leftSection={
+                                    <IconPlus size={16} color={EXTENDED_COLOR.accent5} />
+                                }
+                                onClick={() => {
+                                    openModalStock();
+                                    setSelectedRecord(record)
+                                }}
+                            >
+                                <Text size="sm" c={'accent5'}>Stock</Text>
+                            </Menu.Item>
+                            <Link href={`/admin/inventaris-barang/${record.id}/update`}>
+                                <Menu.Item
+                                    leftSection={
+                                        <IconEdit size={16} color={EXTENDED_COLOR.accent3} />
+                                    }
+                                >
+                                    <Text size="sm" c={'accent3'}>Edit</Text>
+                                </Menu.Item>
+                            </Link>
+                            <Menu.Item
+                                leftSection={
+                                    <IconTrash size={16} color={EXTENDED_COLOR.accent6} />
+                                }
+                                onClick={() => {
+                                    open();
+                                    setSelectedRecord(record)
+                                }}
+                            >
+                                <Text c="accent6" size="sm">
+                                    Delete
+                                </Text>
+                            </Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu >
+                )
+            }
         ]
     });
     return (
@@ -121,7 +184,7 @@ const DaftarBarang = ({ barangs }) => {
             {/* breadcrumb */}
             <Stack gap={"md"}>
                 <Group align='center' justify='space-between'>
-                    <ButtonWithRoute route={'/test'} label={'Tambah Barang'} leftSection={<IconPlus size={14} />} />
+                    <ButtonWithRoute route={route('admin.inventaris-barang.create')} label={'Tambah Barang'} leftSection={<IconPlus size={14} />} />
                     <SearchInput keyword={keyword} setKeyword={setKeyword} />
                 </Group>
                 {keyword && (
@@ -130,7 +193,8 @@ const DaftarBarang = ({ barangs }) => {
                     </Group>
                 )}
                 <DataTable
-                    height={430}
+                    pinLastColumn
+                    height={450}
                     fz="xs"
                     withColumnBorders
                     sortStatus={sortStatus}
@@ -148,6 +212,8 @@ const DaftarBarang = ({ barangs }) => {
                     recordsPerPageOptions={PAGE_SIZES}
                     onRecordsPerPageChange={setPageSize}
                 />
+                <TambahStockModal opened={openedModalStock} close={closeModalStock} selectedRecord={selectedRecord} />
+                <ConfirmationModal opened={opened} close={close} selectedRecord={selectedRecord} urlDelete={'admin.inventaris-barang.delete'} urlRevisit={'admin.inventaris-barang'} only={'barangs'} />
             </Stack>
         </>
     )

@@ -80,7 +80,7 @@ const DaftarSatuanBarang = ({ satuanBarangs, status }) => {
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Link href={`/admin/inventaris-barang/jenis-barang/${record.id}/update`}>
+                            <Link href={`/admin/inventaris-barang/satuan-barang/${record.id}/update`}>
                                 <Menu.Item
                                     leftSection={
                                         <IconEdit size={16} color={EXTENDED_COLOR.accent5} />
@@ -139,7 +139,7 @@ const DaftarSatuanBarang = ({ satuanBarangs, status }) => {
                 recordsPerPageOptions={PAGE_SIZES}
                 onRecordsPerPageChange={setPageSize}
             />
-            <ConfirmationModal opened={opened} close={close} selectedRecord={selectedRecord} urlDelete={'admin.inventaris-barang.jenis.delete'} urlRevisit={'admin.inventaris-barang.jenis'} only={'jenisBarangs'} />
+            <ConfirmationModal opened={opened} close={close} selectedRecord={selectedRecord} urlDelete={'admin.inventaris-barang.satuan.delete'} urlRevisit={'admin.inventaris-barang.satuan'} only={'satuanBarangs'} />
         </Stack>
     )
 }

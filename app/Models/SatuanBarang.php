@@ -16,6 +16,6 @@ class SatuanBarang extends Model
 
     public function barang()
     {
-        return $this->hasMany(Barang::class);
+        return $this->hasMany(Barang::class, 'satuan_id', 'id');
     }
 }
