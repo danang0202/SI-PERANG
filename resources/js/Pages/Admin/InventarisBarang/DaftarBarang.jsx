@@ -184,7 +184,7 @@ const DaftarBarang = ({ barangs, status }) => {
             {/* breadcrumb */}
             <Stack gap={"md"}>
                 <Group align='center' justify='space-between'>
-                    <ButtonWithRoute route={route('admin.inventaris-barang.create')} label={'Tambah Barang'} leftSection={<IconPlus size={14} />} />
+                    <ButtonWithRoute route={route('admin.inventaris-barang.create')} label={'Tambah'} leftSection={<IconPlus size={14} />} />
                     <SearchInput keyword={keyword} setKeyword={setKeyword} />
                 </Group>
                 {keyword && (

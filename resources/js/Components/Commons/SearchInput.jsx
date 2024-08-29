@@ -9,6 +9,7 @@ const SearchInput = ({ keyword, setKeyword }) => {
             value={keyword}
             onChange={(event) => setKeyword(event.currentTarget.value)}
             rightSectionPointerEvents="all"
+            radius={'xs'}
             rightSection={
                 <>
                     <CloseButton

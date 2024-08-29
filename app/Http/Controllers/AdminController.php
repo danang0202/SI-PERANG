@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\JenisBarang;
+use App\Models\Pengajuan;
 use App\Models\SatuanBarang;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,8 +20,29 @@ class AdminController extends Controller
 
     public function renderAdminPengajuanPerluTindakan()
     {
+        $pengajuans = Pengajuan::where('status', 'MENUNGGU KONFIRMASI')->with(['user:id,nama,tim_kerja'])->orderBy('created_at', 'asc')->get();
         return Inertia::render('Admin/Pengajuan/PerluTindakan', [
-            'user' => auth()->user()
+            'user' => auth()->user(),
+            'pengajuans' => $pengajuans
+
+        ]);
+    }
+
+    public function renderAdminPengajuanPerluTindakanDetail($id)
+    {
+        $pengajuan = Pengajuan::where('id', $id)->with([
+            'user',
+            'items' => function ($query) {
+                $query->with([
+                    'barang' => function ($query) {
+                        $query->with(['satuanBarang:id,nama', 'jenisBarang:id,nama']);
+                    }
+                ]);
+            }
+        ])->first();
+        return Inertia::render('Admin/Pengajuan/PengajuanDetail', [
+            'user' => auth()->user(),
+            'pengajuan' => $pengajuan
         ]);
     }
 

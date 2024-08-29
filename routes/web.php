@@ -3,7 +3,9 @@
 use App\Http\Controllers\AdminActionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserActionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +39,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     // Pengajuan
     Route::prefix('pengajuan')->group(function () {
         Route::get('perlu-tindakan',  [AdminController::class, 'renderAdminPengajuanPerluTindakan'])->name('admin.pengajuan.perlu-tindakan');
+        Route::get('perlu-tindakan/{id}/detail',  [AdminController::class, 'renderAdminPengajuanPerluTindakanDetail'])->name('admin.pengajuan.perlu-tindakan.detail');
         Route::get('riwayat-pengajuan',  [AdminController::class, 'renderAdminPengajuanRiwayatPengajuan'])->name('admin.pengajuan.riwayat-pengajuan');
     });
 
@@ -77,16 +80,27 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
 // Route grub user
 Route::middleware(['auth', 'user'])->group(function () {
+    Route::prefix('pengajuan')->name('user.pengajuan.')->group(function () {
+        Route::prefix('tambah-pengajuan')->group(function () {
+            Route::get('/', [UserController::class, 'renderPengajuanTambahPengajuan'])->name('tambah');
+            Route::post('/action', [UserActionController::class, 'tambahPengajuanAction'])->name('tambah.action');
+        });
+        Route::get('/riwayat-pengajuan', [UserController::class, 'renderPengajuanRiwayatPengajuan'])->name('riwayat');
+        Route::get('/{id}/pembatalan', [UserActionController::class, 'pembatalanPengajuanAction'])->name('pembatalan');
+    });
+
     Route::get('/dashboard', [UserController::class, 'index'])->name('user.dashboard');
-    Route::get('/pengajuan/tambah-pengajuan', [UserController::class, 'renderPengajuanTambahPengajuan'])->name('user.tambah-pengajuan');
-    Route::get('/pengajuan/riwayat-pengajuan', [UserController::class, 'renderPengajuanRiwayatPengajuan'])->name('user.riwayat-pengajuan');
-    Route::get('/daftar-barang', [UserController::class, 'renderDaftarBarang'])->name('user.daftar-barang');
+    Route::get('/daftar-barang', [UserController::class, 'renderDaftarBarang'])->name('daftar-barang');
 });
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/pengajuan/{id}/stream-pdf', [PDFController::class, 'streamPDF'])->name('streamPDF');
 
 require __DIR__ . '/auth.php';

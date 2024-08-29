@@ -4,7 +4,6 @@ import UserLayout from '@/Layout/Layout';
 import { router } from '@inertiajs/react';
 import { Button, Grid, Group, Select, Stack, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { values } from 'lodash';
 import React, { useState } from 'react'
 
 const CreateBarang = ({ jenisBarangs, satuanBarangs }) => {

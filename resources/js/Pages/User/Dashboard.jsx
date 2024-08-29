@@ -7,4 +7,5 @@ const Dashboard = ({ user }) => {
   )
 }
 
+Dashboard.layout = page => <UserLayout children={page} session={page.props.user} title="Dashboard" />
 export default Dashboard

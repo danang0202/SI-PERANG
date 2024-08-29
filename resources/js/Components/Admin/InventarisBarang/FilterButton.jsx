@@ -1,7 +1,7 @@
 import { EXTENDED_COLOR } from '@/constan/mantine.constan';
 import { Group, Menu, Text, UnstyledButton } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
-import { IconFilterFilled } from '@tabler/icons-react';
+import { IconFilter } from '@tabler/icons-react';
 import React, { useState } from 'react'
 
 function FilterButton() {
@@ -17,7 +17,7 @@ function FilterButton() {
                     }}
                 >
                     <Group gap={6} ref={ref} opacity={hovered ? .6 : 1} className='transition duration-300'>
-                        <IconFilterFilled color={EXTENDED_COLOR.bluePrimary} />
+                        <IconFilter color={EXTENDED_COLOR.bluePrimary} />
                         <Text c="bluePrimary" fw={'bold'}>Filter</Text>
                     </Group>
                 </UnstyledButton>

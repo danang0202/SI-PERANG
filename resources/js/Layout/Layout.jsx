@@ -137,7 +137,7 @@ const UserLayout = ({ children, session, title }) => {
                     <NavbarMenu isAdmin={session.role === 'ADMIN'} />
                 </Stack>
             </AppShell.Navbar>
-            <AppShell.Main>{children}</AppShell.Main>
+            <AppShell.Main mr={{ base: 0, lg: 'lg' }}>{children}</AppShell.Main>
         </AppShell>
     )
 }
