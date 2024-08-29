@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Text } from '@mantine/core';
-import UserLayout from '@/Layout/UserLayout';
+import UserLayout from '@/Layout/Layout';
 
 const Test = () => {
     return (

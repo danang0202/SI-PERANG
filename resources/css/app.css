@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer mantine, mantine-datatable;
+
+.mantine-DateInput-label {
+    padding-bottom: .5rem !important;
+}
+
+.mantine-NumberInput-label {
+    padding-bottom: .5rem !important;
+}

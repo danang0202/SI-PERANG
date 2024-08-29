@@ -30,10 +30,12 @@ export const EXTENDED_COLOR = {
     accent7: "#FFA940",
     accent8: "#FFFB8F",
     accent9: "#FA8C16",
-
-    bluePrimary: "#11629A",
+    bluePrimary: "#228be6",
+    blueBackground: "#E7F5FF",
+    secondaryPurple: "#BE4BDB",
+    secondaryBackground: "#F8F0FC",
+    blueDark: "#11629A",
     secondaryBlue: "#CDEBFF",
-
     limePrimary: "#A0D911",
 };
 
@@ -64,7 +66,11 @@ export const extendedColor = {
     accent9: getColorsTuple(EXTENDED_COLOR.accent9),
 
     bluePrimary: getColorsTuple(EXTENDED_COLOR.bluePrimary),
+    blueBackground: getColorsTuple(EXTENDED_COLOR.blueBackground),
+    secondaryPurple: getColorsTuple(EXTENDED_COLOR.secondaryPurple),
+    secondaryBackground: getColorsTuple(EXTENDED_COLOR.secondaryBackground),
     secondaryBlue: getColorsTuple(EXTENDED_COLOR.secondaryBlue),
+
 
     limePrimary: getColorsTuple(EXTENDED_COLOR.limePrimary),
 }

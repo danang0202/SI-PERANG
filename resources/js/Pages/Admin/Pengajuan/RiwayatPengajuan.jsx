@@ -1,13 +1,15 @@
-import UserLayout from '@/Layout/UserLayout'
+import UserLayout from '@/Layout/Layout'
 import React from 'react'
 
-const RiwayatPengajuan = () => {
+const RiwayatPengajuan = ({ user }) => {
     return (
         <div>RiwayatPengajuan</div>
+
+
     )
 }
 
-export default RiwayatPengajuan
+RiwayatPengajuan.layout = page => <UserLayout children={page} session={page.props.user} title="Pengajuan" />
 
-// LoginPage.getLayout = (page) => page;
-// AdminPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;
+
+export default RiwayatPengajuan

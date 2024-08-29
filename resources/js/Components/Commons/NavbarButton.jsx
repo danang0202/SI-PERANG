@@ -27,20 +27,14 @@ const NavbarButton = ({ menuItem, selectedKey }) => {
         }
     }, [selectedKey])
 
-    const backgroundColor =
-        isSelectedMenu
-            ? lighten(theme.colors.secondaryBlue[0], 0.6)
-            : hovered
-                ? lighten(theme.colors.secondaryBlue[0], 0.6)
-                : "";
+    const backgroundColor = hovered ? theme.colors.gray[0] : "";
     const ButtonFill = (
         <Group justify="space-between" align="center" ref={ref} p="sm" w="100%">
             <Group gap="xs" align="center">
                 {menuItem.icon && (
                     <ActionIcon
-                        color={"bluePrimary"}
-                        variant="light"
-                        bg={lighten(theme.colors.secondaryBlue[0], 0.6)}
+                        variant={isSelectedMenu || isSubmenuActive ? 'filled' : 'light'}
+                        bg={isSelectedMenu || isSubmenuActive ? 'bluePrimary' : 'blueBackground'}
                         aria-label="Settings"
                         size={"lg"}
                     >
@@ -49,10 +43,9 @@ const NavbarButton = ({ menuItem, selectedKey }) => {
                 )}
 
                 <Text
-                    fw="bold"
+                    fw={isSelectedMenu || isSubmenuActive ? 'bold' : 'normal'}
                     size="sm"
                     pl={menuItem.icon ? 0 : "35px"}
-                    c={isSelectedMenu || isSubmenuActive ? "bluePrimary" : ""}
                 >
                     {menuItem.label}
                 </Text>
@@ -86,6 +79,7 @@ const NavbarButton = ({ menuItem, selectedKey }) => {
                     bg={backgroundColor}
                     style={{ borderRadius: "5px" }}
                     w="100%"
+                    variant="light"
                 >
                     <Link href={menuItem.route} onClick={() => setSelectedKey(menuItem.key)}>
                         {ButtonFill}
@@ -123,22 +117,16 @@ const NavbarSubMenu = ({ menuItem, selectedKey }) => {
         }
     }, [selectedKey])
 
-    const backgroundColor =
-        isSelectedMenu
-            ? lighten(theme.colors.secondaryBlue[0], 0.6)
-            : hovered
-                ? lighten(theme.colors.secondaryBlue[0], 0.6)
-                : "";
+    const backgroundColor = hovered ? theme.colors.gray[0] : "";
+
 
 
     const ButtonFill = (
-        <Group justify="space-between" align="start" ref={ref} p="sm" w="100%" className={`border-l ${isSelectedMenu ? 'border-primaryBlue' : 'border-gray-400'}`}>
+        <Group justify="space-between" align="start" ref={ref} p="sm" w="100%" className={`${isSelectedMenu ? 'border-primaryBlue border-l-2' : 'border-l border-gray-400'}`}>
             <Group gap="xs" align="center">
                 <Text
-                    fw="bold"
+                    fw={isSelectedMenu ? 'bold' : 'normal'}
                     size="sm"
-                    pl={"md"}
-                    c={isSelectedMenu ? "bluePrimary" : ""}
                 >
                     {menuItem.label}
                 </Text>
