@@ -118,9 +118,8 @@ const UserLayout = ({ children, session, title }) => {
             <AppShell.Navbar p="md">
                 <Stack>
                     <Group justify="space-between" pt={10}>
-                        <Group pl={20}>
-                            {/* <Logo h={40} /> */}
-                            <Text fw={'bold'} size='lg'>SI PERANG</Text>
+                        <Group pl={10}>
+                            <img src="/images/logo-small.png" alt="Logo" width={160} />
                         </Group>
                         {!isMobile && isNavbarOpen && HamburgerMenu}
                         {isMobile && isNavbarOpen && (

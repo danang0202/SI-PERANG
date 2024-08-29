@@ -10,7 +10,7 @@ import { Link } from '@inertiajs/react'
 import { ActionIcon, Badge, Group, Menu, MultiSelect, Stack, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconDots, IconEdit, IconPlus, IconSearch, IconTrash, IconX } from '@tabler/icons-react'
-import { sortBy } from 'lodash'
+import { size, sortBy } from 'lodash'
 import { DataTable, useDataTableColumns } from 'mantine-datatable'
 import React, { useEffect, useMemo, useState } from 'react'
 import TambahStockModal from './TambahStockModal'
@@ -19,9 +19,9 @@ import TambahStockModal from './TambahStockModal'
 const PAGE_SIZES = [10, 15, 20];
 const key = 'table-barang-admin';
 const props = {
-    resizable: true,
     sortable: true,
-    draggable: true
+    draggable: true,
+    resizable: true
 };
 const DaftarBarang = ({ barangs, status }) => {
     const [page, setPage] = useState(1);
@@ -89,12 +89,12 @@ const DaftarBarang = ({ barangs, status }) => {
             {
                 accessor: 'kode',
                 render: ({ kode }) => <strong>{kode}</strong>,
-                ...props
+                ...props,
             },
             { accessor: 'nama', ...props },
             {
                 accessor: 'jenis_barang',
-                render: ({ jenis_barang }) => jenis_barang ? jenis_barang.nama : 'N/A',
+                render: ({ jenis_barang }) => jenis_barang ? <Badge radius={'xs'} color='bluePrimary' variant='outline'>{jenis_barang.nama}</Badge> : 'N/A',
                 ...props,
                 filter: (
                     <MultiSelect
@@ -110,10 +110,12 @@ const DaftarBarang = ({ barangs, status }) => {
                 ),
                 filtering: selectedJenisBarang.length > 0,
             },
-            { accessor: 'jumlah', textAlign: 'center', ...props },
+            {
+                accessor: 'jumlah', textAlign: 'center', ...props, width: 50,
+            },
             {
                 accessor: 'satuan_barang',
-                render: ({ satuan_barang }) => satuan_barang ? satuan_barang.nama : 'N/A',
+                render: ({ satuan_barang }) => satuan_barang ? <Badge radius={'xs'} color='secondaryPurple' variant='light'>{satuan_barang.nama}</Badge> : 'N/A',
                 ...props,
                 filter: (
                     <MultiSelect

@@ -68,7 +68,7 @@ const DaftarBarang = ({ user, barangs }) => {
             { accessor: 'nama', ...props },
             {
                 accessor: 'jenis_barang',
-                render: ({ jenis_barang }) => jenis_barang ? jenis_barang.nama : 'N/A',
+                render: ({ jenis_barang }) => jenis_barang ? <Badge radius={'xs'} color='bluePrimary' variant='outline'>{jenis_barang.nama}</Badge>  : 'N/A',
                 ...props,
                 filter: (
                     <MultiSelect
@@ -87,7 +87,7 @@ const DaftarBarang = ({ user, barangs }) => {
             { accessor: 'jumlah', textAlign: 'center', ...props },
             {
                 accessor: 'satuan_barang',
-                render: ({ satuan_barang }) => satuan_barang ? satuan_barang.nama : 'N/A',
+                render: ({ satuan_barang }) => satuan_barang ?  <Badge radius={'xs'} color='secondaryPurple' variant='light'>{satuan_barang.nama}</Badge> : 'N/A',
                 ...props,   
                 filter: (
                     <MultiSelect

@@ -25,8 +25,6 @@ class UserActionController extends Controller
             'itemPengajuan.*.jumlah' => 'required|integer|min:1',
             'itemPengajuan.*.keterangan' => 'nullable|string',
         ]);
-
-
         // Gunakan transaksi database untuk memastikan data tersimpan dengan baik
         DB::beginTransaction();
 
@@ -43,7 +41,6 @@ class UserActionController extends Controller
                 if ($barang->jumlah < $item['jumlah']) {
                     throw new \Exception("Stok barang {$barang->nama} tidak mencukupi");
                 }
-
                 $barang->decrement('jumlah', $item['jumlah']);
 
                 ItemPengajuan::create([
@@ -95,8 +92,7 @@ class UserActionController extends Controller
                 'type' => 'success',
                 'message' => 'Pengajuan berhasil dibatalkan!'
             ];
-            return redirect()->route('user.pengajuan.riwayat')
-                ->with('status', $status);
+            return redirect()->back()->with('status', $status);
         } catch (\Throwable $th) {
             DB::rollBack(); // Rollback transaksi jika terjadi kesalahan
 
@@ -105,8 +101,7 @@ class UserActionController extends Controller
                 'type' => 'fail',
                 'message' => 'Pengajuan gagal dibatalkan!'
             ];
-            return redirect()->route('user.pengajuan.riwayat')
-                ->with('status', $status);
+            return redirect()->back()->with('status', $status);
         }
     }
 }

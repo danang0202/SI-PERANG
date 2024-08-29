@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\JenisBarang;
+use App\Models\Pengajuan;
 use App\Models\SatuanBarang;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\TryCatch;
@@ -274,5 +275,60 @@ class AdminActionController extends Controller
 
         return redirect()->route('admin.inventaris-barang.satuan')
             ->with('status', $status);
+    }
+
+    public function terimaPengajuanAction(Request $request, $id)
+    {
+        try {
+            $pengajuan = Pengajuan::findOrFail($id);
+            $tahun = now()->year;
+            $lastPengajuan = Pengajuan::whereYear('created_at', $tahun)
+                ->whereNotNull('no_pengajuan')
+                ->orderBy('no_pengajuan', 'desc')
+                ->first();
+
+            if ($lastPengajuan) {
+                $lastNumber = (int) substr($lastPengajuan->no_pengajuan, 2, 3);
+                $nextNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+            } else {
+                $nextNumber = '001';
+            }
+
+            $noPengajuan = "B-" . $nextNumber . "/34021/PL615/" . $tahun;
+            $pengajuan->status = 'PENGAJUAN DITERIMA';
+            $pengajuan->no_pengajuan = $noPengajuan;
+            $pengajuan->save();
+
+            $status = [
+                'type' => 'success',
+                'message' => 'Pengajuan telah diterima dengan nomor pengajuan: ' . $noPengajuan
+            ];
+        } catch (\Exception $e) {
+            $status = [
+                'type' => 'fail',
+                'message' => 'Terjadi kesalahan saat menerima pengajuan: ' . $e->getMessage()
+            ];
+        }
+
+        return redirect()->back()->with('status', $status);
+    }
+
+    public function tolakPengajuanAction(Request $request, $id)
+    {
+        try {
+            $pengajuan = Pengajuan::findOrFail($id);
+            $pengajuan->status = 'PENGAJUAN DITOLAK';
+            $pengajuan->save();
+            $status = [
+                'type' => 'success',
+                'message' => 'Pengajuan telah ditolak.'
+            ];
+        } catch (\Exception $e) {
+            $status = [
+                'type' => 'fail',
+                'message' => 'Terjadi kesalahan saat menolak pengajuan: ' . $e->getMessage()
+            ];
+        }
+        return redirect()->back()->with('status', $status);
     }
 }

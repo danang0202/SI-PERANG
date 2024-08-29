@@ -1,11 +1,14 @@
 import UserLayout from '@/Layout/Layout'
 import { useMenuContext } from '@/Provider/Menu'
+import { Head } from '@inertiajs/react'
 import { Text } from '@mantine/core'
 import React, { useEffect } from 'react'
 
 const Dashboard = ({ user }) => {
-    return (
+    return (<>
+        <Head title="Dashboard" />
         <Text> Halaman Dashboard</Text>
+    </>
     )
 }
 

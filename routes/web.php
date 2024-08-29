@@ -21,14 +21,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-// Route::get('/', function () {
-//     return Inertia::render('User/Dashboard', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
+Route::get('/pengajuan/{id}/stream-pdf', [PDFController::class, 'streamPDF'])->name('streamPDF');
+Route::get('/pengajuan/{id}/cetak-surat', [PDFController::class, 'renderPDFPage'])->name('cetak-surat')->middleware(['auth']);
+
 
 //  Route group admin
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
@@ -41,6 +36,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::get('perlu-tindakan',  [AdminController::class, 'renderAdminPengajuanPerluTindakan'])->name('admin.pengajuan.perlu-tindakan');
         Route::get('perlu-tindakan/{id}/detail',  [AdminController::class, 'renderAdminPengajuanPerluTindakanDetail'])->name('admin.pengajuan.perlu-tindakan.detail');
         Route::get('riwayat-pengajuan',  [AdminController::class, 'renderAdminPengajuanRiwayatPengajuan'])->name('admin.pengajuan.riwayat-pengajuan');
+        Route::get('/{id}/accepted',  [AdminActionController::class, 'terimaPengajuanAction'])->name('admin.pengajuan.accept');
+        Route::get('/{id}/rejected',  [AdminActionController::class, 'tolakPengajuanAction'])->name('admin.pengajuan.reject');
     });
 
     // Inventaris Barang
@@ -86,6 +83,7 @@ Route::middleware(['auth', 'user'])->group(function () {
             Route::post('/action', [UserActionController::class, 'tambahPengajuanAction'])->name('tambah.action');
         });
         Route::get('/riwayat-pengajuan', [UserController::class, 'renderPengajuanRiwayatPengajuan'])->name('riwayat');
+        Route::get('/riwayat-pengajuan/{id}/detail', [UserController::class, 'renderPengajuanRiwayatPengajuanDetail'])->name('riwayat.detail');
         Route::get('/{id}/pembatalan', [UserActionController::class, 'pembatalanPengajuanAction'])->name('pembatalan');
     });
 
@@ -100,7 +98,4 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-Route::get('/pengajuan/{id}/stream-pdf', [PDFController::class, 'streamPDF'])->name('streamPDF');
-
 require __DIR__ . '/auth.php';

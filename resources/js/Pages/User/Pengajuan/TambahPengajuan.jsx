@@ -125,7 +125,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, status }) => {
                     </Group>
                     {/* Form awal */}
                     <Stack gap={'xs'}>
-                        <Text size='sm' fw={'bold'}>Informasi Pengajuan</Text>
+                        <Text size='base' fw={'bold'}>Informasi Pengajuan</Text>
                         <Grid gutter={'lg'}>
                             <Grid.Col span={4}>
                                 <DateInput
@@ -238,7 +238,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, status }) => {
                 </Stack>
             </form>
             <Stack gap={'xs'}>
-                <Text size='sm' fw={'bold'}>Tabel Item Pengajuan</Text>
+                <Text size='base' fw={'bold'}>Tabel Item Pengajuan</Text>
                 <DataTable
                     mih={150}
                     fz="sm"

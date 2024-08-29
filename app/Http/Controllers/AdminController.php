@@ -40,9 +40,12 @@ class AdminController extends Controller
                 ]);
             }
         ])->first();
+        $status = session('status');
         return Inertia::render('Admin/Pengajuan/PengajuanDetail', [
             'user' => auth()->user(),
-            'pengajuan' => $pengajuan
+            'pengajuan' => $pengajuan,
+            'status' => $status,
+            'backUrl' => 'admin.pengajuan.perlu-tindakan'
         ]);
     }
 

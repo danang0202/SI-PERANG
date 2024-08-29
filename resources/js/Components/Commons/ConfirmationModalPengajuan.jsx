@@ -3,23 +3,22 @@ import { Modal, Button, Text, Group } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { router } from '@inertiajs/react';
 
-const ConfirmationModalPengajuan = ({ opened, close, selectedRecord, label, urlPatch, urlRevisit, only }) => {
+const ConfirmationModalPengajuan = ({ opened, close, selectedRecord, label, urlPatch, only }) => {
     const { hovered, ref } = useHover();
     const [loading, setLoading] = useState();
     const handleConfirm = (recordId) => {
         setLoading(true);
-        router.get(route(urlPatch , { id: recordId }), {
+        router.get(route(urlPatch, { id: recordId }), {
             onSuccess: () => {
                 setLoading(false);
                 close();
-                router.visit(route(urlRevisit), {
+                router.visit(windowl.location.pathname, {
                     only: [{ only }],
                 });
             },
             onError: (errors) => {
                 setLoading(false);
-                console.error('Error:', errors); // Log errors to the console for debugging
-                // You can also show an error notification or handle errors here
+                console.error('Error:', errors); 
             },
         });
     };

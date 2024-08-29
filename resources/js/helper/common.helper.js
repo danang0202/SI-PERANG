@@ -2,6 +2,18 @@
 export const statusesData = [
     'MENUNGGU KONFIRMASI', 'PENGAJUAN DITERIMA', 'PENGAJUAN DITOLAK', 'PENGAJUAN DIBATALKAN',
 ]
+
+export const timKerjaData = [
+    "PIMPINAN",
+    "PRODUKSI",
+    "NWA",
+    "DISTRIBUSI",
+    "SOSIAL",
+    "IPDS",
+    "RB",
+    "UMUM",
+]
+
 export const getStatusColor = (status) => {
     if (status == 'MENUNGGU KONFIRMASI') {
         return 'gray'

@@ -76,8 +76,8 @@ const DaftarJenisBarang = ({ jenisBarangs, status }) => {
                 render: (record) => (
                     <Menu shadow="md" width={110} position="bottom-end" offset={-5}>
                         <Menu.Target>
-                            <ActionIcon variant="transparent" color="bluePrimary">
-                                <IconDots />
+                            <ActionIcon variant="transparent" color="secondaryPurple">
+                                <IconDots/>
                             </ActionIcon>
                         </Menu.Target>
 
@@ -124,7 +124,7 @@ const DaftarJenisBarang = ({ jenisBarangs, status }) => {
             )}
             <DataTable
                 height={450}
-                fz="xs"
+                fz="sm"
                 withColumnBorders
                 sortStatus={sortStatus}
                 onSortStatusChange={setSortStatus}

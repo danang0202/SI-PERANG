@@ -95,7 +95,7 @@ const RiwayatPengajuan = ({ user, pengajuans, status }) => {
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Link>
+                            <Link href={route('user.pengajuan.riwayat.detail', { id: record.id ? record.id : '' })}>
                                 <Menu.Item
                                     leftSection={
                                         <IconEye size={16} color={EXTENDED_COLOR.accent3} />
