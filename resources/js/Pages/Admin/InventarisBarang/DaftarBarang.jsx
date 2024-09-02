@@ -20,6 +20,7 @@ import { filterBarangs } from '@/helper/table.helper'
 const PAGE_SIZES = [10, 15, 20];
 const key = 'table-barang-admin';
 const props = {
+    resizable: true,
     sortable: true,
     draggable: true,
 };

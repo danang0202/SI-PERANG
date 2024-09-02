@@ -247,50 +247,6 @@ class AdminController extends Controller
         ]);
     }
 
-    public function renderAdminUserManagement()
-    {
-        $users = User::with('timKerjas')->get();
-        $status = session('status');
-        return Inertia::render('Admin/UserManagement/UserManagement', [
-            'user' => auth()->user(),
-            'users' => $users,
-            'status' => $status,
-        ]);
-    }
-
-    public function renderAdminUserManagementCreate()
-    {
-        $timKerjas = TimKerja::all();
-        $status = session('status');
-        return Inertia::render('Admin/UserManagement/CreateUser', [
-            'user' => auth()->user(),
-            'timKerjas' => $timKerjas,
-            'status' => $status,
-        ]);
-    }
-
-    public function renderUserManagementUpdate($id)
-    {
-        $prevUser = User::where('id', $id)->with('timKerjas')->first();
-        $timKerjas = TimKerja::all();
-        $status = session('status');
-        return Inertia::render('Admin/UserManagement/UpdateUser', [
-            'user' => auth()->user(),
-            'timKerjas' => $timKerjas,
-            'status' => $status,
-            'prevUser' => $prevUser
-        ]);
-    }
-
-
-    public function renderAdminUserManagementTimKerja()
-    {
-        $timKerjas = TimKerja::all();
-        return Inertia::render('Admin/UserManagement/DaftarTimKerja', [
-            'user' => auth()->user(),
-            'timKerjas' => $timKerjas
-        ]);
-    }
 
     public function renderAdminInventarisBarangJenisBarangUpdate($id)
     {
@@ -335,6 +291,77 @@ class AdminController extends Controller
             'user' => auth()->user(),
             'prevSatuanBarang' => $satuanBarang,
             'status' => $status
+        ]);
+    }
+
+    public function renderAdminUserManagement()
+    {
+        $users = User::with('timKerjas')->get();
+        $status = session('status');
+        return Inertia::render('Admin/UserManagement/UserManagement', [
+            'user' => auth()->user(),
+            'users' => $users,
+            'status' => $status,
+        ]);
+    }
+
+    public function renderAdminUserManagementCreate()
+    {
+        $timKerjas = TimKerja::all();
+        $status = session('status');
+        return Inertia::render('Admin/UserManagement/CreateUser', [
+            'user' => auth()->user(),
+            'timKerjas' => $timKerjas,
+            'status' => $status,
+        ]);
+    }
+
+    public function renderUserManagementUpdate($id)
+    {
+        $prevUser = User::where('id', $id)->with('timKerjas')->first();
+        $timKerjas = TimKerja::all();
+        $status = session('status');
+        return Inertia::render('Admin/UserManagement/UpdateUser', [
+            'user' => auth()->user(),
+            'timKerjas' => $timKerjas,
+            'status' => $status,
+            'prevUser' => $prevUser
+        ]);
+    }
+
+
+    public function renderAdminUserManagementTimKerja()
+    {
+        $timKerjas = TimKerja::all();
+        $status = session('status');
+        return Inertia::render('Admin/UserManagement/DaftarTimKerja', [
+            'user' => auth()->user(),
+            'timKerjas' => $timKerjas,
+            'status' => $status
+        ]);
+    }
+
+    public function renderAdminUserManagementTimKerjaCreate()
+    {
+        $users = User::select('id', 'nama', 'nip')->get();
+        $status = session('status');
+        return Inertia::render('Admin/UserManagement/CreateTimKerja', [
+            'user' => auth()->user(),
+            'users' => $users,
+            'status' => $status
+        ]);
+    }
+
+    public function renderAdminUserManagementTimKerjaUpdate($id)
+    {
+        $prevTimKerja = TimKerja::findOrFail($id);
+        $users = User::select('id', 'nama', 'nip')->get();
+        $status = session('status');
+        return Inertia::render('Admin/UserManagement/UpdateTimKerja', [
+            'user' => auth()->user(),
+            'users' => $users,
+            'status' => $status,
+            'prevTimKerja' => $prevTimKerja
         ]);
     }
 }

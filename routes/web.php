@@ -122,6 +122,14 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
             Route::get('/', [AdminController::class, 'renderAdminUserManagementTimKerja'])->name('admin.user-management.tim-kerja');
 
             Route::get('/create', [AdminController::class, 'renderAdminUserManagementTimKerjaCreate'])->name('admin.user-management.tim-kerja.create');
+
+            Route::post('/create/action', [AdminActionController::class, 'createTimKerjaAction'])->name('admin.user-management.tim-kerja.create.action');
+
+            Route::get('/{id}/update', [AdminController::class, 'renderAdminUserManagementTimKerjaUpdate'])->name('admin.user-management.tim-kerja.update');
+
+            Route::post('/{id}/update/action', [AdminActionController::class, 'updateTimKerjaAction'])->name('admin.user-management.tim-kerja.update.action');
+
+            Route::delete('/{id}/delete', [AdminActionController::class, 'deleteTimKerja'])->name('admin.user-management.tim-kerja.delete');
         });
     });
 });

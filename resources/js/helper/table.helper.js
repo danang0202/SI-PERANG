@@ -69,3 +69,20 @@ export function filterUsers(users, keyword, selectedTimKerja) {
     return [];
 }
 
+export function filterTimKerja(timKerjas, keyword) {
+    if (timKerjas) {
+        let filteredData = timKerjas;
+        if (keyword) {
+            filteredData = timKerjas.filter((item) =>
+                (item.nama.toLowerCase().includes(keyword.toLowerCase())) ||
+                (item.nama_ketua.toLowerCase().includes(keyword.toLowerCase())) ||
+                (item.nip_ketua.includes(keyword.toLowerCase()))
+
+            );
+        }
+        return filteredData;
+    }
+
+    return [];
+}
+

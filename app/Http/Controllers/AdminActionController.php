@@ -6,6 +6,7 @@ use App\Models\Barang;
 use App\Models\JenisBarang;
 use App\Models\Pengajuan;
 use App\Models\SatuanBarang;
+use App\Models\TimKerja;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -399,7 +400,7 @@ class AdminActionController extends Controller
 
             return redirect()->route('admin.user-management')->with('status', [
                 'type' => 'success',
-                'message' => 'Status user ' . $user->nama . ' berhasil diubah menjadi '.$user->status.'.'
+                'message' => 'Status user ' . $user->nama . ' berhasil diubah menjadi ' . $user->status . '.'
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors([
@@ -409,5 +410,87 @@ class AdminActionController extends Controller
                 ]
             ]);
         }
+    }
+
+    public function createTimKerjaAction(Request $request)
+    {
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:256|unique:tim_kerja',
+            'namaKetua' => 'required|string|max:256',
+            'nipKetua' => 'required|string|max:256',
+        ]);
+
+        try {
+            $timKerja = TimKerja::create([
+                'nama' => $validatedData['nama'],
+                'nama_ketua' => $validatedData['namaKetua'],
+                'nip_ketua' => $validatedData['nipKetua'],
+            ]);
+
+            $status = [
+                'type' => 'success',
+                'message' => 'Tim Kerja ' . $timKerja->nama . ' berhasil ditambahkan!'
+            ];
+            return redirect()->route('admin.user-management.tim-kerja')->with('status', $status);
+        } catch (\Exception $e) {
+            $status = [
+                'type' => 'fail',
+                'message' => 'Error' . $e->getMessage()
+            ];
+            return redirect()->back()->with(['status' => $status]);
+        }
+    }
+
+    public function updateTimKerjaAction(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:256',
+            'namaKetua' => 'required|string|max:256',
+            'nipKetua' => 'required|string|max:256',
+        ]);
+
+        try {
+            $timKerja = TimKerja::findOrFail($id);
+            $timKerja->update([
+                'nama' => $validatedData['nama'],
+                'nama_ketua' => $validatedData['namaKetua'],
+                'nip_ketua' => $validatedData['nipKetua'],
+            ]);
+            $status = [
+                'type' => 'success',
+                'message' => 'Tim Kerja ' . $timKerja->nama . ' berhasil diupdate!'
+            ];
+            return redirect()->route('admin.user-management.tim-kerja')->with('status', $status);
+        } catch (\Exception $e) {
+            $status = [
+                'type' => 'fail',
+                'message' => 'Error' . $e->getMessage()
+            ];
+            return redirect()->back()->with(['status' => $status]);
+        }
+    }
+
+
+    public function deleteTimKerja($id)
+    {
+        $timKerja = TimKerja::findOrFail($id);
+        $isUsed = $timKerja->users()->exists();
+        
+        if ($isUsed) {
+            $status = [
+                'type' => 'fail',
+                'message' => 'Tim kerja"' . $timKerja->nama . '" tidak dapat dihapus karena sedang digunakan!'
+            ];
+
+            return redirect()->back()->with('status', $status);
+        }
+
+        $timKerja->delete();
+        $status = [
+            'type' => 'success',
+            'message' => 'Tim kerja "' . $timKerja->nama . '" berhasil dihapus!'
+        ];
+
+        return redirect()->back()->with('status', $status);
     }
 }

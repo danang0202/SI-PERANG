@@ -40,3 +40,9 @@ export const updateUserSchema = z.object({
     message: 'Password dan konfirmasi password tidak cocok',
     path: ['confirmPassword'],
 });
+
+export const timKerjaSchema = z.object({
+    nama: z.string().min(1, { message: 'Nama harus diisi' }),
+    namaKetua: z.string().min(1, { message: 'Nama Ketua harus diisi' }),
+    nipKetua: z.string().min(1, { message: 'NIP Ketua harus diisi' }),
+});

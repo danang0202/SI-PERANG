@@ -3,7 +3,7 @@ import { Modal, Button, Text, Group } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { router } from '@inertiajs/react';
 
-const ConfirmationModal = ({ opened, close, selectedRecord, label = "menghapus", urlDelete, urlRevisit, only }) => {
+const ConfirmationModal = ({ opened, close, selectedRecord, label = "menghapus", urlDelete, only }) => {
     const { hovered, ref } = useHover();
     const [loading, setLoading] = useState();
     const handleDelete = (recordId) => {
@@ -12,7 +12,7 @@ const ConfirmationModal = ({ opened, close, selectedRecord, label = "menghapus",
             onSuccess: () => {
                 setLoading(false);
                 close();
-                router.visit(route(urlRevisit), {
+                router.visit(window.location.pathname, {
                     only: [{ only }],
                     preserveScroll: true,
                 })

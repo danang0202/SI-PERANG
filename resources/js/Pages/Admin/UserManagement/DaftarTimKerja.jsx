@@ -1,16 +1,19 @@
 import ButtonWithRoute from '@/Components/Commons/ButtonWithRoute'
+import ConfirmationModal from '@/Components/Commons/ConfirmationModal'
 import SearchInput from '@/Components/Commons/SearchInput'
 import { EXTENDED_COLOR } from '@/constan/mantine.constan'
 import { showFailNotification, showSuccesNotification } from '@/helper/notification.helper'
+import { filterTimKerja } from '@/helper/table.helper'
 import AdminUserManagementLayout from '@/Layout/AdminUserManagementLayout'
 import UserLayout from '@/Layout/Layout'
 import { useMenuContext } from '@/Provider/Menu'
 import { Link } from '@inertiajs/react'
 import { ActionIcon, Badge, Group, Menu, MultiSelect, Stack, Text } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 import { IconDots, IconEdit, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
 import { sortBy } from 'lodash'
 import { DataTable, useDataTableColumns } from 'mantine-datatable'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 
 const PAGE_SIZES = [10, 15, 20];
@@ -27,7 +30,8 @@ const DaftarTimKerja = ({ user, status, timKerjas }) => {
     const [totalRecords, setTotalRecords] = useState(timKerjas.length);
     const { setLoading } = useMenuContext();
     const [keyword, setKeyword] = useState();
-    // const [selectedTimKerja, setSelectedTimKerja] = useState([]);
+    const [opened, { open, close }] = useDisclosure(false);
+    const [selectedTimKerja, setSelectedTimKerja] = useState([]);
 
     useEffect(() => {
         setLoading(false)
@@ -44,8 +48,11 @@ const DaftarTimKerja = ({ user, status, timKerjas }) => {
     });
 
     useEffect(() => {
-        // const filteredData = filtertimKerjas(timKerjas, keyword, selectedTimKerja);
-        const filteredData = timKerjas;
+        setPage(1)
+    }, [pageSize])
+
+    useEffect(() => {
+        const filteredData = filterTimKerja(timKerjas, keyword);
         const sortedData = sortBy(filteredData, sortStatus.columnAccessor);
         const from = (page - 1) * pageSize;
         const to = from + pageSize;
@@ -61,36 +68,8 @@ const DaftarTimKerja = ({ user, status, timKerjas }) => {
         columns: [
             { accessor: 'no', width: 70, textAlign: "center", render: (row, index) => <div style={{ textAlign: 'center' }}>{index + 1}</div>, },
             { accessor: 'nama', ...props },
-            // {
-            //     accessor: 'tim_kerjas', title: 'Tim Kerja',
-            //     render: (row) => (
-            //         <Group wrap='wrap'>
-            //             {row.tim_kerjas && row.tim_kerjas.length > 0 ? (
-            //                 row.tim_kerjas.map((item, index) => (
-            //                     <Badge radius={"xs"} variant='light' color='secondaryPurple' key={index} style={{ marginRight: '5px', marginBottom: '5px' }}>
-            //                         {item.nama}
-            //                     </Badge>
-            //                 ))
-            //             ) : (
-            //                 <Text className='text-gray-400'>Tidak ada tim</Text>
-            //             )}
-            //         </Group>
-            //     ),
-            //     filter: (
-            //         <MultiSelect
-            //             label="Tim Kerja"
-            //             description="Tampilkan seluruh pengguna dengan tim kerja terpilih"
-            //             data={timKerja}
-            //             value={selectedTimKerja}
-            //             onChange={setSelectedTimKerja}
-            //             leftSection={<IconSearch size={16} />}
-            //             clearable
-            //             searchable
-            //         />
-            //     ),
-            //     filtering: selectedTimKerja.length > 0,
-
-            // },
+            { accessor: 'nama_ketua', ...props, title: "Nama Ketua Tim" },
+            { accessor: 'nip_ketua', ...props, title: "NIP Ketua Tim" },
             {
                 accessor: 'action', textAlign: 'center', width: 70,
                 render: (record) => (
@@ -100,9 +79,8 @@ const DaftarTimKerja = ({ user, status, timKerjas }) => {
                                 <IconDots color={EXTENDED_COLOR.secondaryPurple} />
                             </ActionIcon>
                         </Menu.Target>
-
                         <Menu.Dropdown>
-                            <Link href={`/admin/inventaris-barang/${record.id}/update`}>
+                            <Link href={route('admin.user-management.tim-kerja.update', { id: record.id ? record.id : '' })}>
                                 <Menu.Item
                                     leftSection={
                                         <IconEdit size={16} color={EXTENDED_COLOR.accent3} />
@@ -117,7 +95,7 @@ const DaftarTimKerja = ({ user, status, timKerjas }) => {
                                 }
                                 onClick={() => {
                                     open();
-                                    setSelectedRecord(record)
+                                    setSelectedTimKerja(record)
                                 }}
                             >
                                 <Text c="accent6" size="sm">
@@ -134,7 +112,7 @@ const DaftarTimKerja = ({ user, status, timKerjas }) => {
     return (
         <Stack gap={'md'}>
             <Group align='center' justify='space-between'>
-                <ButtonWithRoute route={route('admin.inventaris-barang.create')} label={'Tambah'} leftSection={<IconPlus size={14} />} />
+                <ButtonWithRoute route={route('admin.user-management.tim-kerja.create')} label={'Tambah'} leftSection={<IconPlus size={14} />} />
                 <SearchInput keyword={keyword} setKeyword={setKeyword} />
             </Group>
             <DataTable
@@ -157,9 +135,7 @@ const DaftarTimKerja = ({ user, status, timKerjas }) => {
                 recordsPerPageOptions={PAGE_SIZES}
                 onRecordsPerPageChange={setPageSize}
             />
-
-
-
+            <ConfirmationModal opened={opened} close={close} selectedRecord={selectedTimKerja} urlDelete={'admin.user-management.tim-kerja.delete'} only={'timKerjas'} />
         </Stack>
     )
 }
