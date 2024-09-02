@@ -6,12 +6,12 @@ import { router } from '@inertiajs/react';
 import { ActionIcon, Button, Grid, Group, Menu, NumberInput, Select, Stack, Text, Textarea, TextInput } from '@mantine/core'
 import { DateInput } from '@mantine/dates';
 import { useForm, zodResolver } from '@mantine/form';
-import { IconCalendar, IconDots, IconEdit, IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconCalendar, IconDots, IconEdit, IconTrash } from '@tabler/icons-react';
 import { sortBy } from 'lodash';
 import { DataTable } from 'mantine-datatable';
 import React, { useEffect, useState } from 'react'
 
-const TambahPengajuan = ({ user, barangs, satuanBarangs, status }) => {
+const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) => {
     const [loading, setLoading] = useState();
     const [satuanBarang, setSatuanBarang] = useState('');
     const [itemPengajuan, setItemPengajuan] = useState([]);
@@ -30,6 +30,11 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, status }) => {
         stock: item.jumlah
     }));
 
+    const timKerjaOptions = userProfile.tim_kerjas.map(item => ({
+        value: item.id.toString(),
+        label: item.nama,
+    }));
+
 
     const formPengajuan = useForm({
         mode: 'uncontrolled',
@@ -37,7 +42,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, status }) => {
             valueFormat: 'DD MM YYYY',
             tanggalPengajuan: new Date(),
             namaPengaju: user.nama,
-            timKerja: user.tim_kerja,
+            timKerjaId: '',
             itemPengajuan: []
         },
         validate: zodResolver(pengajuanSchema),
@@ -118,20 +123,20 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, status }) => {
             <form onSubmit={formPengajuan.onSubmit((values) => handleSubmitPengajuan(values))}>
                 <Stack>
                     <Group justify='space-between' align='center'>
-                        <Text size='sm'>Menambahkan Pengajuan Barang</Text>
+                        <Text size='sm'>Menambahkan Permintaan Barang</Text>
                         <Button loading={loading} radius={'xs'} className='hover:opacity-60 transition duration-200' type='submit' disabled={itemPengajuan.length == 0}>
                             Simpan
                         </Button>
                     </Group>
                     {/* Form awal */}
                     <Stack gap={'xs'}>
-                        <Text size='base' fw={'bold'}>Informasi Pengajuan</Text>
+                        <Text size='base' fw={'bold'}>Informasi Permintaan</Text>
                         <Grid gutter={'lg'}>
                             <Grid.Col span={4}>
                                 <DateInput
                                     withAsterisk
                                     leftSection={<IconCalendar size={16} />}
-                                    label="Tanggal Pengajuan"
+                                    label="Tanggal Permintaan"
                                     placeholder="Pilih tanggal..."
                                     radius={"xs"}
                                     size='sm'
@@ -151,16 +156,16 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, status }) => {
                                 />
                             </Grid.Col>
                             <Grid.Col span={4}>
-                                <TextInput
-                                    readOnly
-                                    label="Tim Kerja"
-                                    placeholder="Nama tim kerja..."
-                                    radius={"xs"}
-                                    size='sm'
+                                <Select
                                     withAsterisk
-                                    value={user.tim_kerja}
-                                    variant='filled'
-                                /></Grid.Col>
+                                    label="Tim Kerja"
+                                    placeholder="Pilih tim  kerja..."
+                                    data={timKerjaOptions}
+                                    radius={'xs'}
+                                    key={formPengajuan.key('timKerjaId')}
+                                    {...formPengajuan.getInputProps('timKerjaId')}
+                                />
+                            </Grid.Col>
                         </Grid>
                     </Stack>
                 </Stack>
@@ -168,7 +173,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, status }) => {
 
             <form onSubmit={formItemPengajuan.onSubmit((values) => handleSubmitFormItemPengajuan(values))}>
                 <Stack gap={'xs'}>
-                    <Text size='sm' fw={'bold'}>Item Pengajuan</Text>
+                    <Text size='sm' fw={'bold'}>Item Permintaan</Text>
                     <Grid>
                         <Grid.Col span={6}>
                             <Stack gap={"md"}>
@@ -238,7 +243,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, status }) => {
                 </Stack>
             </form>
             <Stack gap={'xs'}>
-                <Text size='base' fw={'bold'}>Tabel Item Pengajuan</Text>
+                <Text size='base' fw={'bold'}>Tabel Item Permintaan</Text>
                 <DataTable
                     mih={150}
                     fz="sm"

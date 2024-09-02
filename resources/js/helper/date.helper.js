@@ -11,3 +11,17 @@ export function formatTanggal(tanggal) {
 
     return `${tanggalHari} ${bulan[bulanIndex]} ${tahun}`;
 }
+
+export function formatDateTime(dateTimeStr) {
+    const date = new Date(dateTimeStr);
+    const options = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    };
+    const formattedDate = date.toLocaleDateString('id-ID', options);
+    return formattedDate;
+}

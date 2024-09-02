@@ -1,37 +1,31 @@
 import ButtonOutlineWithRoute from '@/Components/Commons/ButtonOutlineWithRoute'
 import AdminInventarisBarangLayout from '@/Layout/AdminInventarisBarangLayout'
 import UserLayout from '@/Layout/Layout'
-import { Button, Group, Stack, Text, TextInput } from '@mantine/core'
-import { useForm } from '@mantine/form'
-import React from 'react'
+import { Button, Grid, Group, Stack, Text, TextInput } from '@mantine/core'
+import { useForm, zodResolver } from '@mantine/form'
+import React, { useState } from 'react'
 import { Inertia } from '@inertiajs/inertia'
+import { jenisBarangSchema } from '@/Schema/inventaris-barang.schema'
 
-const UpdateJenisBarang = ({ prevJenisBarang }) => {
+const UpdateJenisBarang = ({ prevJenisBarang, jenisBarangsKode }) => {
+    const [loading, setLoading] = useState();
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: {
+            kode: prevJenisBarang.kode,
             nama: prevJenisBarang.nama,
         },
 
-        validate: {
-            nama: (value) => {
-                // Memeriksa apakah nilai kosong atau hanya berisi spasi
-                if (!value.trim()) {
-                    return 'Nama tidak boleh kosong atau hanya berisi spasi';
-                }
-
-                // Memeriksa apakah nilai hanya berisi huruf (termasuk huruf dengan diakritik dan spasi)
-                if (!/^[A-Za-z\s]+$/.test(value)) {
-                    return 'Nama hanya boleh berisi huruf dan spasi';
-                }
-
-                // Jika tidak ada masalah, kembalikan `null` (validasi lulus)
-                return null;
-            },
-        },
+        validate: zodResolver(jenisBarangSchema)
     });
 
     const handleSubmit = (values) => {
+        if (jenisBarangsKode.includes(values.kode)) {
+            form.setErrors({ kode: 'Kode sudah digunakan, silakan pilih kode lain.' });
+            setLoading(false);
+            return;
+        }
+        setLoading(true);
         Inertia.post(route('admin.inventaris-barang.jenis.update.action', { id: prevJenisBarang.id }), values, {
             onSuccess: () => {
                 console.log('Data berhasil disimpan');
@@ -50,19 +44,30 @@ const UpdateJenisBarang = ({ prevJenisBarang }) => {
                         <Text size='sm'>Menambahkan Jenis Barang</Text>
                         <Group justify='flex-end'>
                             <ButtonOutlineWithRoute label={'Kembali'} route={route('admin.inventaris-barang.jenis')} />
-                            <Button radius={'xs'} type='submit'>
+                            <Button radius={'xs'} type='submit' loading={loading}>
                                 Simpan
                             </Button>
                         </Group>
                     </Group>
                     {/* Form */}
-                    <TextInput
-                        withAsterisk
-                        label="Nama"
-                        placeholder="Masukkan jenis barang..."
-                        key={form.key('nama')}
-                        {...form.getInputProps('nama')}
-                    />
+                    <Grid>
+                        <Grid.Col span={{ base: 12, lg: 6 }}>
+                            <TextInput
+                                withAsterisk
+                                label="Kode"
+                                placeholder="Masukkan kode barang..."
+                                key={form.key('kode')}
+                                {...form.getInputProps('kode')}
+                            />
+                            <TextInput
+                                withAsterisk
+                                label="Nama"
+                                placeholder="Masukkan jenis barang..."
+                                key={form.key('nama')}
+                                {...form.getInputProps('nama')}
+                            />
+                        </Grid.Col>
+                    </Grid>
                 </Stack>
             </form>
         </>

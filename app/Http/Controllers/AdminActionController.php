@@ -6,84 +6,48 @@ use App\Models\Barang;
 use App\Models\JenisBarang;
 use App\Models\Pengajuan;
 use App\Models\SatuanBarang;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Stmt\TryCatch;
 
 class AdminActionController extends Controller
 {
 
-    public function createBarangAction(Request $request)
+    public function saveBarangAction(Request $request, $id = null)
     {
-        $request->validate([
-            'kode' => 'required|digits:6',
-            'nama' => 'required|string|max:255',
-            'jenisBarangId' => 'required|exists:jenis_barang,id',
-            'satuanId' => 'required|exists:satuan_barang,id',
-            'jumlah' => 'required|integer|min:1',
-        ]);
+        $this->validateBarangRequest($request);
 
         try {
-            $barang = new Barang();
+            $barang = $id ? Barang::findOrFail($id) : new Barang();
             $barang->kode = $request->input('kode');
             $barang->nama = strtoupper($request->input('nama'));
             $barang->jenis_barang_id = intval($request->input('jenisBarangId'));
             $barang->satuan_id = intval($request->input('satuanId'));
             $barang->jumlah = $request->input('jumlah');
             $barang->save();
+            $action = $id ? 'diperbarui' : 'ditambahkan';
             $status = [
                 'type' => 'success',
-                'message' => 'Barang ' . $barang->nama . ' berhasil ditambahkan!'
+                'message' => "Barang {$barang->nama} berhasil {$action}!"
             ];
 
             return redirect()->route('admin.inventaris-barang')
                 ->with('status', $status);
         } catch (\Exception $e) {
+            $action = $id ? 'memperbarui' : 'menambahkan';
             $status = [
                 'type' => 'fail',
-                'message' => 'Gagal menambahkan barang. Terjadi kesalahan.'
+                'message' => "Gagal {$action} barang. Terjadi kesalahan."
             ];
 
-            return redirect()->route('admin.inventaris-barang.create')
-                ->with('status', $status);
+            return redirect()->route(
+                $id ? 'admin.inventaris-barang.update' : 'admin.inventaris-barang.create',
+                $id ? ['id' => $id] : []
+            )->with('status', $status);
         }
     }
-
-    public function updateBarangAction(Request $request, $id)
-    {
-        $request->validate([
-            'kode' => 'required|digits:6',
-            'nama' => 'required|string|max:255',
-            'jenisBarangId' => 'required|exists:jenis_barang,id',
-            'satuanId' => 'required|exists:satuan_barang,id',
-            'jumlah' => 'required|integer|min:1',
-        ]);
-        try {
-            $barang = Barang::findOrFail($id);
-            $barang->kode = $request->input('kode');
-            $barang->nama = strtoupper($request->input('nama'));
-            $barang->jenis_barang_id = intval($request->input('jenisBarangId'));
-            $barang->satuan_id = intval($request->input('satuanId'));
-            $barang->jumlah = $request->input('jumlah');
-            $barang->save();
-
-            $status = [
-                'type' => 'success',
-                'message' => 'Barang ' . $barang->nama . ' berhasil diperbarui!'
-            ];
-
-            return redirect()->route('admin.inventaris-barang')
-                ->with('status', $status);
-        } catch (\Exception $e) {
-            $status = [
-                'type' => 'fail',
-                'message' => 'Gagal memperbarui barang. Terjadi kesalahan.'
-            ];
-
-            return redirect()->route('admin.inventaris-barang.update', ['id' => $id])
-                ->with('status', $status);
-        }
-    }
-
 
     public function deleteBarangAction($id)
     {
@@ -135,35 +99,31 @@ class AdminActionController extends Controller
         }
     }
     // Jenis Barang
-    public function updateJenisBarangAction(Request $request, $id)
+
+    public function saveJenisBarangAction(Request $request, $id = null)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-        ]);
+        $this->validateJenisBarang($request);
 
-        $jenisBarang = JenisBarang::findOrFail($id);
+        $data = $request->only(['kode', 'nama']);
 
-        $jenisBarang->nama = $request->input('nama');
-        $jenisBarang->save();
+        $jenisBarang = $id ? JenisBarang::findOrFail($id) : new JenisBarang();
+        $jenisBarang->fill($data)->save();
 
+        $action = $id ? 'diperbarui' : 'ditambahkan';
         $status = [
             'type' => 'success',
-            'message' => 'Jenis barang dengan nama "' . $jenisBarang->nama . '" berhasil diperbarui!'
+            'message' => 'Jenis barang "' . $jenisBarang->nama . '" berhasil ' . $action . '!'
         ];
 
         return redirect()->route('admin.inventaris-barang.jenis')
             ->with('status', $status);
     }
 
+
     public function deleteJenisBarangAction($id)
     {
-        // Cari jenis barang berdasarkan ID
         $jenisBarang = JenisBarang::findOrFail($id);
-
-        // Cek apakah jenis barang digunakan oleh barang lain
         $isUsed = $jenisBarang->barang()->exists();
-
-        // Jika digunakan oleh barang lain, kirimkan status gagal
         if ($isUsed) {
             $status = [
                 'type' => 'fail',
@@ -173,15 +133,11 @@ class AdminActionController extends Controller
             return redirect()->route('admin.inventaris-barang.jenis')
                 ->with('status', $status);
         }
-
-        // Jika tidak digunakan, hapus jenis barang
         $jenisBarang->delete();
-
         $status = [
             'type' => 'success',
             'message' => 'Jenis barang "' . $jenisBarang->nama . '" berhasil dihapus!'
         ];
-
         return redirect()->route('admin.inventaris-barang.jenis')
             ->with('status', $status);
     }
@@ -189,13 +145,11 @@ class AdminActionController extends Controller
     //  Satuan Barang
     public function createSatuanBarangAction(Request $request)
     {
-        // Validasi input dengan tambahan validasi unique
         $request->validate([
             'nama' => 'required|string|max:255',
         ]);
 
         try {
-            // Membuat dan menyimpan SatuanBarang baru
             $satuanBarang = new SatuanBarang();
             $satuanBarang->nama = strtoupper($request->input('nama'));
             $satuanBarang->save();
@@ -220,12 +174,10 @@ class AdminActionController extends Controller
 
     public function updateSatuanBarangAction(Request $request, $id)
     {
-        // Validasi input dengan tambahan validasi unique
         $request->validate([
             'nama' => 'required|string|max:255',
         ]);
         try {
-            // Membuat dan menyimpan SatuanBarang baru
             $satuanBarang = SatuanBarang::findOrFail($id);
             $satuanBarang->nama = strtoupper($request->input('nama'));
             $satuanBarang->save();
@@ -249,12 +201,9 @@ class AdminActionController extends Controller
 
     public function deleteSatuanBarangAction($id)
     {
-        // Cari jenis barang berdasarkan ID
         $satuanBarang = SatuanBarang::findOrFail($id);
 
-        // Cek apakah jenis barang digunakan oleh barang lain
         $isUsed = $satuanBarang->barang()->exists();
-        // Jika digunakan oleh barang lain, kirimkan status gagal
         if ($isUsed) {
             $status = [
                 'type' => 'fail',
@@ -265,7 +214,6 @@ class AdminActionController extends Controller
                 ->with('status', $status);
         }
 
-        // Jika tidak digunakan, hapus jenis barang
         $satuanBarang->delete();
 
         $status = [
@@ -295,18 +243,18 @@ class AdminActionController extends Controller
             }
 
             $noPengajuan = "B-" . $nextNumber . "/34021/PL615/" . $tahun;
-            $pengajuan->status = 'PENGAJUAN DITERIMA';
+            $pengajuan->status = 'PERMINTAAN DITERIMA';
             $pengajuan->no_pengajuan = $noPengajuan;
             $pengajuan->save();
 
             $status = [
                 'type' => 'success',
-                'message' => 'Pengajuan telah diterima dengan nomor pengajuan: ' . $noPengajuan
+                'message' => 'Permintaan telah diterima dengan nomor Permintaan: ' . $noPengajuan
             ];
         } catch (\Exception $e) {
             $status = [
                 'type' => 'fail',
-                'message' => 'Terjadi kesalahan saat menerima pengajuan: ' . $e->getMessage()
+                'message' => 'Terjadi kesalahan saat menerima Permintaan: ' . $e->getMessage()
             ];
         }
 
@@ -317,18 +265,149 @@ class AdminActionController extends Controller
     {
         try {
             $pengajuan = Pengajuan::findOrFail($id);
-            $pengajuan->status = 'PENGAJUAN DITOLAK';
+            $pengajuan->status = 'PERMINTAAN DITOLAK';
             $pengajuan->save();
             $status = [
                 'type' => 'success',
-                'message' => 'Pengajuan telah ditolak.'
+                'message' => 'Permintaan telah ditolak.'
             ];
         } catch (\Exception $e) {
             $status = [
                 'type' => 'fail',
-                'message' => 'Terjadi kesalahan saat menolak pengajuan: ' . $e->getMessage()
+                'message' => 'Terjadi kesalahan saat menolak Permintaan: ' . $e->getMessage()
             ];
         }
         return redirect()->back()->with('status', $status);
+    }
+
+    private function validateJenisBarang(Request $request)
+    {
+        return $request->validate([
+            'kode' => 'required|digits:3',
+            'nama' => 'required|string|max:255',
+        ]);
+    }
+
+    private function validateBarangRequest(Request $request)
+    {
+        return $request->validate([
+            'kode' => 'required|digits:9',
+            'nama' => 'required|string|max:255',
+            'jenisBarangId' => 'required|exists:jenis_barang,id',
+            'satuanId' => 'required|exists:satuan_barang,id',
+            'jumlah' => 'required|integer|min:1',
+        ]);
+    }
+
+    // User
+
+
+    public function createUserAction(Request $request)
+    {
+        // Validasi data yang masuk
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'nip' => 'required|string|size:18|unique:users',
+            'role' => 'required|in:ADMIN,USER',
+            'password' => 'required|string|min:8',
+            'timKerjaId' => 'required|array',
+            'timKerjaId.*' => 'exists:tim_kerja,id',
+        ], [
+            'email.unique' => 'Email sudah terdaftar.',
+            'nip.unique' => 'NIP sudah terdaftar.',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $user = User::create([
+                'nama' => $validatedData['nama'],
+                'email' => $validatedData['email'],
+                'nip' => $validatedData['nip'],
+                'role' => $validatedData['role'],
+                'password' => Hash::make($validatedData['password']),
+            ]);
+            if (isset($validatedData['timKerjaId'])) {
+                $user->timKerjas()->attach($validatedData['timKerjaId']);
+            }
+            DB::commit();
+            $status = [
+                'type' => 'success',
+                'message' => 'User ' . $user->nama . ' berhasil ditambahkan!'
+            ];
+            return redirect()->route('admin.user-management')->with('status', $status);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $status = [
+                'type' => 'fail',
+                'message' => 'Error' . $e->getMessage()
+            ];
+            return redirect()->back()->with(['status' => $status]);
+        }
+    }
+
+    public function updateUserAction(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'nip' => 'required|string|size:18',
+            'role' => 'required|in:ADMIN,USER',
+            'timKerjaId' => 'required|array',
+            'password' => 'nullable|string|min:8',
+            'timKerjaId.*' => 'exists:tim_kerja,id',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $user = User::findOrFail($id);
+            // Update data user
+            $user->update([
+                'nama' => $validatedData['nama'],
+                'email' => $validatedData['email'],
+                'nip' => $validatedData['nip'],
+                'role' => $validatedData['role'],
+                'password' => $validatedData['password'] ? Hash::make($validatedData['password']) : $user->password
+            ]);
+            // Update tim kerja
+            $user->timKerjas()->sync($validatedData['timKerjaId']);
+
+            DB::commit();
+            $status = [
+                'type' => 'success',
+                'message' => 'User ' . $user->nama . ' berhasil diperbarui!'
+            ];
+            return redirect()->route('admin.user-management')->with('status', $status);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $status = [
+                'type' => 'fail',
+                'message' => 'Error' . $e->getMessage()
+            ];
+            return redirect()->back()->with(['status' => $status]);
+        }
+    }
+
+    public function changeUserStatusAction($id, Request $request)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->status = $request->get('status');
+            $user->save();
+
+            return redirect()->route('admin.user-management')->with('status', [
+                'type' => 'success',
+                'message' => 'Status user ' . $user->nama . ' berhasil diubah menjadi '.$user->status.'.'
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors([
+                'status' => [
+                    'type' => 'fail',
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                ]
+            ]);
+        }
     }
 }

@@ -81,7 +81,7 @@ const NavbarButton = ({ menuItem, selectedKey }) => {
                     w="100%"
                     variant="light"
                 >
-                    <Link href={menuItem.route} onClick={() => setSelectedKey(menuItem.key)}>
+                    <Link href={route(menuItem.route)} onClick={() => setSelectedKey(menuItem.key)}>
                         {ButtonFill}
                     </Link>
                 </UnstyledButton>
@@ -122,7 +122,7 @@ const NavbarSubMenu = ({ menuItem, selectedKey }) => {
 
 
     const ButtonFill = (
-        <Group justify="space-between" align="start" ref={ref} p="sm" w="100%" className={`${isSelectedMenu ? 'border-primaryBlue border-l-2' : 'border-l border-gray-400'}`}>
+        <Group justify="space-between" align="start" ref={ref} p="sm" w="100%" className={`${isSelectedMenu ? 'border-bluePrimary border-l-2' : 'border-l border-gray-400'}`}>
             <Group gap="xs" align="center">
                 <Text
                     fw={isSelectedMenu ? 'bold' : 'normal'}
@@ -141,7 +141,7 @@ const NavbarSubMenu = ({ menuItem, selectedKey }) => {
                 w="85%"
                 ml={'xl'}
             >
-                <Link href={menuItem.route} onClick={() => setSelectedKey(menuItem.key)}>
+                <Link href={route(menuItem.route)} onClick={() => setSelectedKey(menuItem.key)}>
                     {ButtonFill}
                 </Link>
             </UnstyledButton>

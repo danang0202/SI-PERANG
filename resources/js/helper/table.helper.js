@@ -27,3 +27,45 @@ export const filterDataRiwayatPengajuanUser = (data, keyword, dateRange, statusA
         return [];
     }
 }
+
+export function filterBarangs(barangs, keyword, selectedJenisBarang = [], selectedSatuanBarang = []) {
+    let filteredData = barangs.filter((barang) =>
+        barang.nama.toLowerCase().includes(keyword.toLowerCase()) ||
+        barang.kode.toLowerCase().includes(keyword.toLowerCase())
+    );
+
+    if (selectedJenisBarang.length > 0) {
+        filteredData = filteredData.filter((barang) => selectedJenisBarang.includes(barang.jenis_barang.nama));
+    }
+
+    if (selectedSatuanBarang.length > 0) {
+        filteredData = filteredData.filter((barang) => selectedSatuanBarang.includes(barang.satuan_barang.nama));
+    }
+
+    return filteredData;
+}
+
+export function filterUsers(users, keyword, selectedTimKerja) {
+    if (users) {
+        let filteredData = users;
+        if (keyword) {
+            filteredData = users.filter((item) =>
+                (item.nama && item.nama.toLowerCase().includes(keyword.toLowerCase())) ||
+                (item.nip && item.nip.toLowerCase().includes(keyword.toLowerCase())) ||
+                (item.email && item.email.toLowerCase().includes(keyword.toLowerCase()))
+            );
+        }
+        if (selectedTimKerja.length > 0) {
+            filteredData = filteredData.filter((item) => {
+                console.log(item.tim_kerjas);
+
+                return item.tim_kerjas && item.tim_kerjas.some((tim) => selectedTimKerja.includes(tim.nama));
+            });
+        }
+
+        return filteredData;
+    }
+
+    return [];
+}
+

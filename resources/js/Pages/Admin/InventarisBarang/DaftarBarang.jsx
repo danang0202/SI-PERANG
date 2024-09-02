@@ -9,11 +9,12 @@ import { useMenuContext } from '@/Provider/Menu'
 import { Link } from '@inertiajs/react'
 import { ActionIcon, Badge, Group, Menu, MultiSelect, Stack, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { IconDots, IconEdit, IconPlus, IconSearch, IconTrash, IconX } from '@tabler/icons-react'
+import { IconDots, IconEdit, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
 import { size, sortBy } from 'lodash'
 import { DataTable, useDataTableColumns } from 'mantine-datatable'
 import React, { useEffect, useMemo, useState } from 'react'
 import TambahStockModal from './TambahStockModal'
+import { filterBarangs } from '@/helper/table.helper'
 
 
 const PAGE_SIZES = [10, 15, 20];
@@ -21,20 +22,18 @@ const key = 'table-barang-admin';
 const props = {
     sortable: true,
     draggable: true,
-    resizable: true
 };
 const DaftarBarang = ({ barangs, status }) => {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [records, setRecords] = useState([sortBy(barangs, 'name').slice(0, pageSize)]);
+    const [totalRecords, setTotalRecords] = useState(barangs.length);
     const [selectedRecord, setSelectedRecord] = useState();
     const [selectedJenisBarang, setSelectedJenisBarang] = useState([]);
     const [selectedSatuanBarang, setSelectedSatuanBarang] = useState([]);
     const [keyword, setKeyword] = useState('');
     const [opened, { open, close }] = useDisclosure(false);
     const [openedModalStock, { open: openModalStock, close: closeModalStock }] = useDisclosure(false);
-
-
 
     const { setLoading } = useMenuContext();
 
@@ -63,33 +62,29 @@ const DaftarBarang = ({ barangs, status }) => {
 
     useEffect(() => {
         setPage(1);
-    }, [pageSize]);
+    }, [pageSize, selectedJenisBarang, selectedSatuanBarang]);
 
     useEffect(() => {
-        const filteredData = barangs.filter((barang) =>
-            barang.nama.toLowerCase().includes(keyword.toLowerCase()) ||
-            barang.kode.toLowerCase().includes(keyword.toLowerCase())
-        );
-
+        const filteredData = filterBarangs(barangs, keyword, selectedJenisBarang, selectedSatuanBarang);
         const sortedData = sortBy(filteredData, sortStatus.columnAccessor);
-
         const from = (page - 1) * pageSize;
         const to = from + pageSize;
         const paginatedData = sortStatus.direction === 'desc'
             ? sortedData.reverse().slice(from, to)
             : sortedData.slice(from, to);
-
         setRecords(paginatedData);
-    }, [page, sortStatus, pageSize, keyword]);
+        setTotalRecords(filteredData.length)
+    }, [page, sortStatus, pageSize, keyword, selectedJenisBarang, selectedSatuanBarang]);
 
-
-    const { effectiveColumns, resetColumnsOrder, resetColumnsWidth } = useDataTableColumns({
+    const { effectiveColumns } = useDataTableColumns({
         key,
         columns: [
             {
                 accessor: 'kode',
                 render: ({ kode }) => <strong>{kode}</strong>,
                 ...props,
+                width: 100,
+                textAlign: 'center'
             },
             { accessor: 'nama', ...props },
             {
@@ -111,7 +106,7 @@ const DaftarBarang = ({ barangs, status }) => {
                 filtering: selectedJenisBarang.length > 0,
             },
             {
-                accessor: 'jumlah', textAlign: 'center', ...props, width: 50,
+                accessor: 'jumlah', textAlign: 'center', ...props, width: 120,
             },
             {
                 accessor: 'satuan_barang',
@@ -130,9 +125,10 @@ const DaftarBarang = ({ barangs, status }) => {
                     />
                 ),
                 filtering: selectedSatuanBarang.length > 0,
+                width: 200
             },
             {
-                accessor: 'action', textAlign: 'center',
+                accessor: 'action', textAlign: 'center', width: 70,
                 render: (record) => (
                     <Menu shadow="md" width={110} position="bottom-end" offset={-5}>
                         <Menu.Target>
@@ -189,11 +185,6 @@ const DaftarBarang = ({ barangs, status }) => {
                     <ButtonWithRoute route={route('admin.inventaris-barang.create')} label={'Tambah'} leftSection={<IconPlus size={14} />} />
                     <SearchInput keyword={keyword} setKeyword={setKeyword} />
                 </Group>
-                {keyword && (
-                    <Group>
-                        <Badge radius={"xs"} variant='light' color={'gray'} rightSection={<IconX size={14} className='cursor-pointer hover:text-red-600' onClick={() => setKeyword('')} />} >Menampilkan hasil pencarian: "{keyword}"</Badge>
-                    </Group>
-                )}
                 <DataTable
                     pinLastColumn
                     height={450}
@@ -204,7 +195,7 @@ const DaftarBarang = ({ barangs, status }) => {
                     records={records}
                     storeColumnsKey={key}
                     columns={effectiveColumns}
-                    totalRecords={barangs.length}
+                    totalRecords={totalRecords}
                     recordsPerPage={pageSize}
                     page={page}
                     onPageChange={(p) => setPage(p)}

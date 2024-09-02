@@ -1,38 +1,30 @@
 import ButtonOutlineWithRoute from '@/Components/Commons/ButtonOutlineWithRoute'
 import AdminInventarisBarangLayout from '@/Layout/AdminInventarisBarangLayout'
 import UserLayout from '@/Layout/Layout'
-import { Button, Group, Stack, Text, TextInput } from '@mantine/core'
-import { useForm } from '@mantine/form'
+import { Button, Grid, Group, Stack, Text, TextInput } from '@mantine/core'
+import { useForm, zodResolver } from '@mantine/form'
 import React, { useState } from 'react'
 import { router } from '@inertiajs/react'
+import { jenisBarangSchema } from '@/Schema/inventaris-barang.schema'
 
-const CreateJenisBarang = () => {
+const CreateJenisBarang = ({ jenisBarangsKode }) => {
     const [loading, setLoading] = useState();
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: {
+            kode: '',
             nama: '',
         },
 
-        validate: {
-            nama: (value) => {
-                // Memeriksa apakah nilai kosong atau hanya berisi spasi
-                if (!value.trim()) {
-                    return 'Nama tidak boleh kosong atau hanya berisi spasi';
-                }
-
-                // Memeriksa apakah nilai hanya berisi huruf (termasuk huruf dengan diakritik dan spasi)
-                if (!/^[A-Za-z\s]+$/.test(value)) {
-                    return 'Nama hanya boleh berisi huruf dan spasi';
-                }
-
-                // Jika tidak ada masalah, kembalikan `null` (validasi lulus)
-                return null;
-            },
-        },
+        validate: zodResolver(jenisBarangSchema)
     });
 
     const handleSubmit = (values) => {
+        if (jenisBarangsKode.includes(values.kode)) {
+            form.setErrors({ kode: 'Kode sudah digunakan, silakan pilih kode lain.' });
+            setLoading(false);
+            return;
+        }
         setLoading(true)
         router.post(route('admin.inventaris-barang.jenis.create.action'), values, {
         });
@@ -52,13 +44,24 @@ const CreateJenisBarang = () => {
                         </Group>
                     </Group>
                     {/* Form */}
-                    <TextInput
-                        withAsterisk
-                        label="Nama"
-                        placeholder="Masukkan jenis barang..."
-                        key={form.key('nama')}
-                        {...form.getInputProps('nama')}
-                    />
+                    <Grid>
+                        <Grid.Col span={{ base: 12, lg: 6 }}>
+                            <TextInput
+                                withAsterisk
+                                label="Kode"
+                                placeholder="Masukkan kode barang..."
+                                key={form.key('kode')}
+                                {...form.getInputProps('kode')}
+                            />
+                            <TextInput
+                                withAsterisk
+                                label="Nama"
+                                placeholder="Masukkan jenis barang..."
+                                key={form.key('nama')}
+                                {...form.getInputProps('nama')}
+                            />
+                        </Grid.Col>
+                    </Grid>
                 </Stack>
             </form>
         </>

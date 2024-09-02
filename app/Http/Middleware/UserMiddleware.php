@@ -15,8 +15,11 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->role === 'USER') {
-            return $next($request);
+        if (auth()->check()) {
+            $user = auth()->user();
+            if ($user->status == 'AKTIF' && $user->role == 'USER') {
+                return $next($request);
+            }
         }
 
         return redirect('/');

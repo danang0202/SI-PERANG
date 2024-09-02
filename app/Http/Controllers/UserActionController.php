@@ -15,11 +15,11 @@ class UserActionController extends Controller
     {
 
         $user = auth()->user();
-        // Validasi data yang masuk
+        // Validasi data yang masuk 
         $validatedData = $request->validate([
             'tanggalPengajuan' => 'required|date',
             'namaPengaju' => 'required|string|max:255',
-            'timKerja' => 'required|string|max:255',
+            'timKerjaId' => 'required|string',
             'itemPengajuan' => 'required|array',
             'itemPengajuan.*.barangId' => 'required|exists:barang,id',
             'itemPengajuan.*.jumlah' => 'required|integer|min:1',
@@ -32,6 +32,7 @@ class UserActionController extends Controller
             // Simpan data pengajuan
             $pengajuan = Pengajuan::create([
                 'user_id' => $user->id,
+                'tim_kerja_id' => intval($validatedData['timKerjaId']),
             ]);
 
             // Simpan setiap item pengajuan
@@ -55,7 +56,7 @@ class UserActionController extends Controller
 
             $status = [
                 'type' => 'success',
-                'message' => 'Pengajuan berhasil ditambahkan!'
+                'message' => 'Permintaan berhasil ditambahkan!'
             ];
             return redirect()->route('user.pengajuan.tambah')
                 ->with('status', $status);
@@ -63,7 +64,7 @@ class UserActionController extends Controller
             DB::rollBack();
             $status = [
                 'type' => 'fail',
-                'message' => 'Pengajuan gagal ditambahkan!'
+                'message' => 'Permintaan gagal ditambahkan!'
             ];
             return redirect()->route('user.pengajuan.tambah')
                 ->with('status', $status);
@@ -76,7 +77,7 @@ class UserActionController extends Controller
 
         try {
             $pengajuan = Pengajuan::with('items.barang')->findOrFail($id);
-            $pengajuan->update(['status' => 'PENGAJUAN DIBATALKAN']);
+            $pengajuan->update(['status' => 'PERMINTAAN DIBATALKAN']);
 
             foreach ($pengajuan->items as $item) {
                 $barang = $item->barang;
@@ -90,7 +91,7 @@ class UserActionController extends Controller
             // Status sukses
             $status = [
                 'type' => 'success',
-                'message' => 'Pengajuan berhasil dibatalkan!'
+                'message' => 'Permintaan berhasil dibatalkan!'
             ];
             return redirect()->back()->with('status', $status);
         } catch (\Throwable $th) {
@@ -99,7 +100,7 @@ class UserActionController extends Controller
             // Status gagal
             $status = [
                 'type' => 'fail',
-                'message' => 'Pengajuan gagal dibatalkan!'
+                'message' => 'Permintaan gagal dibatalkan!'
             ];
             return redirect()->back()->with('status', $status);
         }

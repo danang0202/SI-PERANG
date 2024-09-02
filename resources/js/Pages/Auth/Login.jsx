@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Checkbox from '@/Components/Checkbox';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
+import { IconEye, IconEyeClosed } from '@tabler/icons-react';
 
 export default function Login({ status }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -22,10 +23,15 @@ export default function Login({ status }) {
 
     const submit = (e) => {
         e.preventDefault();
-
         post(route('login'));
     };
 
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword((prevState) => !prevState);
+    };
     return (
         <GuestLayout>
             <Head title="Log in" />
@@ -50,19 +56,27 @@ export default function Login({ status }) {
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 relative" >
                     <InputLabel htmlFor="password" value="Password" />
-
                     <TextInput
                         id="password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={data.password}
                         className="mt-1 block w-full"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
-
+                    <div
+                        className="absolute bottom-3.5 right-0 pr-3 flex items-center cursor-pointer"
+                        onClick={togglePasswordVisibility}
+                    >
+                        {showPassword ? (
+                            <IconEyeClosed size={18} className='text-gray-500' />
+                        ) : (
+                            <IconEye size={18} className='text-gray-500' />
+                        )}
+                    </div>
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
@@ -78,15 +92,6 @@ export default function Login({ status }) {
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
-                    {/* {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )} */}
-
                     <PrimaryButton className="ms-4" disabled={processing}>
                         Log in
                     </PrimaryButton>

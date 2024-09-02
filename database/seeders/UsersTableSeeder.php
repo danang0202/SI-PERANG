@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
             [
                 'nama' => 'Admin User',
                 'nip' => '1234567890',
-                'tim_kerja' => 'Team A',
+                // 'tim_kerja' => 'Team A',
                 'role' => 'ADMIN',
                 'email' => 'admin@example.com',
                 'password' => Hash::make('danang123'),
@@ -27,7 +27,7 @@ class UsersTableSeeder extends Seeder
             [
                 'nama' => 'Regular User',
                 'nip' => '0987654321',
-                'tim_kerja' => 'Team B',
+                // 'tim_kerja' => 'Team B',
                 'role' => 'USER',
                 'email' => 'user@example.com',
                 'password' => Hash::make('danang123'),

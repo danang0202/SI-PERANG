@@ -17,7 +17,6 @@ import React, { useEffect, useState } from 'react'
 const PAGE_SIZES = [10, 15, 20];
 const key = 'table-satuan-barang-admin';
 const props = {
-    resizable: true,
     sortable: true,
     draggable: true
 };
@@ -66,11 +65,13 @@ const DaftarSatuanBarang = ({ satuanBarangs, status }) => {
             {
                 accessor: 'id',
                 render: ({ id }) => <strong>{id}</strong>,
-                ...props
+                ...props,
+                width: 80,
+                textAlign: 'center'
             },
             { accessor: 'nama', ...props },
             {
-                accessor: 'action', textAlign: 'center',
+                accessor: 'action', textAlign: 'center', width: 70,
                 render: (record) => (
                     <Menu shadow="md" width={110} position="bottom-end" offset={-5}>
                         <Menu.Target>
