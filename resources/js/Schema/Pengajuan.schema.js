@@ -15,6 +15,6 @@ export const pengajuanSchema = z.object({
     tanggalPengajuan: z.date({
         required_error: 'Tanggal Pengajuan tidak boleh kosong',
     }),
-    namaPengaju: z.string().nonempty({ message: 'Nama Pengaju tidak boleh kosong' }),
-    timKerja: z.string().nonempty({ message: 'Tim Kerja tidak boleh kosong' }),
+    namaPengaju: z.string().min(1, { message: 'Nama Pengaju tidak boleh kosong' }),
+    timKerjaId: z.string().min(1, { message: 'Tim Kerja tidak boleh kosong' }),
 });

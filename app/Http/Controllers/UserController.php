@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\Pengajuan;
 use App\Models\SatuanBarang;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,16 +20,20 @@ class UserController extends Controller
         ]);
     }
 
+
     public function renderPengajuanTambahPengajuan()
     {
         $barang = Barang::get();
         $satuanBarang = SatuanBarang::all();
         $status = session('status');
+        $user = auth()->user();
+        $userProfile = User::where('id', $user->id)->with(['timKerjas:id,nama'])->first();
         return Inertia::render('User/Pengajuan/TambahPengajuan', [
-            'user' => auth()->user(),
+            'user' => $user,
             'barangs' => $barang,
             'satuanBarangs' =>  $satuanBarang,
-            'status' => $status
+            'status' => $status,
+            'userProfile' => $userProfile
         ]);
     }
     public function renderPengajuanRiwayatPengajuan()
@@ -55,7 +60,8 @@ class UserController extends Controller
                         $query->with(['satuanBarang:id,nama', 'jenisBarang:id,nama']);
                     }
                 ]);
-            }
+            },
+            'timKerja'
         ])->first();
         $status = session('status');
         return Inertia::render('Admin/Pengajuan/PengajuanDetail', [

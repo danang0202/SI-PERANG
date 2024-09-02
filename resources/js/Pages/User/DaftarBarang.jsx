@@ -1,16 +1,16 @@
 import UserLayout from '@/Layout/Layout'
 import React, { useEffect, useMemo, useState } from 'react'
-import { ActionIcon, Badge, Group, Menu, MultiSelect, Stack, Text } from '@mantine/core'
-import { IconDots, IconEdit, IconPlus, IconSearch, IconTrash, IconX } from '@tabler/icons-react'
+import { Badge, Group, MultiSelect, Stack } from '@mantine/core'
+import { IconSearch } from '@tabler/icons-react'
 import { DataTable, useDataTableColumns } from 'mantine-datatable'
 import { sortBy } from 'lodash'
 import SearchInput from '@/Components/Commons/SearchInput'
+import { filterBarangs } from '@/helper/table.helper'
 
 
 const PAGE_SIZES = [10, 15, 20];
 const key = 'table-barang-user';
 const props = {
-    resizable: true,
     sortable: true,
     draggable: true
 };
@@ -18,6 +18,7 @@ const DaftarBarang = ({ user, barangs }) => {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [records, setRecords] = useState([sortBy(barangs, 'name').slice(0, pageSize)]);
+    const [totalRecords, setTotalRecords] = useState(barangs.length);
     const [selectedJenisBarang, setSelectedJenisBarang] = useState([]);
     const [selectedSatuanBarang, setSelectedSatuanBarang] = useState([]);
     const [keyword, setKeyword] = useState('');
@@ -28,7 +29,7 @@ const DaftarBarang = ({ user, barangs }) => {
     });
     const jenisBarang = useMemo(() => {
         const temp = new Set(barangs.map((e) => e.jenis_barang.nama));
-        return [...temp];
+        return [...temp];p
     }, []);
 
     const satuanBarang = useMemo(() => {
@@ -38,37 +39,34 @@ const DaftarBarang = ({ user, barangs }) => {
 
     useEffect(() => {
         setPage(1);
-    }, [pageSize]);
+    }, [pageSize, selectedJenisBarang, selectedSatuanBarang]);
 
     useEffect(() => {
-        const filteredData = barangs.filter((barang) =>
-            barang.nama.toLowerCase().includes(keyword.toLowerCase()) ||
-            barang.kode.toLowerCase().includes(keyword.toLowerCase())
-        );
-
+        const filteredData = filterBarangs(barangs, keyword, selectedJenisBarang, selectedSatuanBarang);
         const sortedData = sortBy(filteredData, sortStatus.columnAccessor);
-
         const from = (page - 1) * pageSize;
         const to = from + pageSize;
         const paginatedData = sortStatus.direction === 'desc'
             ? sortedData.reverse().slice(from, to)
             : sortedData.slice(from, to);
-
         setRecords(paginatedData);
-    }, [page, sortStatus, pageSize, keyword]);
+        setTotalRecords(filteredData.length)
+    }, [page, sortStatus, pageSize, keyword, selectedJenisBarang, selectedSatuanBarang]);
 
-    const { effectiveColumns, resetColumnsOrder, resetColumnsWidth } = useDataTableColumns({
+    const { effectiveColumns } = useDataTableColumns({
         key,
         columns: [
             {
                 accessor: 'kode',
                 render: ({ kode }) => <strong>{kode}</strong>,
-                ...props
+                ...props,
+                width: 100,
+                textAlign: 'center'
             },
             { accessor: 'nama', ...props },
             {
                 accessor: 'jenis_barang',
-                render: ({ jenis_barang }) => jenis_barang ? <Badge radius={'xs'} color='bluePrimary' variant='outline'>{jenis_barang.nama}</Badge>  : 'N/A',
+                render: ({ jenis_barang }) => jenis_barang ? <Badge radius={'xs'} color='bluePrimary' variant='outline'>{jenis_barang.nama}</Badge> : 'N/A',
                 ...props,
                 filter: (
                     <MultiSelect
@@ -84,11 +82,11 @@ const DaftarBarang = ({ user, barangs }) => {
                 ),
                 filtering: selectedJenisBarang.length > 0,
             },
-            { accessor: 'jumlah', textAlign: 'center', ...props },
+            { accessor: 'jumlah', textAlign: 'center', ...props, width: 120, },
             {
                 accessor: 'satuan_barang',
-                render: ({ satuan_barang }) => satuan_barang ?  <Badge radius={'xs'} color='secondaryPurple' variant='light'>{satuan_barang.nama}</Badge> : 'N/A',
-                ...props,   
+                render: ({ satuan_barang }) => satuan_barang ? <Badge radius={'xs'} color='secondaryPurple' variant='light'>{satuan_barang.nama}</Badge> : 'N/A',
+                ...props,
                 filter: (
                     <MultiSelect
                         label="Jenis Barang"
@@ -102,6 +100,7 @@ const DaftarBarang = ({ user, barangs }) => {
                     />
                 ),
                 filtering: selectedSatuanBarang.length > 0,
+                width: 200
             },
         ]
     });
@@ -111,14 +110,9 @@ const DaftarBarang = ({ user, barangs }) => {
             <Group align='center' justify='flex-end'>
                 <SearchInput keyword={keyword} setKeyword={setKeyword} />
             </Group>
-            {keyword && (
-                <Group>
-                    <Badge radius={"xs"} variant='light' color={'gray'} rightSection={<IconX size={14} className='cursor-pointer hover:text-red-600' onClick={() => setKeyword('')} />} >Menampilkan hasil pencarian: "{keyword}"</Badge>
-                </Group>
-            )}
             <DataTable
                 pinLastColumn
-                height={450}
+                height={500}
                 fz="xs"
                 withColumnBorders
                 sortStatus={sortStatus}
@@ -126,7 +120,7 @@ const DaftarBarang = ({ user, barangs }) => {
                 records={records}
                 storeColumnsKey={key}
                 columns={effectiveColumns}
-                totalRecords={barangs.length}
+                totalRecords={totalRecords}
                 recordsPerPage={pageSize}
                 page={page}
                 onPageChange={(p) => setPage(p)}

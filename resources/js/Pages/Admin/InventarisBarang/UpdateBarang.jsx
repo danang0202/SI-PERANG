@@ -2,12 +2,15 @@ import ButtonOutlineWithRoute from '@/Components/Commons/ButtonOutlineWithRoute'
 import { showFailNotification } from '@/helper/notification.helper';
 import AdminInventarisBarangLayout from '@/Layout/AdminInventarisBarangLayout';
 import UserLayout from '@/Layout/Layout';
+import { barangSchema } from '@/Schema/inventaris-barang.schema';
 import { router } from '@inertiajs/react';
-import { Button, Grid, Group, Select, Stack, Text, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { Button, Grid, Group, NumberInput, Select, Stack, Text, TextInput } from '@mantine/core';
+import { useForm, zodResolver } from '@mantine/form';
 import React, { useEffect, useState } from 'react'
 
-const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, status }) => {
+const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangsKode, status }) => {
+    const [selectedJenisBarang, setSelectedJenisBarang] = useState();
+
     useEffect(() => {
         if (status && status.type == 'fail') {
             showFailNotification(status.message)
@@ -25,54 +28,27 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, status }) => {
 
     const [loading, setLoading] = useState();
     const form = useForm({
-        mode: 'uncontrolled',
+        mode: 'controlled',
         initialValues: {
-            kode: prevBarang.kode,
+            kode: prevBarang.kode.slice(3),
             nama: prevBarang.nama,
             jenisBarangId: prevBarang.jenis_barang_id.toString(),
             satuanId: prevBarang.satuan_id.toString(),
             jumlah: prevBarang.jumlah,
         },
 
-        validate: {
-            nama: (value) => {
-                if (!value.trim()) {
-                    return 'Nama tidak boleh kosong';
-                }
-                return null;
-            },
-            kode: (value) => {
-                if (!/^\d{6}$/.test(value)) {
-                    return 'Kode harus terdiri dari 6 digit angka';
-                }
-                return null;
-            },
-            jenisBarangId: (value) => {
-                if (!value) {
-                    return 'Jenis barang tidak boleh kosong';
-                }
-                return null;
-            },
-            satuanId: (value) => {
-                if (!value) {
-                    return 'Satuan barang tidak boleh kosong';
-                }
-                return null;
-            },
-            jumlah: (value) => {
-                if (!value) {
-                    return 'Jumlah tidak boleh kosong';
-                }
-                if (parseInt(value, 10) < 0) {
-                    return 'Jumlah tidak boleh negatif';
-                }
-                return null;
-            },
-        },
+        validate: zodResolver(barangSchema)
     });
 
 
     const handleSubmit = (values) => {
+        const temp = selectedJenisBarang.kode + values.kode;
+        if (existingBarangsKode.includes(temp)) {
+            form.setErrors({ kode: 'Kode sudah digunakan, silakan pilih kode lain.' });
+            setLoading(false);
+            return;
+        }
+        values.kode = temp;
         setLoading(true)
         router.post(route('admin.inventaris-barang.update.action', { id: prevBarang.id }), values, {
             onSuccess: () => {
@@ -84,6 +60,11 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, status }) => {
             }
         });
     };
+
+    useEffect(() => {
+        const temp = jenisBarangs.find((item) => item.id.toString() === form.values.jenisBarangId)
+        setSelectedJenisBarang(temp);
+    }, [form.values.jenisBarangId], prevBarang)
 
     return (
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -100,16 +81,30 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, status }) => {
                 <Grid gutter={{ base: 'md', lg: "lg" }}>
                     <Grid.Col span={6}>
                         <Stack gap={"lg"}>
-                            <TextInput
-                                label="Kode Barang"
-                                placeholder="Masukkan kode barang ..."
-                                description="Kode barang terdiri dari 5 digit angka"
-                                radius={"xs"}
-                                size='sm'
-                                withAsterisk
-                                key={form.key('kode')}
-                                {...form.getInputProps('kode')}
-                            />
+                            <Grid>
+                                <Grid.Col span={5}>
+                                    <TextInput
+                                        label="Kode Jenis Barang"
+                                        description="Kode depan / kode jenis  barang"
+                                        radius={"xs"}
+                                        size='sm'
+                                        value={selectedJenisBarang ? selectedJenisBarang.kode : ''}
+                                        variant='filled'
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={7}>
+                                    <TextInput
+                                        label="Kode Barang"
+                                        placeholder="Masukkan kode barang ..."
+                                        description="Kode barang terdiri dari 6 digit angka"
+                                        radius={"xs"}
+                                        size='sm'
+                                        withAsterisk
+                                        key={form.key('kode')}
+                                        {...form.getInputProps('kode')}
+                                    />
+                                </Grid.Col>
+                            </Grid>
                             <TextInput
                                 label="Nama Barang"
                                 description='Masukkan nama barang dengan sesuai'
@@ -135,13 +130,12 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, status }) => {
                     </Grid.Col>
                     <Grid.Col span={6}>
                         <Stack gap={"lg"}>
-                            <TextInput
+                            <NumberInput
                                 withAsterisk
                                 label="Jumlah Barang"
                                 placeholder="Masukkan jumlah barang"
                                 description='Masukkan jumlah barang dalam angka'
                                 radius={"xs"}
-                                type='number'
                                 key={form.key('jumlah')}
                                 {...form.getInputProps('jumlah')}
                             />

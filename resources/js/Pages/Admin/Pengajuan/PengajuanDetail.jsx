@@ -1,7 +1,8 @@
 import ButtonOutlineWithRoute from '@/Components/Commons/ButtonOutlineWithRoute'
 import ConfirmationModalPengajuan from '@/Components/Commons/ConfirmationModalPengajuan'
 import TextStatus from '@/Components/Commons/TextStatus'
-import { getStatusColor } from '@/helper/common.helper'
+import { getStatusColor, toTitleCase } from '@/helper/common.helper'
+import { formatDateTime } from '@/helper/date.helper'
 import { showFailNotification, showSuccesNotification } from '@/helper/notification.helper'
 import UserLayout from '@/Layout/Layout'
 import { Link, router } from '@inertiajs/react'
@@ -25,25 +26,25 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
         }
     }, [])
 
-    const handleConfirm = (recordId) => {
-        setLoading(true);
-        if (confirmStatus) {
-            const url = confirmStatus == 'accept' ? 'admin.pengajuan.accept' : confirmStatus == 'reject' ? 'admin.pengajuan.reject' : 'user.pengajuan.pembatalan';
-            router.get(route(url, { id: recordId }), {
-                onSuccess: () => {
-                    setLoading(false);
-                    close();
-                    router.visit(window.location.pathname, {
-                        only: ['pengajuan'],
-                    });
-                },
-                onError: (errors) => {
-                    setLoading(false);
-                    console.error('Error:', errors);
-                },
-            });
-        }
-    };
+    // const handleConfirm = (recordId) => {
+    //     setLoading(true);
+    //     if (confirmStatus) {
+    //         const url = confirmStatus == 'accept' ? 'admin.pengajuan.accept' : confirmStatus == 'reject' ? 'admin.pengajuan.reject' : 'user.pengajuan.pembatalan';
+    //         router.get(route(url, { id: recordId }), {
+    //             onSuccess: () => {
+    //                 setLoading(false);
+    //                 close();
+    //                 router.visit(window.location.pathname, {
+    //                     only: ['pengajuan'],
+    //                 });
+    //             },
+    //             onError: (errors) => {
+    //                 setLoading(false);
+    //                 console.error('Error:', errors);
+    //             },
+    //         });
+    //     }
+    // };
 
     return (
         <Stack gap="md">
@@ -54,12 +55,12 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
                 <Grid.Col span={8}>
                     <Stack gap={'lg'}>
                         <Stack gap={"xs"}>
-                            <Text size='base' fw={'bold'}>Informasi Pengajuan</Text>
+                            <Text size='base' fw={'bold'}>Informasi Permintaan</Text>
                             <Grid gutter={"md"} align='center'>
                                 <Grid.Col span={6}>
                                     <DateInput
                                         leftSection={<IconCalendar size={16} />}
-                                        label="Tanggal Pengajuan"
+                                        label="Tanggal Permintaan"
                                         radius={"xs"}
                                         size='sm'
                                         readOnly
@@ -100,14 +101,14 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
                                         label="Tim Kerja"
                                         radius={"xs"}
                                         size='sm'
-                                        value={pengajuan.user.tim_kerja}
+                                        value={pengajuan.tim_kerja.nama}
                                     />
                                 </Grid.Col>
 
                             </Grid>
                         </Stack>
                         <Stack gap={'xs'}>
-                            <Text size='base' fw={'bold'}>Item Pengajuan</Text>
+                            <Text size='base' fw={'bold'}>Item Permintaan</Text>
                             <DataTable
                                 mih={150}
                                 fz="sm"
@@ -151,17 +152,19 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
                 </Grid.Col>
                 <Grid.Col span={4}>
                     <Stack align='flex-start' gap="lg">
-                        <Text fw={'bold'}>Log Status Pengajuan</Text>
+                        <Text fw={'bold'}>Log Status Permintaan</Text>
                         <Stepper active={3}
                             orientation="vertical">
-                            <Stepper.Step color='gray' completedIcon={<IconUserCheck style={{ width: rem(18), height: rem(18) }} />} label="Pengajuan Diajukan" description={<Stack my={'xs'} gap={'xs'} align='flex-start'>
-                                <Badge variant='light' color='secondaryPurple' size="sm">Regular User</Badge>
-                                <Text size='xs' ml={4}>August 29, 2024</Text>
+                            <Stepper.Step color='gray' completedIcon={<IconUserCheck style={{ width: rem(18), height: rem(18) }} />} label="Permintaan Diajukan" description={<Stack my={'xs'} gap={'xs'} align='flex-start'>
+                                <Badge variant='light' color='bluePrimary' size="sm">{pengajuan.user.nama}</Badge>
+                                <Text size='xs' ml={4}>{formatDateTime(pengajuan.created_at)}</Text>
                             </Stack>} />
-                            <Stepper.Step color='accent5' completedIcon={<IconShieldCheck style={{ width: rem(18), height: rem(18) }} />} label="Pengajuan Diterima" description={<Stack my={'xs'} gap={'xs'} align='flex-start'>
-                                <Badge variant='light' size="sm">Regular User</Badge>
-                                <Text size='xs' ml={4}>August 29, 2024</Text>
-                            </Stack>} />
+                            {pengajuan.status != 'MENUNGGU KONFIRMASI' && (
+                                <Stepper.Step color={getStatusColor(pengajuan.status)} completedIcon={<IconShieldCheck style={{ width: rem(18), height: rem(18) }} />} label={toTitleCase(pengajuan.status)} description={<Stack my={'xs'} gap={'xs'} align='flex-start'>
+                                    <Badge variant='light' size="sm">{pengajuan.status == 'PERMINTAAN DIBATALKAN' ? pengajuan.user.nama : 'Admin'}</Badge>
+                                    <Text size='xs' ml={4}>{formatDateTime(pengajuan.updated_at)}</Text>
+                                </Stack>} />
+                            )}
                         </Stepper>
                     </Stack>
                     {user.role == 'ADMIN' && pengajuan.status == 'MENUNGGU KONFIRMASI' && (
@@ -182,12 +185,12 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
                             <Text fw={'bold'}>Tindakan</Text>
                             <Group justify='flex-start' gpa='lg'>
                                 <Button radius='xs' color='red' variant='outline' onClick={() => { setConfirmStatus('cencel'); open() }}>
-                                    Batalkan Pengajuan
+                                    Batalkan Permintaan
                                 </Button>
                             </Group>
                         </Stack>
                     )}
-                    {pengajuan.status == 'PENGAJUAN DITERIMA' && (
+                    {pengajuan.status == 'PERMINTAAN DITERIMA' && (
                         <Stack align='flex-start' gap="lg">
                             <Text fw={'bold'}>Tindakan</Text>
                             <Group justify='flex-start' gpa='lg'>
@@ -201,7 +204,7 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
                     )}
                 </Grid.Col>
             </Grid>
-           <ConfirmationModalPengajuan opened={opened} close={close} selectedRecord={pengajuan} label={confirmStatus == 'accept' ? 'menerima' : confirmStatus == 'reject' ? 'menolak' : 'membatalkan'} urlPatch={confirmStatus == 'accept' ? 'admin.pengajuan.accept' : confirmStatus == 'reject' ? 'admin.pengajuan.reject' : 'user.pengajuan.pembatalan'} only='pengajuan'/>
+            <ConfirmationModalPengajuan opened={opened} close={close} selectedRecord={pengajuan} label={confirmStatus == 'accept' ? 'menerima' : confirmStatus == 'reject' ? 'menolak' : 'membatalkan'} urlPatch={confirmStatus == 'accept' ? 'admin.pengajuan.accept' : confirmStatus == 'reject' ? 'admin.pengajuan.reject' : 'user.pengajuan.pembatalan'} only='pengajuan' />
         </Stack>
     )
 }

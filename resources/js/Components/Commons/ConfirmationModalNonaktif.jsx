@@ -3,12 +3,12 @@ import { Modal, Button, Text, Group } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { router } from '@inertiajs/react';
 
-const ConfirmationModalPengajuan = ({ opened, close, selectedRecord, label, urlPatch, only }) => {
+const ConfirmationModalNonaktif = ({ opened, close, selectedRecord, urlPatch, only }) => {
     const { hovered, ref } = useHover();
     const [loading, setLoading] = useState();
     const handleConfirm = (recordId) => {
         setLoading(true);
-        router.get(route(urlPatch, { id: recordId }), {
+        router.get(route(urlPatch, { id: recordId, status: selectedRecord.status == 'AKTIF' ? 'NONAKTIF' : 'AKTIF' }), {
             onSuccess: () => {
                 setLoading(false);
                 close();
@@ -18,18 +18,17 @@ const ConfirmationModalPengajuan = ({ opened, close, selectedRecord, label, urlP
             },
             onError: (errors) => {
                 setLoading(false);
-                console.error('Error:', errors); 
+                console.error('Error:', errors);
             },
         });
     };
-
 
     return (
         <>
             <Modal opened={opened} onClose={close} title="Konfirmasi Tindakan">
                 {/* Modal content */}
                 {selectedRecord && (
-                    <Text size='sm'>Apakah anda yakin untuk <span className='font-bold text-red-600'>{label || 'membatalkan'} permintaan dengan nomor id [ {selectedRecord.id} ] </span> ? </Text>
+                    <Text size='sm'>Apakah anda yakin untuk <span className={`font-bold ${selectedRecord.status == "AKTIF" ? 'text-red-600' : 'text-green-500'}`}>{selectedRecord.status == "AKTIF" ? 'menonaktifkan' : 'mengaktifkan'} user dengan nama "{selectedRecord.nama}" </span> ? </Text>
                 )}
                 <Group justify='flex-end' align='center' mt={'md'} gap={'lg'}>
                     <Button ref={ref} opacity={hovered ? .6 : 1} onClick={() => handleConfirm(selectedRecord.id)} radius={'xs'} className='transition duration-300' loading={loading}>Yakin</Button>
@@ -41,4 +40,4 @@ const ConfirmationModalPengajuan = ({ opened, close, selectedRecord, label, urlP
     )
 }
 
-export default ConfirmationModalPengajuan
+export default ConfirmationModalNonaktif

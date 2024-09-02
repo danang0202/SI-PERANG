@@ -19,7 +19,8 @@ class JenisBarangSeeder extends Seeder
         while (($data = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
             if (!$firstline) {
                 JenisBarang::create([
-                    "nama" => $data['0'],
+                    "kode" => $data['0'],
+                    "nama" => $data['1'],
                 ]);
             }
             $firstline = false;

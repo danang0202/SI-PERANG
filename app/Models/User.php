@@ -20,7 +20,6 @@ class User extends Authenticatable
     protected $fillable = [
         'nama',
         'nip',
-        'tim_kerja',
         'role',
         'email',
         'password',
@@ -48,5 +47,9 @@ class User extends Authenticatable
     public function pengajuan()
     {
         return $this->hasMany(Pengajuan::class);
+    }
+    public function timKerjas()
+    {
+        return $this->belongsToMany(TimKerja::class, 'user_has_tim_kerja', 'user_id', 'tim_kerja_id');
     }
 }

@@ -4,34 +4,28 @@ import React from 'react'
 import { useMenuContext } from '@/Provider/Menu'
 
 
-const AdminInventarisBarangLayout = ({ children }) => {
+const AdminUserManagementLayout = ({ children }) => {
     const { loading, setLoading } = useMenuContext();
     const { url } = usePage();
-    let activeTab = 'barang';
-    if (url.includes('jenis-barang')) {
-        activeTab = 'jenis';
-    } else if (url.includes('satuan-barang')) {
-        activeTab = 'satuan';
+    let activeTab = 'user-management';
+    if (url.includes('tim-kerja')) {
+        activeTab = 'tim-kerja';
     }
+
     return (
         <>
-            <Head title="Inventaris Barang" />
+            <Head title="User Management" />
             <Stack pr={{ base: 0, lg: 'xl' }}>
                 <Tabs value={activeTab}>
                     <Tabs.List>
-                        <Link href={route('admin.inventaris-barang')} onClick={() => setLoading(true)}>
-                            <Tabs.Tab value={'barang'}>
-                                Daftar Barang
+                        <Link href={route('admin.user-management')} onClick={() => setLoading(true)}>
+                            <Tabs.Tab value={'user-management'}>
+                                User
                             </Tabs.Tab>
                         </Link>
-                        <Link href={route('admin.inventaris-barang.jenis')} onClick={() => setLoading(true)}>
-                            <Tabs.Tab value="jenis">
-                                Jenis Barang
-                            </Tabs.Tab>
-                        </Link>
-                        <Link href={route('admin.inventaris-barang.satuan')} onClick={() => setLoading(true)}>
-                            <Tabs.Tab value="satuan">
-                                Satuan Barang
+                        <Link href={route('admin.user-management.tim-kerja')} onClick={() => setLoading(true)}>
+                            <Tabs.Tab value="tim-kerja">
+                                Tim Kerja
                             </Tabs.Tab>
                         </Link>
                     </Tabs.List>
@@ -51,4 +45,4 @@ const AdminInventarisBarangLayout = ({ children }) => {
     )
 }
 
-export default AdminInventarisBarangLayout
+export default AdminUserManagementLayout

@@ -3,7 +3,7 @@ import { Modal, Button, Text, Group } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { router } from '@inertiajs/react';
 
-const ConfirmationModal = ({ opened, close, selectedRecord, label = "menghapus", urlDelete, urlRevisit, only }) => {
+const ConfirmationModal = ({ opened, close, selectedRecord, label = "menghapus", urlDelete, only }) => {
     const { hovered, ref } = useHover();
     const [loading, setLoading] = useState();
     const handleDelete = (recordId) => {
@@ -12,8 +12,9 @@ const ConfirmationModal = ({ opened, close, selectedRecord, label = "menghapus",
             onSuccess: () => {
                 setLoading(false);
                 close();
-                router.visit(route(urlRevisit), {
+                router.visit(window.location.pathname, {
                     only: [{ only }],
+                    preserveScroll: true,
                 })
             },
         });
@@ -24,11 +25,10 @@ const ConfirmationModal = ({ opened, close, selectedRecord, label = "menghapus",
             <Modal opened={opened} onClose={close} title="Konfirmasi Tindakan">
                 {/* Modal content */}
                 {selectedRecord && (
-                    <Text size='sm'>Apakah anda yakin untuk <span className='font-bold text-red-600'>{label} {selectedRecord.nama} </span> ? </Text>
+                    <Text size='sm'>Apakah anda yakin untuk <span className='font-bold text-red-600'>{label} "{selectedRecord.nama}" </span> ? </Text>
                 )}
                 <Group justify='flex-end' align='center' mt={'md'} gap={'lg'}>
                     <Button ref={ref} opacity={hovered ? .6 : 1} onClick={() => handleDelete(selectedRecord.id)} radius={'xs'} className='transition duration-300' loading={loading}>Yakin</Button>
-                    {/* Kalau yakin arahkan  ke action delete                     */}
                     <Button onClick={close} variant='outline' color='red' radius={'xs'}>Batal</Button>
                 </Group>
             </Modal>

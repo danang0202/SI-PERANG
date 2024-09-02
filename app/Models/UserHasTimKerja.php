@@ -5,27 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pengajuan extends Model
+class UserHasTimKerja extends Model
 {
     use HasFactory;
-    protected $table = 'pengajuan';
+    protected $table = 'user_has_tim_kerja';
 
     protected $fillable = [
         'user_id',
-        'no_pengajuan',
-        'status',
-        'tim_kerja_id'
+        'tim_kerja_id',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function items()
-    {
-        return $this->hasMany(ItemPengajuan::class);
-    }
     public function timKerja()
     {
         return $this->belongsTo(TimKerja::class, 'tim_kerja_id');

@@ -69,7 +69,7 @@ const RiwayatPengajuan = ({ user, pengajuans, status }) => {
                 title: "Nomor Surat",
                 render: (row) => {
                     return row.no_pengajuan ? (
-                        row.no_pengajuan
+                        <Badge radius="xs" variant="outline">{row.no_pengajuan}</Badge>
                     ) : (
                         <Text size='sm' c={'gray'} fs={'italic'}>Belum ada</Text>
                     );
@@ -130,17 +130,6 @@ const RiwayatPengajuan = ({ user, pengajuans, status }) => {
             <Group align='center' justify='space-between'>
                 <FilterButtonUserRiwayatPengajuan dateRange={dateRange} setDateRange={setDateRange} setSelectedStatus={setSelectedStatus} selectedStatus={selectedStatus} />
                 <SearchInput keyword={keyword} setKeyword={setKeyword} />
-            </Group>
-            <Group>
-                {keyword && (
-                    <Badge radius={"xs"} variant='light' color={'gray'} rightSection={<IconX size={14} className='cursor-pointer hover:text-red-600' onClick={() => setKeyword('')} />} >Menampilkan hasil pencarian: "{keyword}"</Badge>
-                )}
-                {dateRange && dateRange[0] && dateRange[1] && (
-                    <Badge radius={"xs"} variant='light' color={'gray'} rightSection={<IconX size={14} className='cursor-pointer hover:text-red-600' onClick={() => setDateRange([])} />} >Filter tanggal</Badge>
-                )}
-                {selectedStatus.length < 4 && (
-                    <Badge radius={"xs"} variant='light' color={'gray'} rightSection={<IconX size={14} className='cursor-pointer hover:text-red-600' onClick={() => setSelectedStatus(statusesData)} />}>Filter Status</Badge>
-                )}
             </Group>
             <DataTable
                 pinLastColumn

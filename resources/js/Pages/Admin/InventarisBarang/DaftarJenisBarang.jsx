@@ -18,7 +18,7 @@ import React, { useEffect, useState } from 'react'
 const PAGE_SIZES = [10, 15, 20];
 const key = 'table-jenis-barang-admin';
 const props = {
-    resizable: true,
+    // resizable: true,
     sortable: true,
     draggable: true
 };
@@ -66,18 +66,21 @@ const DaftarJenisBarang = ({ jenisBarangs, status }) => {
         key,
         columns: [
             {
-                accessor: 'id',
-                render: ({ id }) => <strong>{id}</strong>,
-                ...props
+                accessor: 'kode',
+                render: ({ kode }) => <strong>{kode}</strong>,
+                ...props,
+                width: 100,
+                textAlign: 'center'
             },
             { accessor: 'nama', ...props },
             {
                 accessor: 'action', textAlign: 'center',
+                width: 70,
                 render: (record) => (
                     <Menu shadow="md" width={110} position="bottom-end" offset={-5}>
                         <Menu.Target>
                             <ActionIcon variant="transparent" color="secondaryPurple">
-                                <IconDots/>
+                                <IconDots />
                             </ActionIcon>
                         </Menu.Target>
 
@@ -123,6 +126,7 @@ const DaftarJenisBarang = ({ jenisBarangs, status }) => {
                 </Group>
             )}
             <DataTable
+            pinLastColumn
                 height={450}
                 fz="sm"
                 withColumnBorders

@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('pengajuan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users'); // Relasi ke tabel User
+            $table->foreignId('user_id')->constrained('users');
             $table->string('no_pengajuan', 50)->nullable();
-            $table->enum('status', ['PENGAJUAN DITERIMA', 'PENGAJUAN DITOLAK', 'MENUNGGU KONFIRMASI', 'PENGAJUAN DIBATALKAN'])->default('MENUNGGU KONFIRMASI');
-            $table->timestamps(); // created_at dan updated_at
+            $table->foreignId('tim_kerja_id')->constrained('tim_kerja');
+            $table->enum('status', ['PERMINTAAN DITERIMA', 'PERMINTAAN DITOLAK', 'MENUNGGU KONFIRMASI', 'PERMINTAAN DIBATALKAN'])->default('MENUNGGU KONFIRMASI');
+            $table->timestamps();
         });
     }
 

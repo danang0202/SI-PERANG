@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('jenis_barang', function (Blueprint $table) {
             $table->id();
+            $table->string('kode', 3); // unique nya saya hilangkan
             $table->string('nama');
             $table->timestamps(); // created_at dan updated_at
         });

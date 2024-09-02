@@ -16,24 +16,27 @@ const menuItemsAdmin = [
         key: "admin-dashboard",
         label: "Dashboard",
         icon: <IconLayoutBoard size={20} />,
-        route: "/admin/dashboard",
+        route: "admin.dashboard",
+        href: '/admin/dashboard',
         children: [],
     },
     {
         key: "pengajuan",
-        label: "Pengajuan",
+        label: "Permintaan",
         icon: <IconClipboardData size={20} />,
         children: [
             {
                 key: "admin-pengajuan-perlu-tindakan",
                 label: "Perlu Tindakan",
-                route: "/admin/pengajuan/perlu-tindakan",
+                route: "admin.pengajuan.perlu-tindakan",
+                href: '/admin/pengajuan/perlu-tindakan',
                 children: []
             },
             {
                 key: "admin-pengajuan-riwayat-pengajuan",
-                label: "Riwayat Pengajuan",
-                route: "/admin/pengajuan/riwayat-pengajuan",
+                label: "Riwayat Permintaan",
+                route: "admin.pengajuan.riwayat-pengajuan",
+                href: '/admin/pengajuan/riwayat-pengajuan',
                 children: []
             },
         ],
@@ -42,14 +45,16 @@ const menuItemsAdmin = [
         key: "admin-inventaris-barang",
         label: "Inventaris Barang",
         icon: <IconBrandAirtable size={20} />,
-        route: '/admin/inventaris-barang',
+        route: 'admin.inventaris-barang',
+        href: '/admin/inventaris-barang',
         children: [],
     },
     {
         key: "admin-user-management",
         label: "User",
         icon: <IconUsers size={19} />,
-        route: '/admin/user-management',
+        route: 'admin.user-management',
+        href: '/admin/user-management',
         children: [],
     },
 ];
@@ -59,24 +64,28 @@ const menuItemsUser = [
         key: "dashboard",
         label: "Dashboard",
         icon: <IconLayoutBoard size={20} />,
-        route: "/dashboard",
+        route: "user.dashboard",
+        href: '/dashboard',
         children: [],
     },
     {
         key: "pengajuan",
-        label: "Pengajuan",
+        label: "Permintaan",
         icon: <IconClipboardData size={20} />,
         children: [
             {
                 key: "pengajuan-tambah-pengajuan",
-                label: "Tambah Pengajuan",
-                route: "/pengajuan/tambah-pengajuan",
+                label: "Tambah Permintaan",
+                route: "user.pengajuan.tambah",
+                href: '/pengajuan/tambah-pengajuan',
                 children: []
             },
             {
                 key: "pengajuan-riwayat-pengajuan",
-                label: "Riwayat Pengajuan",
-                route: "/pengajuan/riwayat-pengajuan",
+                label: "Riwayat Permintaan",
+                route: "user.pengajuan.riwayat",
+                href: '/pengajuan/riwayat-pengajuan',
+
                 children: []
             },
         ],
@@ -85,7 +94,8 @@ const menuItemsUser = [
         key: "daftar-barang",
         label: "Daftar Barang",
         icon: <IconBrandAirtable size={20} />,
-        route: '/daftar-barang',
+        route: 'user.daftar-barang',
+        href: '/daftar-barang',
         children: [],
     },
 ];
@@ -117,9 +127,6 @@ export const NavbarMenu = ({ isAdmin }) => {
                     ))
                 }
             </Stack>
-            <ResponsiveNavLink method="post" href={route('logout')} as="button">
-                Log Out
-            </ResponsiveNavLink>
         </Stack>
     );
 };

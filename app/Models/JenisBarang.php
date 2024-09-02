@@ -10,7 +10,7 @@ class JenisBarang extends Model
     use HasFactory;
     protected $table = 'jenis_barang';
 
-    protected $fillable = ['nama'];
+    protected $fillable = ['kode', 'nama'];
 
     public $timestamps = true;
 
