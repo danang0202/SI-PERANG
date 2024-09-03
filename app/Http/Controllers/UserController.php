@@ -12,11 +12,49 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
-
     public function index()
     {
+        $user = auth()->user();
+
+        $countMenungguKonfirmasi = Pengajuan::where('status', 'MENUNGGU KONFIRMASI')->where('user_id', $user->id)->count();
+        $countPermintaanDiterima = Pengajuan::where('status', 'DITERIMA')->where('user_id', $user->id)->count();
+        $countPermintaanDitolak = Pengajuan::where('status', 'DITOLAK')->where('user_id', $user->id)->count();
+        $countPermintaanDibatalkan = Pengajuan::where('status', 'DIBATALKAN')->where('user_id', $user->id)->count();
+
+        $statusCardData = [
+            [
+                'color' => 'gray5',
+                'icon' => 'IconHourglass',
+                'text' => 'Menunggu Konfirmasi',
+                'count' => $countMenungguKonfirmasi,
+                'iconColor' => 'black',
+            ],
+            [
+                'color' => 'accent5',
+                'icon' => 'IconCircleCheck',
+                'text' => 'Permintaan Diterima',
+                'count' => $countPermintaanDiterima,
+                'iconColor' => 'white',
+            ],
+            [
+                'color' => 'accent6',
+                'icon' => 'IconCircleX',
+                'text' => 'Permintaan Ditolak',
+                'count' => $countPermintaanDitolak,
+                'iconColor' => 'white',
+            ],
+            [
+                'color' => 'secondaryPurple',
+                'icon' => 'IconCancel',
+                'text' => 'Permintaan Dibatalkan',
+                'count' => $countPermintaanDibatalkan,
+                'iconColor' => 'white',
+            ],
+        ];
+
         return Inertia::render('User/Dashboard', [
-            'user' => auth()->user(),
+            'user' => $user,
+            'statusCardData' => $statusCardData,
         ]);
     }
 

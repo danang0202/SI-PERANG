@@ -25,3 +25,17 @@ export function formatDateTime(dateTimeStr) {
     const formattedDate = date.toLocaleDateString('id-ID', options);
     return formattedDate;
 }
+
+export const getTodayDate = () => {
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const today = new Date();
+    const dayName = days[today.getDay()];
+    const day = today.getDate();
+    const month = today.toLocaleString('default', { month: 'long' });
+    const year = today.getFullYear();
+  
+    return {
+      dayName,
+      date: `${day} ${month} ${year}`,
+    };
+  };
