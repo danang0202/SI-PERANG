@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('nama'); // Renamed from 'name' to 'nama'
-            $table->string('nip')->unique(); // Added NIP (Nomor Induk Pegawai)
-            // $table->enum('tim_kerja', ['Team A', 'Team B', 'Team C']); // Example enum values for tim_kerja
-            $table->enum('role', ['ADMIN', 'USER']); // Enum for role
+            $table->string('nama');
+            $table->string('nip')->unique();
+            $table->string('username')->unique();
+            $table->enum('role', ['ADMIN', 'USER']);
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('status', ['AKTIF', 'NONAKTIF'])->default('AKTIF');
             $table->rememberToken();
-            $table->timestamps(); // Includes both created_at and updated_at
+            $table->timestamps();
         });
     }
 
