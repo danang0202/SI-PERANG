@@ -201,12 +201,10 @@ class AdminController extends Controller
     {
         $jenisBarangs = JenisBarang::select('id', 'kode', 'nama')->get();
         $satuanBarangs = SatuanBarang::select('id', 'nama')->get();
-        $existingBarangsKode = Barang::pluck('kode')->toArray();
         return Inertia::render('Admin/InventarisBarang/CreateBarang', [
             'user' => auth()->user(),
             'jenisBarangs' => $jenisBarangs,
             'satuanBarangs' => $satuanBarangs,
-            'existingBarangsKode' => $existingBarangsKode
         ]);
     }
 
@@ -215,14 +213,12 @@ class AdminController extends Controller
         $prevBarang = Barang::findOrFail($id);
         $jenisBarangs = JenisBarang::select('id', 'kode', 'nama')->get();
         $satuanBarangs = SatuanBarang::select('id', 'nama')->get();
-        $existingBarangsKode = Barang::where('id', '!=', $id)->pluck('kode')->toArray();
         $status = session('status');
         return Inertia::render('Admin/InventarisBarang/UpdateBarang', [
             'user' => auth()->user(),
             'jenisBarangs' => $jenisBarangs,
             'satuanBarangs' => $satuanBarangs,
             'prevBarang' => $prevBarang,
-            'existingBarangsKode' => $existingBarangsKode,
             'status' => $status
         ]);
     }
@@ -240,24 +236,18 @@ class AdminController extends Controller
     }
     public function renderAdminInventarisBarangJenisBarangCreate()
     {
-        $jenisBarangKode = JenisBarang::pluck('kode')->toArray();
         return Inertia::render('Admin/InventarisBarang/CreateJenisBarang', [
             'user' => auth()->user(),
-            'jenisBarangsKode' => $jenisBarangKode
         ]);
     }
 
 
     public function renderAdminInventarisBarangJenisBarangUpdate($id)
     {
-        $jenisBarangKode = JenisBarang::where('id', '!=', $id)
-            ->pluck('kode')
-            ->toArray();
         $jenisBarang = JenisBarang::find($id);
         return Inertia::render('Admin/InventarisBarang/UpdateJenisBarang', [
             'user' => auth()->user(),
             'prevJenisBarang' => $jenisBarang,
-            'jenisBarangsKode' => $jenisBarangKode
         ]);
     }
 

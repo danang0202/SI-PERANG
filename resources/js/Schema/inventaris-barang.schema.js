@@ -1,8 +1,9 @@
 import { z } from 'zod';
 
 export const jenisBarangSchema = z.object({
-    kode: z.string()
-        .regex(/^\d{3}$/, { message: 'Kode harus berupa tiga digit angka' }),
+    // kode: z.string()
+    //     .length(10, { message: 'Kode harus berupa 10 digit angka' }),
+        // .regex(/^\d+$/, { message: 'Kode harus berupa angka' }),
     nama: z.string()
         .regex(/^[A-Za-z\s]+$/, { message: 'Nama hanya boleh berisi huruf dan spasi' }),
 });

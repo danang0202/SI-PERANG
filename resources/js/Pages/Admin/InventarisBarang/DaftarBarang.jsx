@@ -20,7 +20,6 @@ import { filterBarangs } from '@/helper/table.helper'
 const PAGE_SIZES = [10, 15, 20];
 const key = 'table-barang-admin';
 const props = {
-    resizable: true,
     sortable: true,
     draggable: true,
 };
@@ -84,7 +83,7 @@ const DaftarBarang = ({ barangs, status }) => {
                 accessor: 'kode',
                 render: ({ kode }) => <strong>{kode}</strong>,
                 ...props,
-                width: 100,
+                width: 150,
                 textAlign: 'center'
             },
             { accessor: 'nama', ...props },

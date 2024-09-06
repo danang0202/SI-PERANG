@@ -3,13 +3,15 @@ import { showFailNotification } from '@/helper/notification.helper';
 import AdminInventarisBarangLayout from '@/Layout/AdminInventarisBarangLayout';
 import UserLayout from '@/Layout/Layout';
 import { barangSchema } from '@/Schema/inventaris-barang.schema';
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { Button, Grid, Group, NumberInput, Select, Stack, Text, TextInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import React, { useEffect, useState } from 'react'
 
-const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangsKode, status }) => {
+const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, status }) => {
     const [selectedJenisBarang, setSelectedJenisBarang] = useState();
+    const { errors } = usePage().props
+
 
     useEffect(() => {
         if (status && status.type == 'fail') {
@@ -26,11 +28,22 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangs
         label: item.nama
     }));
 
+    useEffect(() => {
+        if (errors) {
+            const formattedErrors = {};
+            Object.keys(errors).forEach((key) => {
+                formattedErrors[key] = errors[key];
+            });
+            form.setErrors(formattedErrors);
+            setLoading(false);
+        }
+    }, [errors]);
+
     const [loading, setLoading] = useState();
     const form = useForm({
         mode: 'controlled',
         initialValues: {
-            kode: prevBarang.kode.slice(3),
+            kode: prevBarang.kode.slice(10),
             nama: prevBarang.nama,
             jenisBarangId: prevBarang.jenis_barang_id.toString(),
             satuanId: prevBarang.satuan_id.toString(),
@@ -43,11 +56,6 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangs
 
     const handleSubmit = (values) => {
         const temp = selectedJenisBarang.kode + values.kode;
-        if (existingBarangsKode.includes(temp)) {
-            form.setErrors({ kode: 'Kode sudah digunakan, silakan pilih kode lain.' });
-            setLoading(false);
-            return;
-        }
         values.kode = temp;
         setLoading(true)
         router.post(route('admin.inventaris-barang.update.action', { id: prevBarang.id }), values, {

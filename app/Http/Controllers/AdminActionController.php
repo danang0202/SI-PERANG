@@ -11,14 +11,24 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Validation\Rule;
 
 class AdminActionController extends Controller
 {
 
     public function saveBarangAction(Request $request, $id = null)
     {
-        $this->validateBarangRequest($request);
+        $request->validate([
+            'kode' => [
+                'required',
+                'digits:16',
+                Rule::unique('barang', 'kode')->ignore($id),
+            ],
+            'nama' => 'required|string|max:255',
+            'jenisBarangId' => 'required|exists:jenis_barang,id',
+            'satuanId' => 'required|exists:satuan_barang,id',
+            'jumlah' => 'required|integer|min:1',
+        ]);
 
         try {
             $barang = $id ? Barang::findOrFail($id) : new Barang();
@@ -103,8 +113,14 @@ class AdminActionController extends Controller
 
     public function saveJenisBarangAction(Request $request, $id = null)
     {
-        $this->validateJenisBarang($request);
-
+        $request->validate([
+            'kode' => [
+                'required',
+                'digits:10',
+                Rule::unique('jenis_barang')->ignore($id),
+            ],
+            'nama' => 'required|string|max:255',
+        ]);
         $data = $request->only(['kode', 'nama']);
 
         $jenisBarang = $id ? JenisBarang::findOrFail($id) : new JenisBarang();
@@ -280,26 +296,6 @@ class AdminActionController extends Controller
         }
         return redirect()->back()->with('status', $status);
     }
-
-    private function validateJenisBarang(Request $request)
-    {
-        return $request->validate([
-            'kode' => 'required|digits:3',
-            'nama' => 'required|string|max:255',
-        ]);
-    }
-
-    private function validateBarangRequest(Request $request)
-    {
-        return $request->validate([
-            'kode' => 'required|digits:9',
-            'nama' => 'required|string|max:255',
-            'jenisBarangId' => 'required|exists:jenis_barang,id',
-            'satuanId' => 'required|exists:satuan_barang,id',
-            'jumlah' => 'required|integer|min:1',
-        ]);
-    }
-
     // User
 
 
@@ -475,7 +471,7 @@ class AdminActionController extends Controller
     {
         $timKerja = TimKerja::findOrFail($id);
         $isUsed = $timKerja->users()->exists();
-        
+
         if ($isUsed) {
             $status = [
                 'type' => 'fail',
