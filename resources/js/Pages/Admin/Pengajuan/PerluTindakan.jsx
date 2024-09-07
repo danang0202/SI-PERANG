@@ -118,7 +118,7 @@ const PerluTindakan = ({ user, paginatedPengajuans, timKerja, filters }) => {
             <DataTable
                 pinLastColumn
                 height={450}
-                fz="sm"
+                fz="xs"
                 records={records}
                 columns={effectiveColumns}
                 totalRecords={paginatedPengajuans.last_page}

@@ -33,7 +33,7 @@ const CreateUser = ({ user, timKerjas, status }) => {
         mode: 'uncontrolled',
         initialValues: {
             nama: '',
-            email: '',
+            username: '',
             nip: '',
             role: '',
             timKerjaId: [],
@@ -85,11 +85,11 @@ const CreateUser = ({ user, timKerjas, status }) => {
                                 {...form.getInputProps('nama')}
                             />
                             <TextInput
-                                label="Email User"
+                                label="Username User"
                                 radius={"xs"}
                                 size='sm'
-                                key={form.key('email')}
-                                {...form.getInputProps('email')}
+                                key={form.key('username')}
+                                {...form.getInputProps('username')}
                             />
                             <TextInput
                                 label="Nomor Induk Pegawai"

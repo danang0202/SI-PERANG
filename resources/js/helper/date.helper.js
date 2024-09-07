@@ -1,9 +1,8 @@
+export const bulan = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+];
 export function formatTanggal(tanggal) {
-    const bulan = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-    ];
-
     const date = new Date(tanggal);
     const tanggalHari = date.getDate();
     const bulanIndex = date.getMonth();

@@ -8,7 +8,7 @@ import { formatTanggal } from '@/helper/date.helper';
 import { showFailNotification, showSuccesNotification } from '@/helper/notification.helper';
 import { filterDataRiwayatPengajuanUser } from '@/helper/table.helper';
 import UserLayout from '@/Layout/Layout'
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { ActionIcon, Badge, Group, Menu, Stack, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconDots, IconEye, IconX } from '@tabler/icons-react';
@@ -127,6 +127,7 @@ const RiwayatPengajuan = ({ user, pengajuans, status }) => {
 
     return (
         <Stack gap={"md"}>
+            <Head title='Permintaan' />
             <Group align='center' justify='space-between'>
                 <FilterButtonUserRiwayatPengajuan dateRange={dateRange} setDateRange={setDateRange} setSelectedStatus={setSelectedStatus} selectedStatus={selectedStatus} />
                 <SearchInput keyword={keyword} setKeyword={setKeyword} />
@@ -134,7 +135,7 @@ const RiwayatPengajuan = ({ user, pengajuans, status }) => {
             <DataTable
                 pinLastColumn
                 height={450}
-                fz="sm"
+                fz="xs"
                 records={records}
                 columns={effectiveColumns}
                 totalRecords={pengajuans.length}

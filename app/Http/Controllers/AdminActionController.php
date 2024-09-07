@@ -304,14 +304,14 @@ class AdminActionController extends Controller
         // Validasi data yang masuk
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'username' => 'required|string|max:255|unique:users',
             'nip' => 'required|string|size:18|unique:users',
             'role' => 'required|in:ADMIN,USER',
             'password' => 'required|string|min:8',
             'timKerjaId' => 'required|array',
             'timKerjaId.*' => 'exists:tim_kerja,id',
         ], [
-            'email.unique' => 'Email sudah terdaftar.',
+            'username.unique' => 'Username sudah terdaftar.',
             'nip.unique' => 'NIP sudah terdaftar.',
         ]);
 
@@ -320,7 +320,7 @@ class AdminActionController extends Controller
         try {
             $user = User::create([
                 'nama' => $validatedData['nama'],
-                'email' => $validatedData['email'],
+                'username' => $validatedData['username'],
                 'nip' => $validatedData['nip'],
                 'role' => $validatedData['role'],
                 'password' => Hash::make($validatedData['password']),
@@ -348,29 +348,23 @@ class AdminActionController extends Controller
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users')->ignore($id),
+            ],
             'nip' => 'required|string|size:18',
             'role' => 'required|in:ADMIN,USER',
             'timKerjaId' => 'required|array',
             'password' => 'nullable|string|min:8',
             'timKerjaId.*' => 'exists:tim_kerja,id',
         ]);
-
         DB::beginTransaction();
 
         try {
             $user = User::findOrFail($id);
-            // Update data user
-            $user->update([
-                'nama' => $validatedData['nama'],
-                'email' => $validatedData['email'],
-                'nip' => $validatedData['nip'],
-                'role' => $validatedData['role'],
-                'password' => $validatedData['password'] ? Hash::make($validatedData['password']) : $user->password
-            ]);
-            // Update tim kerja
             $user->timKerjas()->sync($validatedData['timKerjaId']);
-
             DB::commit();
             $status = [
                 'type' => 'success',

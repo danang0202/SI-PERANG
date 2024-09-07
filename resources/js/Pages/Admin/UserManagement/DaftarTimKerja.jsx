@@ -118,7 +118,7 @@ const DaftarTimKerja = ({ user, status, timKerjas }) => {
             <DataTable
                 pinLastColumn
                 height={450}
-                fz="sm"
+                fz="xs"
                 withColumnBorders
                 sortStatus={sortStatus}
                 onSortStatusChange={setSortStatus}

@@ -35,7 +35,7 @@ const UpdateUser = ({ user, timKerjas, status, prevUser }) => {
         mode: 'uncontrolled',
         initialValues: {
             nama: prevUser.nama,
-            email: prevUser.email,
+            username: prevUser.username,
             nip: prevUser.nip,
             role: prevUser.role,
             timKerjaId: prevTimKerjaId,
@@ -87,11 +87,11 @@ const UpdateUser = ({ user, timKerjas, status, prevUser }) => {
                                 {...form.getInputProps('nama')}
                             />
                             <TextInput
-                                label="Email User"
+                                label="Username User"
                                 radius={"xs"}
                                 size='sm'
-                                key={form.key('email')}
-                                {...form.getInputProps('email')}
+                                key={form.key('username')}
+                                {...form.getInputProps('username')}
                             />
                             <TextInput
                                 label="Nomor Induk Pegawai"
@@ -104,7 +104,6 @@ const UpdateUser = ({ user, timKerjas, status, prevUser }) => {
                     </Grid.Col>
                     <Grid.Col span={6}>
                         <Stack gap={"xs"}>
-
                             <MultiSelect
                                 label="Tim Kerja"
                                 placeholder="Ketik untuk mencari dan menambahkan tim kerja"

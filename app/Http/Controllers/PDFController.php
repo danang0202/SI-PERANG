@@ -28,7 +28,6 @@ class PDFController extends Controller
 
         // Check if the image file exists
         if (file_exists($imgPath)) {
-            dd('test');
             // Get the image content and encode it as base64
             $imgData = base64_encode(file_get_contents($imgPath));
             // Create the base64 image string

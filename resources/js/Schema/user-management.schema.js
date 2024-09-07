@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const userSchema = z.object({
     nama: z.string().min(1, { message: 'Nama harus diisi' }),
-    email: z.string().email({ message: 'Email tidak valid' }),
+    username: z.string().min(1, { message: 'Username harus diisi' }),
     nip: z.string().length(18, { message: 'NIP harus terdiri dari 18 digit angka' }).regex(/^\d+$/, { message: 'NIP harus berupa angka' }),
     role: z.string().min(1, { message: 'Role harus diisi' }),
     timKerjaId: z.array(z.string()).min(1, { message: 'Minimal 1 tim kerja harus dipilih' }), password: z.string().min(8, { message: 'Password minimal 8 karakter' }),
@@ -14,7 +14,7 @@ export const userSchema = z.object({
 
 export const updateUserSchema = z.object({
     nama: z.string().min(1, { message: 'Nama harus diisi' }),
-    email: z.string().email({ message: 'Email tidak valid' }),
+    username: z.string().min(1, { message: 'Username harus diisi' }),
     nip: z.string().length(18, { message: 'NIP harus terdiri dari 18 digit angka' }).regex(/^\d+$/, { message: 'NIP harus berupa angka' }),
     role: z.string().min(1, { message: 'Role harus diisi' }),
     timKerjaId: z.array(z.string()).min(1, { message: 'Minimal 1 tim kerja harus dipilih' }),

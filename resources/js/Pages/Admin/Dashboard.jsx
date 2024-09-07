@@ -1,13 +1,55 @@
-import UserLayout from '@/Layout/Layout'
-import { useMenuContext } from '@/Provider/Menu'
-import { Head } from '@inertiajs/react'
-import { Text } from '@mantine/core'
-import React, { useEffect } from 'react'
+import DonutStatusDokumen from '@/Components/Chart/DonutStatusDokumen';
+import StackedBarChartByStatusPerYear from '@/Components/Chart/StackedBarChartByStatusPerYear';
+import GreetingDashboard from '@/Components/Commons/GreetingDashboard';
+import PermintaanByStatusCard from '@/Components/Commons/PermintaanByStatusCard';
+import UserLayout from '@/Layout/Layout';
+import { Head, router } from '@inertiajs/react';
+import { Grid, Stack } from '@mantine/core'
+import React, { useEffect, useRef, useState } from 'react'
 
-const Dashboard = ({ user }) => {
+const Dashboard = ({ userData, statusCardData, countTotal, chartData }) => {
+    const [selectedTahun, setSelectedTahun] = useState('');
+    const chartDataDonut = statusCardData.map((status) => ({
+        name: status.text,
+        value: status.count,
+        color: status.color,
+    }));
+
+    const isFirstRender = useRef(true);
+
+    const handleRouteRevisit = (tahun) => {
+        router.visit(route('admin.dashboard', { tahun: tahun }), {
+            only: ['chartData'],
+            preserveScroll: true,
+            preserveState: true
+        })
+    }
+
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+        
+        if (selectedTahun) {            
+            handleRouteRevisit(selectedTahun);
+        }
+    }, [selectedTahun]);
+
     return (<>
-        <Head title="Dashboard" />
-        <Text> Halaman Dashboard</Text>
+        <Stack>
+            <Head title='Dashboard' />
+            <GreetingDashboard userData={userData} />
+            <PermintaanByStatusCard countTotal={countTotal} statusCardData={statusCardData} />
+            <Grid gutter={'lg'} columns={12} justify='center'>
+                <Grid.Col span={4}>
+                    <DonutStatusDokumen data={chartDataDonut} />
+                </Grid.Col>
+                <Grid.Col span={8}>
+                    <StackedBarChartByStatusPerYear data={chartData} selectedTahun={selectedTahun} setSelectedTahun={setSelectedTahun} />
+                </Grid.Col>
+            </Grid>
+        </Stack>
     </>
     )
 }

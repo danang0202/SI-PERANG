@@ -17,11 +17,22 @@ class UserController extends Controller
         $user = auth()->user();
         $userData = User::where('id', $user->id)->with(['timKerjas:id,nama,nama_ketua'])->first();
 
-        $countTotal = Pengajuan::where('user_id', $user->id)->count();
-        $countMenungguKonfirmasi = Pengajuan::where('status', 'MENUNGGU KONFIRMASI')->where('user_id', $user->id)->count();
-        $countPermintaanDiterima = Pengajuan::where('status', 'PERMINTAAN DITERIMA')->where('user_id', $user->id)->count();
-        $countPermintaanDitolak = Pengajuan::where('status', 'PERMINTAAN DITOLAK')->where('user_id', $user->id)->count();
-        $countPermintaanDibatalkan = Pengajuan::where('status', 'PERMINTAAN DIBATALKAN')->where('user_id', $user->id)->count();
+        $pengajuanCounts = Pengajuan::where('user_id', $user->id)
+            ->whereMonth('created_at', date('m'))
+            ->whereYear('created_at', date('Y'))
+            ->selectRaw('
+            COUNT(*) as countTotal,
+            SUM(CASE WHEN status = "MENUNGGU KONFIRMASI" THEN 1 ELSE 0 END) as countMenungguKonfirmasi,
+            SUM(CASE WHEN status = "PERMINTAAN DITERIMA" THEN 1 ELSE 0 END) as countPermintaanDiterima,
+            SUM(CASE WHEN status = "PERMINTAAN DITOLAK" THEN 1 ELSE 0 END) as countPermintaanDitolak,
+            SUM(CASE WHEN status = "PERMINTAAN DIBATALKAN" THEN 1 ELSE 0 END) as countPermintaanDibatalkan
+        ')->first();
+
+        $countTotal = $pengajuanCounts->countTotal;
+        $countMenungguKonfirmasi = (int) $pengajuanCounts->countMenungguKonfirmasi ?? 0;
+        $countPermintaanDiterima = (int) $pengajuanCounts->countPermintaanDiterima ?? 0;
+        $countPermintaanDitolak = (int) $pengajuanCounts->countPermintaanDitolak ?? 0;
+        $countPermintaanDibatalkan = (int) $pengajuanCounts->countPermintaanDibatalkan ?? 0;
 
         $statusCardData = [
             [
@@ -54,7 +65,8 @@ class UserController extends Controller
             ],
         ];
 
-        // Mendapatkan data pengajuan per bulan berdasarkan status
+        $tahun = request('tahun', date('Y'));
+        // Mendapatkan data pengajuan per bulan berdasarkan status dan tahun
         $pengajuanPerBulan = Pengajuan::selectRaw("
                 MONTHNAME(created_at) as month, 
                 MONTH(created_at) as month_number,
@@ -63,7 +75,7 @@ class UserController extends Controller
                 SUM(CASE WHEN status = 'PERMINTAAN DITOLAK' THEN 1 ELSE 0 END) as PERMINTAAN_DITOLAK,
                 SUM(CASE WHEN status = 'PERMINTAAN DIBATALKAN' THEN 1 ELSE 0 END) as PERMINTAAN_DIBATALKAN
             ")
-            ->whereYear('created_at', date('Y'))
+            ->whereYear('created_at', $tahun)
             ->where('user_id', $user->id)
             ->groupByRaw('month, month_number')
             ->orderByRaw("month_number")

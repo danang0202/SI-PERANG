@@ -2,7 +2,7 @@ import { EXTENDED_COLOR } from '@/constan/mantine.constan';
 import { showFailNotification, showSuccesNotification } from '@/helper/notification.helper';
 import UserLayout from '@/Layout/Layout'
 import { itemPengajuanSchema, pengajuanSchema } from '@/Schema/Pengajuan.schema';
-import { router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { ActionIcon, Button, Grid, Group, Menu, NumberInput, Select, Stack, Text, Textarea, TextInput } from '@mantine/core'
 import { DateInput } from '@mantine/dates';
 import { useForm, zodResolver } from '@mantine/form';
@@ -120,6 +120,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
 
     return (
         <Stack gap={"lg"} mb={"xl"}>
+            <Head title='Permintaan' />
             <form onSubmit={formPengajuan.onSubmit((values) => handleSubmitPengajuan(values))}>
                 <Stack>
                     <Group justify='space-between' align='center'>
