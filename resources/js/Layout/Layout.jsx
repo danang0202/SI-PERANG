@@ -76,7 +76,7 @@ const UserLayout = ({ children, session, title }) => {
                         </Group>
                         <Group>
                             <Popover
-                                width={300}
+                                width={250}
                                 position="bottom-end"
                                 withArrow
                                 shadow="md"
@@ -87,7 +87,10 @@ const UserLayout = ({ children, session, title }) => {
                                     </UnstyledButton>
                                 </Popover.Target>
                                 <Popover.Dropdown>
-                                    {/* <NotificationPopOver /> */}
+                                    <Stack align='center' gap={0}>
+                                        <Text fw={'bold'} c={'gray1'} size='sm'>Maaf</Text>
+                                        <Text size='sm' c={'gray1'}>Fitur ini belum tersedia</Text>
+                                    </Stack>
                                 </Popover.Dropdown>
                             </Popover>
                             <Popover

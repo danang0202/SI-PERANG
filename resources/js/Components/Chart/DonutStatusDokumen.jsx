@@ -8,7 +8,7 @@ import { bulan } from '@/helper/date.helper'
 const DonutStatusDokumen = ({ data }) => {
     const tahun = new Date();
     return (
-        <Stack gap={"xs"} className='border rounded-sm' p={'lg'} h={'100%'} justify='space-between'>
+        <Stack className='border rounded-sm' p={'lg'} h={'100%'} justify='space-between'>
             <Text size='sm' fw={'bold'}>Status Dokumen  per {bulan[tahun.getMonth()]}, {tahun.getFullYear()}</Text>
             <Stack gap={'xs'} align='center'>
                 <DonutChart data={data}

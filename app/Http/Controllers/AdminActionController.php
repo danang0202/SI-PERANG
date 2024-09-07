@@ -78,7 +78,7 @@ class AdminActionController extends Controller
                     ? 'Jenis barang "' . $barang->nama . '" tidak dapat dihapus!'
                     : 'Barang tidak terhapus!',
             ];
-            return redirect()->route('admin.inventaris-barang.jenis')
+            return redirect()->route('admin.inventaris-barang')
                 ->with('status', $status);
         }
     }

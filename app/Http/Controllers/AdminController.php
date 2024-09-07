@@ -115,12 +115,53 @@ class AdminController extends Controller
                 'PERMINTAAN_DIBATALKAN' => (int) $data['PERMINTAAN_DIBATALKAN'],
             ];
         });
+
+        $tahunTimKerja = request('tahun_tim_kerja', date('Y'));
+        $pengajuanPerTimKerja = Pengajuan::join('tim_kerja', 'pengajuan.tim_kerja_id', '=', 'tim_kerja.id')
+            ->selectRaw("
+            tim_kerja.nama as tim_kerja,
+            SUM(CASE WHEN pengajuan.status = 'MENUNGGU KONFIRMASI' THEN 1 ELSE 0 END) as MENUNGGU_KONFIRMASI,
+            SUM(CASE WHEN pengajuan.status = 'PERMINTAAN DITERIMA' THEN 1 ELSE 0 END) as PERMINTAAN_DITERIMA,
+            SUM(CASE WHEN pengajuan.status = 'PERMINTAAN DITOLAK' THEN 1 ELSE 0 END) as PERMINTAAN_DITOLAK,
+            SUM(CASE WHEN pengajuan.status = 'PERMINTAAN DIBATALKAN' THEN 1 ELSE 0 END) as PERMINTAAN_DIBATALKAN
+        ")
+            ->whereYear('pengajuan.created_at', $tahunTimKerja);
+
+        $bulanTimKerja = request('bulan_tim_kerja', 'all');
+        if ($bulanTimKerja !== 'all') {
+            $pengajuanPerTimKerja->whereMonth('pengajuan.created_at', $bulanTimKerja);
+        }
+        
+        $pengajuanPerTimKerja = $pengajuanPerTimKerja
+            ->groupBy('tim_kerja.nama')
+            ->orderBy('tim_kerja.nama')
+            ->get();
+
+            $allTeams = TimKerja::pluck('nama');
+            $chartDataTimKerja = $allTeams->map(function ($team) use ($pengajuanPerTimKerja) {
+                $data = $pengajuanPerTimKerja->firstWhere('tim_kerja', $team) ?? [
+                    'MENUNGGU_KONFIRMASI' => 0,
+                    'PERMINTAAN_DITERIMA' => 0,
+                    'PERMINTAAN_DITOLAK' => 0,
+                    'PERMINTAAN_DIBATALKAN' => 0,
+                ];
+                
+                return [
+                    'tim_kerja' => $team,
+                    'MENUNGGU_KONFIRMASI' => (int) $data['MENUNGGU_KONFIRMASI'],
+                    'PERMINTAAN_DITERIMA' => (int) $data['PERMINTAAN_DITERIMA'],
+                    'PERMINTAAN_DITOLAK' => (int) $data['PERMINTAAN_DITOLAK'],
+                    'PERMINTAAN_DIBATALKAN' => (int) $data['PERMINTAAN_DIBATALKAN'],
+                ];
+            });
+
         return Inertia::render('Admin/Dashboard', [
             'user' => $user,
             'statusCardData' => $statusCardData,
             'countTotal' => $countTotal,
             'userData' => $userData,
-            'chartData' => $chartData
+            'chartData' => $chartData,
+            'chartDataTimKerja' => $chartDataTimKerja
         ]);
     }
 
