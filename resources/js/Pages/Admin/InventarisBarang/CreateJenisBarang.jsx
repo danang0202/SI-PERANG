@@ -42,7 +42,7 @@ const CreateJenisBarang = ({  }) => {
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <Stack gap={"md"}>
                     <Group justify='space-between' align='center'>
-                        <Text size='sm'>Menambahkan Jenis Barang</Text>
+                        <Text size='sm'>Tambah Jenis Barang</Text>
                         <Group justify='flex-end'>
                             <ButtonOutlineWithRoute label={'Kembali'} route={route('admin.inventaris-barang.jenis')} />
                             <Button radius={'xs'} type='submit' loading={loading}>

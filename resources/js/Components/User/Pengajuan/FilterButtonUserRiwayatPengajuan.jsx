@@ -70,11 +70,24 @@ const FilterButtonUserRiwayatPengajuan = ({ dateRange, setDateRange, selectedSta
                     </Group>
                 </UnstyledButton>
             </Menu.Target>
-            <Menu.Dropdown py="md" w={300}>
+            <Menu.Dropdown py="md" w={350}>
                 <Stack gap={8}>
-                    <Stack px={"md"}>
+                    <Stack px={"md"} gap={'xs'}>
                         <Text size='sm'>Rentang Tanggal</Text>
-                        <Grid gutter={0} w={260}>
+                        <Group align='center' justify='flex-end'>
+                            <Text
+                                size="xs"
+                                c="gray1"
+                                mr={"xs"}
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                    setLocalDateRange([null, null])
+                                }}
+                            >
+                                Batalkan Filter Tanggal
+                            </Text>
+                        </Group>
+                        <Grid gutter={0} w={300}>
                             <Grid.Col span={6}>
                                 <DatePickerInput
                                     size='xs'
@@ -130,7 +143,7 @@ const FilterButtonUserRiwayatPengajuan = ({ dateRange, setDateRange, selectedSta
                                 style={{ cursor: "pointer" }}
                                 onClick={handleSelectAllStatuses}
                             >
-                                Select All
+                                Pilih Semua
                             </Text>
                             <Text
                                 size="xs"
@@ -138,7 +151,7 @@ const FilterButtonUserRiwayatPengajuan = ({ dateRange, setDateRange, selectedSta
                                 style={{ cursor: "pointer" }}
                                 onClick={handleDeselectAllStatuses}
                             >
-                                Deselect All
+                                Batalkan Piilhan
                             </Text>
                         </Group>
                         <Stack gap={"xs"}>

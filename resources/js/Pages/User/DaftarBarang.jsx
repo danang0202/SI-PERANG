@@ -113,8 +113,8 @@ const DaftarBarang = ({ user, barangs }) => {
                 <SearchInput keyword={keyword} setKeyword={setKeyword} />
             </Group>
             <DataTable
-                pinLastColumn
-                height={500}
+                verticalSpacing={"xs"}
+                minHeight={300}
                 fz="xs"
                 withColumnBorders
                 sortStatus={sortStatus}

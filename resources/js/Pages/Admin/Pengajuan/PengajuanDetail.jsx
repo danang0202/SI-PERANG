@@ -1,14 +1,12 @@
 import ButtonOutlineWithRoute from '@/Components/Commons/ButtonOutlineWithRoute'
 import ConfirmationModalPengajuan from '@/Components/Commons/ConfirmationModalPengajuan'
-import TextStatus from '@/Components/Commons/TextStatus'
 import { getStatusColor, toTitleCase } from '@/helper/common.helper'
 import { formatDateTime } from '@/helper/date.helper'
 import { showFailNotification, showSuccesNotification } from '@/helper/notification.helper'
 import UserLayout from '@/Layout/Layout'
-import { Link, router } from '@inertiajs/react'
-import { Badge, Box, Button, Grid, Group, Modal, rem, Stack, Stepper, Text, TextInput } from '@mantine/core'
+import { Badge, Box, Button, Grid, Group, rem, Stack, Stepper, Text, TextInput, useMantineTheme } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
-import { useDisclosure } from '@mantine/hooks'
+import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import { IconCalendar, IconPrinter, IconShieldCheck, IconUserCheck } from '@tabler/icons-react'
 import { DataTable } from 'mantine-datatable'
 import React, { useEffect, useState } from 'react'
@@ -17,6 +15,8 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
     const [confirmStatus, setConfirmStatus] = useState();
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
 
     useEffect(() => {
         if (status && status.type == 'success') {
@@ -26,33 +26,13 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
         }
     }, [])
 
-    // const handleConfirm = (recordId) => {
-    //     setLoading(true);
-    //     if (confirmStatus) {
-    //         const url = confirmStatus == 'accept' ? 'admin.pengajuan.accept' : confirmStatus == 'reject' ? 'admin.pengajuan.reject' : 'user.pengajuan.pembatalan';
-    //         router.get(route(url, { id: recordId }), {
-    //             onSuccess: () => {
-    //                 setLoading(false);
-    //                 close();
-    //                 router.visit(window.location.pathname, {
-    //                     only: ['pengajuan'],
-    //                 });
-    //             },
-    //             onError: (errors) => {
-    //                 setLoading(false);
-    //                 console.error('Error:', errors);
-    //             },
-    //         });
-    //     }
-    // };
-
     return (
-        <Stack gap="md">
+        <Stack gap="md" mb={'lg'}>
             <Group justify='flex-start'>
                 <ButtonOutlineWithRoute label={'Kembali'} route={route(backUrl)} color={'red'} />
             </Group>
             <Grid gutter={"xl"}>
-                <Grid.Col span={8}>
+                <Grid.Col span={isMobile ? 12 : 8}>
                     <Stack gap={'lg'}>
                         <Stack gap={"xs"}>
                             <Text size='base' fw={'bold'}>Informasi Permintaan</Text>
@@ -111,7 +91,7 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
                             <Text size='base' fw={'bold'}>Item Permintaan</Text>
                             <DataTable
                                 mih={150}
-                                fz="sm"
+                                fz="xs"
                                 withColumnBorders
                                 records={pengajuan.items}
                                 columns={[
@@ -150,7 +130,7 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
                         </Stack>
                     </Stack>
                 </Grid.Col>
-                <Grid.Col span={4}>
+                <Grid.Col span={isMobile ? 12 : 4}>
                     <Stack align='flex-start' gap="lg">
                         <Text fw={'bold'}>Log Status Permintaan</Text>
                         <Stepper active={3}

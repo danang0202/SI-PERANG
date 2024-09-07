@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import {
     ActionIcon,
     AppShell,
@@ -6,7 +6,6 @@ import {
     Popover,
     Stack,
     Text,
-    Title,
     UnstyledButton,
     useMantineTheme,
 } from "@mantine/core";
@@ -136,7 +135,7 @@ const UserLayout = ({ children, session, title }) => {
                             </ActionIcon>
                         )}
                     </Group>
-                    <NavbarMenu isAdmin={session.role === 'ADMIN'} />
+                    <NavbarMenu isAdmin={session.role === 'ADMIN'} toggle={toggle} />
                 </Stack>
             </AppShell.Navbar>
             <AppShell.Main mr={{ base: 0, lg: 'lg' }}>{children}</AppShell.Main>

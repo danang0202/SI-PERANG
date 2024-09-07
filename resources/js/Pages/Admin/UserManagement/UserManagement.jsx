@@ -76,10 +76,10 @@ const UserManagement = ({ user, status, users }) => {
             { accessor: 'no', width: 70, textAlign: "center", render: (row, index) => <div style={{ textAlign: 'center' }}>{index + 1}</div>, },
             { accessor: 'nama', ...props },
             { accessor: 'username', ...props },
-            { accessor: 'nip', title: 'NIP', ...props },
+            { accessor: 'nip', title: 'NIP', ...props, width:150},
             { accessor: 'role', ...props },
             {
-                accessor: 'tim_kerjas', title: 'Tim Kerja',
+                accessor: 'tim_kerjas', title: 'Tim Kerja', width:120,
                 render: (row) => (
                     <Group wrap='wrap'>
                         {row.tim_kerjas && row.tim_kerjas.length > 0 ? (
@@ -107,9 +107,11 @@ const UserManagement = ({ user, status, users }) => {
                 ),
                 filtering: selectedTimKerja.length > 0,
             },
-            { accessor: 'status', render: (record) => <Badge radius={'xs'} variant='light' color={record.status == 'AKTIF' ? 'accent5' : 'accent6'}>{record.status}</Badge> },
+            { accessor: 'status', width:110,  render: (record) => <Badge radius={'xs'} variant='light' color={record.status == 'AKTIF' ? 'accent5' : 'accent6'}>{record.status}</Badge> },
             {
-                accessor: 'action', textAlign: 'center', width: 70,
+                accessor: 'action', textAlign: 'center', width: 60,
+                cellsStyle: () => ({ background: 'white' }),
+                titleStyle: () => ({ background: 'white' }),
                 render: (record) => (
                     <Menu shadow="md" width={150} position="bottom-end" offset={-5}>
                         <Menu.Target>
@@ -168,7 +170,7 @@ const UserManagement = ({ user, status, users }) => {
             </Group>
             <DataTable
                 pinLastColumn
-                height={450}
+                minHeight={300}
                 fz="xs"
                 withColumnBorders
                 sortStatus={sortStatus}

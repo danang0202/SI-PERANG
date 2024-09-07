@@ -128,7 +128,9 @@ const DaftarBarang = ({ barangs, status }) => {
                 width: 200
             },
             {
-                accessor: 'action', textAlign: 'center', width: 70,
+                accessor: 'action', textAlign: 'center',  width: 60,
+                cellsStyle: () => ({ background: 'white' }),
+                titleStyle: () => ({ background: 'white' }),
                 render: (record) => (
                     <Menu shadow="md" width={110} position="bottom-end" offset={-5}>
                         <Menu.Target>
@@ -187,7 +189,7 @@ const DaftarBarang = ({ barangs, status }) => {
                 </Group>
                 <DataTable
                     pinLastColumn
-                    height={450}
+                    minHeight={300}
                     fz="xs"
                     withColumnBorders
                     sortStatus={sortStatus}

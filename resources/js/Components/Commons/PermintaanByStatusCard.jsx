@@ -1,4 +1,5 @@
-import { Grid, Group, Stack, Text, ThemeIcon } from '@mantine/core';
+import { Grid, Group, Stack, Text, ThemeIcon, useMantineTheme } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconCancel, IconCircleCheck, IconCircleX, IconFile, IconHourglass } from '@tabler/icons-react'
 import React from 'react'
 
@@ -9,11 +10,13 @@ const iconData = [
 
 
 const PermintaanByStatusCard = ({ countTotal, statusCardData }) => {
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
     return (
         <Stack className='border  rounded-sm' p={"md"} gap={'lg'} pb={'lg'} >
-            <Text size='sm' fw={'bold'}>Total Permintaan Berdasarkan Status</Text>
+            <Text size='base' fw={'bold'}>Total Permintaan Berdasarkan Status</Text>
             <Grid gutter="xs" columns={10}>
-                <Grid.Col span={2}>
+                <Grid.Col span={isMobile ? 10 : 2}>
                     <Group wrap="nowrap" justify="start" align="flex-start" h="100%">
                         <ThemeIcon
                             color="blueBackground"
@@ -34,8 +37,8 @@ const PermintaanByStatusCard = ({ countTotal, statusCardData }) => {
                     </Group>
                 </Grid.Col>
                 {statusCardData.map((status, index) => (
-                    <Grid.Col span={2} key={index}>
-                        <Group wrap="nowrap" justify="start" align="flex-start" h="100%">
+                    <Grid.Col span={isMobile ? 10 : 2} key={index}>
+                        <Group wrap="nowrap" justify="start" align="flex-start" h="100%" mt={isMobile ? "xs" : '0'}>
                             <ThemeIcon color={status.color} c={status.iconColor} size={50} radius="xl">
                                 {React.createElement(iconData[index], { style: { width: "60%", height: "60%" } })}
                             </ThemeIcon>

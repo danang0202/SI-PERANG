@@ -4,7 +4,8 @@ import GreetingDashboard from '@/Components/Commons/GreetingDashboard';
 import PermintaanByStatusCard from '@/Components/Commons/PermintaanByStatusCard';
 import UserLayout from '@/Layout/Layout'
 import { Head, router } from '@inertiajs/react';
-import { Grid, Stack } from '@mantine/core'
+import { Grid, Stack, useMantineTheme } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useRef, useState } from 'react'
 
 const Dashboard = ({ userData, statusCardData, countTotal, chartData }) => {
@@ -17,6 +18,8 @@ const Dashboard = ({ userData, statusCardData, countTotal, chartData }) => {
   }));
 
   const isFirstRender = useRef(true);
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
 
   const handleRouteRevisit = () => {
     setLoadingChart(true)
@@ -46,10 +49,10 @@ const Dashboard = ({ userData, statusCardData, countTotal, chartData }) => {
       <GreetingDashboard userData={userData} />
       <PermintaanByStatusCard countTotal={countTotal} statusCardData={statusCardData} />
       <Grid gutter={'lg'} columns={12} justify='center'>
-        <Grid.Col span={4}>
+        <Grid.Col span={isMobile ? 12 : 4}>
           <DonutStatusDokumen data={chartDataDonut} />
         </Grid.Col>
-        <Grid.Col span={8}>
+        <Grid.Col span={isMobile ? 12 : 8}>
           <StackedBarChartByStatusPerYear data={chartData} selectedTahun={selectedTahun} setSelectedTahun={setSelectedTahun} loading={loadingChart} />
         </Grid.Col>
       </Grid>

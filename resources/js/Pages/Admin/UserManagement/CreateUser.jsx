@@ -5,9 +5,9 @@ import AdminUserManagementLayout from '@/Layout/AdminUserManagementLayout'
 import UserLayout from '@/Layout/Layout'
 import { userSchema } from '@/Schema/user-management.schema'
 import { router, usePage } from '@inertiajs/react'
-import { Button, Grid, Group, MultiSelect, PasswordInput, Select, Stack, Text, TextInput } from '@mantine/core'
+import { Button, Grid, Group, MultiSelect, PasswordInput, Select, Stack, Text, TextInput, useMantineTheme } from '@mantine/core'
 import { useForm, zodResolver } from '@mantine/form'
-import { useDisclosure } from '@mantine/hooks'
+import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import React, { useEffect, useState } from 'react'
 
 
@@ -17,6 +17,8 @@ const dataRole = [
 ]
 
 const CreateUser = ({ user, timKerjas, status }) => {
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
     const { errors } = usePage().props
     const [loading, setLoading] = useState(false);
     const [visiblePassword, { toggle: togglePassword }] = useDisclosure(false);
@@ -65,7 +67,7 @@ const CreateUser = ({ user, timKerjas, status }) => {
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
             <Stack gap={'xs'}>
                 <Group justify='space-between' align='center'>
-                    <Text size='sm'>Menambahkan Pengguna</Text>
+                    <Text size='sm'>Tambah Pengguna</Text>
                     <Group justify='flex-end'>
                         <ButtonOutlineWithRoute label={'Kembali'} route={route('admin.user-management')} />
                         <Button radius={'xs'} type='submit' loading={loading} className='hover:opacity-60 transition'>
@@ -75,7 +77,7 @@ const CreateUser = ({ user, timKerjas, status }) => {
                 </Group>
                 <Text fw={'bold'}>Informasi User</Text>
                 <Grid gutter={{ base: 'md', lg: "lg" }}>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={isMobile ? 12 : 6}>
                         <Stack gap={'xs'}>
                             <TextInput
                                 label="Nama User"
@@ -100,7 +102,7 @@ const CreateUser = ({ user, timKerjas, status }) => {
                             />
                         </Stack>
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={isMobile ? 12 : 6}>
                         <Stack gap={"xs"}>
 
                             <MultiSelect
@@ -143,7 +145,7 @@ const CreateUser = ({ user, timKerjas, status }) => {
                 </Grid>
                 <Text fw={'bold'}>Keamanan Akun</Text>
                 <Grid>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={isMobile ? 12 : 6}>
                         <PasswordInput
                             label="Password"
                             visible={visiblePassword}
@@ -151,7 +153,7 @@ const CreateUser = ({ user, timKerjas, status }) => {
                             {...form.getInputProps('password')}
                         />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={isMobile ? 12 : 6}>
                         <PasswordInput
                             label="Konfirmasi Password"
                             visible={visibleConfirmPassword}

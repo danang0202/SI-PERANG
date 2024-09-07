@@ -5,11 +5,14 @@ import AdminUserManagementLayout from '@/Layout/AdminUserManagementLayout'
 import UserLayout from '@/Layout/Layout'
 import { timKerjaSchema } from '@/Schema/user-management.schema'
 import { router, usePage } from '@inertiajs/react'
-import { Button, Grid, Group, Select, Stack, Text, TextInput } from '@mantine/core'
+import { Button, Grid, Group, Select, Stack, Text, TextInput, useMantineTheme } from '@mantine/core'
 import { useForm, zodResolver } from '@mantine/form'
+import { useMediaQuery } from '@mantine/hooks'
 import React, { useEffect, useState } from 'react'
 
 const CreateTimKerja = ({ user, users, status }) => {
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
     const { errors } = usePage().props
     const [loading, setLoading] = useState(false);
     const [selectedKetua, setSelectedKetua] = useState(null);
@@ -65,7 +68,7 @@ const CreateTimKerja = ({ user, users, status }) => {
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
             <Stack gap={'xs'}>
                 <Group justify='space-between' align='center'>
-                    <Text size='sm'>Menambahkan Tim Kerja</Text>
+                    <Text size='sm'>Tambah Tim Kerja</Text>
                     <Group justify='flex-end'>
                         <ButtonOutlineWithRoute label={'Kembali'} route={route('admin.user-management.tim-kerja')} />
                         <Button radius={'xs'} type='submit' loading={loading} className='hover:opacity-60 transition'>
@@ -74,7 +77,7 @@ const CreateTimKerja = ({ user, users, status }) => {
                     </Group>
                 </Group>
                 <Grid>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={isMobile ? 12 : 6}>
                         <Stack gap={'xs'}>
                             <TextInput
                                 label="Nama Tim Kerja"

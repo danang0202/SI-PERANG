@@ -16,7 +16,7 @@ const CreateSatuanBarang = ({ status }) => {
     }, [status])
 
     const form = useForm({
-        mode: 'uncontrolled',
+        mode: 'controlled',
         initialValues: {
             nama: '',
         },
@@ -55,7 +55,7 @@ const CreateSatuanBarang = ({ status }) => {
         <form onSubmit={form.onSubmit(handleSubmit)}>
             <Stack gap={"md"}>
                 <Group justify='space-between' align='center'>
-                    <Text size='sm'>Menambahkan Satuan Barang</Text>
+                    <Text size='sm'>Tambah Satuan Barang</Text>
                     <Group justify='flex-end'>
                         <ButtonOutlineWithRoute label={'Kembali'} route={route('admin.inventaris-barang.satuan')} />
                         <Button radius={'xs'} type='submit' loading={loading}>
@@ -70,6 +70,9 @@ const CreateSatuanBarang = ({ status }) => {
                     placeholder="Masukkan satuan barang..."
                     key={form.key('nama')}
                     {...form.getInputProps('nama')}
+                    onChange={(event) => {
+                        form.setFieldValue('nama', event.currentTarget.value.toUpperCase());
+                    }}
                 />
             </Stack>
         </form>)

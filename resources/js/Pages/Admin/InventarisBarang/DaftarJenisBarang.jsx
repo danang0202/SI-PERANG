@@ -18,7 +18,6 @@ import React, { useEffect, useState } from 'react'
 const PAGE_SIZES = [10, 15, 20];
 const key = 'table-jenis-barang-admin';
 const props = {
-    // resizable: true,
     sortable: true,
     draggable: true
 };
@@ -75,7 +74,9 @@ const DaftarJenisBarang = ({ jenisBarangs, status }) => {
             { accessor: 'nama', ...props },
             {
                 accessor: 'action', textAlign: 'center',
-                width: 70,
+                width: 60,
+                cellsStyle: () => ({ background: 'white' }),
+                titleStyle: () => ({ background: 'white' }),
                 render: (record) => (
                     <Menu shadow="md" width={110} position="bottom-end" offset={-5}>
                         <Menu.Target>
@@ -120,14 +121,9 @@ const DaftarJenisBarang = ({ jenisBarangs, status }) => {
                 <ButtonWithRoute route={route('admin.inventaris-barang.jenis.create')} label={'Tambah'} leftSection={<IconPlus size={14} />} />
                 <SearchInput keyword={keyword} setKeyword={setKeyword} />
             </Group>
-            {keyword && (
-                <Group>
-                    <Badge radius={"xs"} variant='light' color={'gray'} rightSection={<IconX size={14} className='cursor-pointer hover:text-red-600' onClick={() => setKeyword('')} />} >Menampilkan hasil pencarian: "{keyword}"</Badge>
-                </Group>
-            )}
             <DataTable
-            pinLastColumn
-                height={450}
+                pinLastColumn
+                minHeight={300}
                 fz="xs"
                 withColumnBorders
                 sortStatus={sortStatus}

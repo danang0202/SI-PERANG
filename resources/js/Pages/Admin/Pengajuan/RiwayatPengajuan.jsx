@@ -10,7 +10,6 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { DataTable, useDataTableColumns } from 'mantine-datatable';
 import React, { useEffect, useRef, useState } from 'react'
 
-const key = 'table-riwayat-admin';
 const pageSize = 15;
 const RiwayatPengajuan = ({ user, paginatedPengajuans, timKerja, filters }) => {
     const [page, setPage] = useState(paginatedPengajuans.current_page);
@@ -28,7 +27,6 @@ const RiwayatPengajuan = ({ user, paginatedPengajuans, timKerja, filters }) => {
     }, [page, keyword]);
 
     const { effectiveColumns } = useDataTableColumns({
-        // key,
         columns: [
             {
                 accessor: 'no',
@@ -38,7 +36,7 @@ const RiwayatPengajuan = ({ user, paginatedPengajuans, timKerja, filters }) => {
             },
             {
                 accessor: 'created_at',
-                width: 180,
+                width: 120,
                 title: 'Tanggal',
                 render: (row) => {
                     return formatTanggal(row.created_at);
@@ -47,6 +45,7 @@ const RiwayatPengajuan = ({ user, paginatedPengajuans, timKerja, filters }) => {
             {
                 accessor: 'no_pengajuan',
                 title: "Nomor Surat",
+                width:185,
                 render: (row) => {
                     return row.no_pengajuan ? (
                         <Badge radius="xs" variant="outline">{row.no_pengajuan}</Badge>
@@ -62,6 +61,7 @@ const RiwayatPengajuan = ({ user, paginatedPengajuans, timKerja, filters }) => {
             {
                 accessor: 'tim_kerja.nama',
                 title: "Tim Kerja",
+                width:100,
                 render: (row) => {
                     return (
                         <Badge variant='light' radius={'xs'} color='secondaryPurple'>{row.tim_kerja.nama}</Badge>
@@ -70,7 +70,6 @@ const RiwayatPengajuan = ({ user, paginatedPengajuans, timKerja, filters }) => {
             },
             {
                 accessor: 'status',
-                width: 230,
                 render: ({ status }) => {
                     return (
                         <TextStatus status={status} />
@@ -78,7 +77,9 @@ const RiwayatPengajuan = ({ user, paginatedPengajuans, timKerja, filters }) => {
                 }
             },
             {
-                accessor: 'action', textAlign: 'center', width: 80,
+                accessor: 'action', textAlign: 'center',  width: 75,
+                cellsStyle: () => ({ background: 'white' }),
+                titleStyle: () => ({ background: 'white' }),
                 render: (record) => (
                     <Link href={route('admin.pengajuan.riwayat-pengajuan.detail', { id: record.id })}>
                         <Button size='xs' variant='light'>Detail</Button>
@@ -116,7 +117,7 @@ const RiwayatPengajuan = ({ user, paginatedPengajuans, timKerja, filters }) => {
             </Group>
             <DataTable
                 pinLastColumn
-                height={450}
+                minHeight={300}
                 fz="xs"
                 records={records}
                 columns={effectiveColumns}

@@ -1,13 +1,16 @@
 import { statusesData } from '@/helper/common.helper'
 import { BarChart } from '@mantine/charts'
-import { Group, Select, Stack, Text } from '@mantine/core'
+import { Group, Select, Stack, Text, useMantineTheme } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import TextStatus from '../Commons/TextStatus'
 import ChartSkeletonHorizonal from '../Commons/ChartSkeletonHorizonal'
+import { useMediaQuery } from '@mantine/hooks'
 
 const StackedBarChartByStatusPerYear = ({ data, selectedTahun, setSelectedTahun, loading }) => {
     const currentYear = new Date().getFullYear();
     const [years, setYears] = useState([]);
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
 
     useEffect(() => {
         const generatedYears = [];
@@ -19,11 +22,11 @@ const StackedBarChartByStatusPerYear = ({ data, selectedTahun, setSelectedTahun,
     }, [currentYear]);
 
     return (
-        <Stack gap={"lg"} className='border rounded-sm' p={'lg'} h={"100%"}>
-            <Group align='center' justify='space-between'>
-                <Text size='sm' fw={'bold'}>Status Permintaan Barang per Bulan Tahun {selectedTahun}</Text>
+        <Stack gap={"lg"} className='border rounded-sm' p={{ base: 'xs', lg: 'lg' }} h={"100%"} mb={'lg'}>
+            <Group align='center' justify={isMobile ? 'flex-end' : 'space-between'} wrap='wrap'>
+                <Text size='base' fw={'bold'}>Status Permintaan per Bulan Tahun {selectedTahun}</Text>
                 <Select
-                    data={['2024', '2025']}
+                    data={years}
                     value={selectedTahun}
                     onChange={setSelectedTahun}
                     allowDeselect={false}
