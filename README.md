@@ -1,65 +1,97 @@
+# (logo-HD.png)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> ### SI PERANG merupakan aplikasi yang bertujuan untuk mengekomodasi permintaan barang dari setiap tim Kerja ke bagian umum BPS Bantul. Pengguna aplikasi ini adalah admin dan user. Admin dapat melakukan inventaris barang (CRUD Barang, CRUD Jenis Barang, CRUD Satuan Barang), Melihat dashoard permintaan barang, menerima permintaan, membatalkna pmermintaan, melihat riwayat permintaan barang, manajemen user, dan manajemen tim kerja. Sementara itu, user dapat melihat dashboard permintaan barang mereka, menambah permintaan barang baru, melihat riwayat permintaan barang, dan melihat daftar barang. 
 
-## About Laravel
+# Ringkasan TechStack
+| **Kategori** 	| **Teknologi**              	| **Deskripsi**            	|
+|-------------	|----------------------------	|------------------	|
+| Frontend      | React              	        | JavaScript library for building user interfaces, integrated with Laravel via Inertia.js. 	|
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# Getting started
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
+Pastikan Anda memeriksa panduan instalasi Laravel resmi untuk mengetahui persyaratan server sebelum memulai. [Official Documentation](https://laravel.com/docs/10.10/installation#installation)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Clone repositori ini:
 
-## Learning Laravel
+    git clone git@github.com:gothinkster/laravel-realworld-example-app.git
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Beralih ke folder repo:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+    cd SI-PERANG
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Install semua dependensi menggunakan composer:
 
-## Laravel Sponsors
+    npm install
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Install semua dependensi frontend menggunakan composer:
 
-### Premium Partners
+    composer install
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Salin file .env contoh dan lakukan perubahan konfigurasi yang diperlukan:
 
-## Contributing
+    cp .env.example .env
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Generate aplikasi key baru:
 
-## Code of Conduct
+    php artisan key:generate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Jalankan migrasi database (**Setel koneksi database di file .env sebelum menjalankan migrasi**)
 
-## Security Vulnerabilities
+    php artisan migrate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Mulai server pengembangan lokal
 
-## License
+    php artisan serve
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Pada terminal baru, jalankan perintah berikut untuk memulai bundler frontend:
+
+    php artisan serve
+
+Anda dapat mengakses server di http://localhost:8000
+
+**Ringkasan Perintah**
+
+    git clone git@github.com:gothinkster/laravel-realworld-example-app.git
+    cd laravel-realworld-example-app
+    composer install
+    cp .env.example .env
+    php artisan key:generate
+    php artisan jwt:generate 
+**Pastikan file .env anda sudah benar sebelum melakukan migrasi** [Environment variables](#environment-variables)
+
+    php artisan migrate
+    php artisan serve
+**Buka terminal baru**
+
+    npm run dev
+
+
+## Database seeding
+
+**Isi database dengan data dummy termasuk hubungan antar tabel yang mencakup pengguna, tim kerja, user_has_tim_kerja, barang, jenis_barang, satuan_barang, pengajuan, item_pengajuan, dll.**
+
+Buka DatabaseSeeder dan sesuaikan nilai properti sesuai kebutuhan Anda:
+
+    database/seeds/DatabaseSeeder.php
+
+Jalankan seeder database dan anda sudah siap:
+
+    php artisan db:seed
+
+***Catatan*** : ICatatan: Disarankan untuk memiliki database yang bersih sebelum seeding. Anda dapat me-refresh migrasi kapan saja untuk membersihkan database dengan menjalankan perintah berikut:
+
+    php artisan migrate:fresh
+
+## Dependencies
+
+- [Laravel-Breeze] - Untuk otentikasi
+- [barryvdh/laravel-dompdf] - Untuk menangani pembuatan PDF
+- [inertiajs/inertia-laravel] - Untuk integrasi antara Laravel dan React
+- [tightenco/ziggy] - Untuk menggunakan Laravel routes di JavaScript
+
+## Additional Information
+- **Frontend Framework**:  Proyek ini menggunakan React yang diintegrasikan dengan Laravel melalui Inertia.js untuk menciptakan pengalaman SPA (Single Page Application).
+- **Component Library**: Kami menggunakan Mantine untuk komponen UI.
+- **State Management**: Menggunakan React's built-in state management bersama dengan Inertia.js untuk manajemen state halaman.
+- **Deployment**: Saat melakukan deployment ke production, pastikan untuk mengubah environment dari local ke production dalam file .env dan jalankan npm run build untuk mengoptimalkan aset frontend.
