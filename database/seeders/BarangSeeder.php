@@ -16,7 +16,7 @@ class BarangSeeder extends Seeder
         $csvFile = fopen(base_path("database/data/barang_seeders.csv"), "r");
 
         $firstline = true;
-        while (($data = fgetcsv($csvFile, 2000, ";")) !== FALSE) {
+        while (($data = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
             if (!$firstline) {
                 Barang::create([
                     "kode" => $data['0'],
@@ -24,7 +24,6 @@ class BarangSeeder extends Seeder
                     "nama" => $data['3'],
                     'jumlah' => $data['4'],
                     "satuan_id" => $data['6'],
-
                 ]);
             }
             $firstline = false;

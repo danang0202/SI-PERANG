@@ -21,7 +21,7 @@ class User extends Authenticatable
         'nama',
         'nip',
         'role',
-        'email',
+        'username',
         'password',
     ];
 

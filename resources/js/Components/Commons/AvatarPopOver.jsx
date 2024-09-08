@@ -20,14 +20,14 @@ const AvatarPopOver = ({ session }) => {
             <Text c={"gray1"} size="sm" mt={-10}>
                 {session.nama} • {session.email}
             </Text>
-            <Button
-                variant="outline"
-                color="accent6"
-            >
-                <Link href={route('logout')} method="post">
+            <Link href={route('logout')} method="post">
+                <Button
+                    variant="outline"
+                    color="accent6"
+                >
                     Logout
-                </Link>
-            </Button>
+                </Button>
+            </Link>
         </Stack>
     );
 };

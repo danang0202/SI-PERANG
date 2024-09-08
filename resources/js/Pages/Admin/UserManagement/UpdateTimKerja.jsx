@@ -1,15 +1,17 @@
 import ButtonOutlineWithRoute from '@/Components/Commons/ButtonOutlineWithRoute'
-import { EXTENDED_COLOR } from '@/constan/mantine.constan'
 import { showFailNotification, showSuccesNotification } from '@/helper/notification.helper'
 import AdminUserManagementLayout from '@/Layout/AdminUserManagementLayout'
 import UserLayout from '@/Layout/Layout'
 import { timKerjaSchema } from '@/Schema/user-management.schema'
 import { router, usePage } from '@inertiajs/react'
-import { Button, Grid, Group, Select, Stack, Text, TextInput } from '@mantine/core'
+import { Button, Grid, Group, Select, Stack, Text, TextInput, useMantineTheme } from '@mantine/core'
 import { useForm, zodResolver } from '@mantine/form'
+import { useMediaQuery } from '@mantine/hooks'
 import React, { useEffect, useState } from 'react'
 
 const UpdateTImKerja = ({ user, users, status, prevTimKerja }) => {
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
     const { errors } = usePage().props
     const [loading, setLoading] = useState(false);
     const [selectedKetua, setSelectedKetua] = useState(null);
@@ -75,7 +77,7 @@ const UpdateTImKerja = ({ user, users, status, prevTimKerja }) => {
                     </Group>
                 </Group>
                 <Grid>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={isMobile ? 12 : 6}>
                         <Stack gap={'xs'}>
                             <TextInput
                                 label="Nama Tim Kerja"

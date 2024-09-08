@@ -8,9 +8,9 @@ import { formatTanggal } from '@/helper/date.helper';
 import { showFailNotification, showSuccesNotification } from '@/helper/notification.helper';
 import { filterDataRiwayatPengajuanUser } from '@/helper/table.helper';
 import UserLayout from '@/Layout/Layout'
-import { Link } from '@inertiajs/react';
-import { ActionIcon, Badge, Group, Menu, Stack, Text } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { Head, Link } from '@inertiajs/react';
+import { ActionIcon, Badge, Group, Menu, Stack, Text, useMantineTheme } from '@mantine/core';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { IconDots, IconEye, IconX } from '@tabler/icons-react';
 import { DataTable, useDataTableColumns } from 'mantine-datatable';
 import React, { useEffect, useState } from 'react'
@@ -26,6 +26,8 @@ const RiwayatPengajuan = ({ user, pengajuans, status }) => {
     const [selectedStatus, setSelectedStatus] = useState(statusesData);
     const [opened, { open, close }] = useDisclosure(false);
     const [selectedRecord, setSelectedRecord] = useState();
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
 
     useEffect(() => {
         if (status && status.type == 'success') {
@@ -85,7 +87,9 @@ const RiwayatPengajuan = ({ user, pengajuans, status }) => {
                 }
             },
             {
-                accessor: 'action', textAlign: 'center', width: 70,
+                accessor: 'action', textAlign: 'center', width: 60,
+                cellsStyle: () => ({ background: 'white' }),
+                titleStyle: () => ({ background: 'white' }),
                 render: (record) => (
                     <Menu shadow="md" width={140} position="bottom-end" offset={-5}>
                         <Menu.Target>
@@ -127,14 +131,15 @@ const RiwayatPengajuan = ({ user, pengajuans, status }) => {
 
     return (
         <Stack gap={"md"}>
+            <Head title='Permintaan' />
             <Group align='center' justify='space-between'>
                 <FilterButtonUserRiwayatPengajuan dateRange={dateRange} setDateRange={setDateRange} setSelectedStatus={setSelectedStatus} selectedStatus={selectedStatus} />
                 <SearchInput keyword={keyword} setKeyword={setKeyword} />
             </Group>
             <DataTable
+                minHeight={300}
                 pinLastColumn
-                height={450}
-                fz="sm"
+                fz="xs"
                 records={records}
                 columns={effectiveColumns}
                 totalRecords={pengajuans.length}

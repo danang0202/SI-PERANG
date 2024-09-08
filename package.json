@@ -24,6 +24,7 @@
     "dependencies": {
         "@inertiajs/inertia-react": "^0.8.1",
         "@inertiajs/react": "^1.2.0",
+        "@mantine/charts": "^7.12.1",
         "@mantine/core": "^7.12.1",
         "@mantine/dates": "^7.12.1",
         "@mantine/form": "^7.12.1",
@@ -36,6 +37,7 @@
         "mantine-datatable": "^7.11.3",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
+        "recharts": "^2.12.7",
         "zod": "^3.23.8"
     }
 }

@@ -1,14 +1,16 @@
 import TextStatus from '@/Components/Commons/TextStatus';
 import { EXTENDED_COLOR } from '@/constan/mantine.constan';
 import { statusesData } from '@/helper/common.helper';
-import { Badge, Box, Button, Checkbox, Divider, Grid, Group, Menu, Stack, Text, UnstyledButton } from '@mantine/core';
+import { Badge, Box, Button, Checkbox, Divider, Grid, Group, Menu, Stack, Text, UnstyledButton, useMantineTheme } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { useHover } from '@mantine/hooks';
+import { useHover, useMediaQuery } from '@mantine/hooks';
 import { IconArrowRight, IconCalendar, IconFilter, IconFilterFilled } from '@tabler/icons-react';
 import React, { useState, useEffect } from 'react';
 const FilterButtonRiwayatPengajuan = ({ localDateRange, setLocalDateRange, localSelectedStatus, setLocalSelectedStatus, localSelectedTimKerja, setLocalSelectedTimKerja, setPage, handleRouteVisit, timKerja }) => {
     const [opened, setOpened] = useState(false);
     const { ref, hovered } = useHover();
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
 
 
     const handleSelectAllStatuses = () => {
@@ -25,7 +27,7 @@ const FilterButtonRiwayatPengajuan = ({ localDateRange, setLocalDateRange, local
                 localSelectedStatus.filter((s) => s !== statusLabel)
             );
         } else {
-            setLocalSelectedStatus([    
+            setLocalSelectedStatus([
                 ...localSelectedStatus,
                 statusLabel,
             ]);
@@ -62,10 +64,23 @@ const FilterButtonRiwayatPengajuan = ({ localDateRange, setLocalDateRange, local
                     </Group>
                 </UnstyledButton>
             </Menu.Target>
-            <Menu.Dropdown py="md" w={550}>
+            <Menu.Dropdown py="md" w={isMobile ? 350 : 550}>
                 <Stack gap={8}>
-                    <Stack px={"md"}>
+                    <Stack px={"md"} gap={'xs'}>
                         <Text size='sm'>Rentang Tanggal</Text>
+                        <Group align='center' justify='flex-end'>
+                            <Text
+                                size="xs"
+                                c="gray1"
+                                mr={"xs"}
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                    setLocalDateRange([null, null])
+                                }}
+                            >
+                                Batalkan Filter Tanggal
+                            </Text>
+                        </Group>
                         <Grid gutter={0} w={300}>
                             <Grid.Col span={6}>
                                 <DatePickerInput
@@ -115,7 +130,7 @@ const FilterButtonRiwayatPengajuan = ({ localDateRange, setLocalDateRange, local
                     <Divider my="md" size="sm" mx={-4} />
                     <Stack px={"md"}>
                         <Grid>
-                            <Grid.Col span={6}>
+                            <Grid.Col span={isMobile ? 12 : 6}>
                                 <Stack gap={"xs"}>
                                     <Text size="sm">Status pengajuan</Text>
                                     <Group>
@@ -154,7 +169,7 @@ const FilterButtonRiwayatPengajuan = ({ localDateRange, setLocalDateRange, local
                                     </Stack>
                                 </Stack>
                             </Grid.Col>
-                            <Grid.Col span={6}>
+                            <Grid.Col span={isMobile ? 12 : 6}>
                                 <Stack gap={"xs"}>
                                     <Text size="sm">Tim Kerja</Text>
                                     <Group>

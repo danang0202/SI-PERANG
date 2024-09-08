@@ -9,11 +9,13 @@ import {
     lighten,
     useMantineTheme,
 } from "@mantine/core";
-import { useDisclosure, useHover } from "@mantine/hooks";
+import { useDisclosure, useHover, useMediaQuery } from "@mantine/hooks";
 import { IconChevronRight } from "@tabler/icons-react";
 import React, { FC, useEffect, useState } from "react";
-const NavbarButton = ({ menuItem, selectedKey }) => {
+const NavbarButton = ({ menuItem, selectedKey, toggle}) => {
     const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+
     const [isSelectedMenu, setIsSelectedMenu] = useState(false);
     const [isSubmenuActive, setIsSubMenuActive] = useState(false);
     const { setSelectedKey } = useMenuContext();
@@ -81,7 +83,7 @@ const NavbarButton = ({ menuItem, selectedKey }) => {
                     w="100%"
                     variant="light"
                 >
-                    <Link href={route(menuItem.route)} onClick={() => setSelectedKey(menuItem.key)}>
+                    <Link href={route(menuItem.route)} onClick={() => {setSelectedKey(menuItem.key); isMobile && toggle()}}>
                         {ButtonFill}
                     </Link>
                 </UnstyledButton>
@@ -94,7 +96,7 @@ const NavbarButton = ({ menuItem, selectedKey }) => {
                     transitionTimingFunction="linear"
                 >
                     {menuItem.children.map((submenu, i) => (
-                        <NavbarSubMenu menuItem={submenu} selectedKey={selectedKey} key={i} />
+                        <NavbarSubMenu menuItem={submenu} selectedKey={selectedKey} key={i}  toggle={toggle}/>
                     ))}
                 </Collapse>
             )}
@@ -105,8 +107,9 @@ const NavbarButton = ({ menuItem, selectedKey }) => {
 export default NavbarButton;
 
 
-const NavbarSubMenu = ({ menuItem, selectedKey }) => {
+const NavbarSubMenu = ({ menuItem, selectedKey, toggle }) => {
     const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
     const { setSelectedKey } = useMenuContext();
     const { hovered, ref } = useHover();
     const [isSelectedMenu, setIsSelectedMenu] = useState(false);
@@ -141,7 +144,7 @@ const NavbarSubMenu = ({ menuItem, selectedKey }) => {
                 w="85%"
                 ml={'xl'}
             >
-                <Link href={route(menuItem.route)} onClick={() => setSelectedKey(menuItem.key)}>
+                <Link href={route(menuItem.route)} onClick={() => {setSelectedKey(menuItem.key); isMobile && toggle()}}>
                     {ButtonFill}
                 </Link>
             </UnstyledButton>

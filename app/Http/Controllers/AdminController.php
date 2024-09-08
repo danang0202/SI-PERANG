@@ -16,8 +16,152 @@ class AdminController extends Controller
 {
     public function renderAdminDashboard()
     {
+        $user = auth()->user();
+        $userData = User::where('id', $user->id)->with(['timKerjas:id,nama,nama_ketua'])->first();
+
+        $pengajuanCounts = Pengajuan::whereMonth('created_at', date('m'))
+            ->whereYear('created_at', date('Y'))
+            ->selectRaw('
+        COUNT(*) as countTotal,
+        SUM(CASE WHEN status = "MENUNGGU KONFIRMASI" THEN 1 ELSE 0 END) as countMenungguKonfirmasi,
+        SUM(CASE WHEN status = "PERMINTAAN DITERIMA" THEN 1 ELSE 0 END) as countPermintaanDiterima,
+        SUM(CASE WHEN status = "PERMINTAAN DITOLAK" THEN 1 ELSE 0 END) as countPermintaanDitolak,
+        SUM(CASE WHEN status = "PERMINTAAN DIBATALKAN" THEN 1 ELSE 0 END) as countPermintaanDibatalkan
+    ')->first();
+
+        $countTotal = $pengajuanCounts->countTotal;
+        $countMenungguKonfirmasi = (int) $pengajuanCounts->countMenungguKonfirmasi ?? 0;
+        $countPermintaanDiterima = (int) $pengajuanCounts->countPermintaanDiterima ?? 0;
+        $countPermintaanDitolak = (int) $pengajuanCounts->countPermintaanDitolak ?? 0;
+        $countPermintaanDibatalkan = (int) $pengajuanCounts->countPermintaanDibatalkan ?? 0;
+
+        $statusCardData = [
+            [
+                'color' => 'gray5',
+                'icon' => 'IconHourglass',
+                'text' => 'Menunggu Konfirmasi',
+                'count' => $countMenungguKonfirmasi,
+                'iconColor' => 'black',
+            ],
+            [
+                'color' => 'accent5',
+                'icon' => 'IconCircleCheck',
+                'text' => 'Permintaan Diterima',
+                'count' => $countPermintaanDiterima,
+                'iconColor' => 'white',
+            ],
+            [
+                'color' => 'accent6',
+                'icon' => 'IconCircleX',
+                'text' => 'Permintaan Ditolak',
+                'count' => $countPermintaanDitolak,
+                'iconColor' => 'white',
+            ],
+            [
+                'color' => 'accent3',
+                'icon' => 'IconCancel',
+                'text' => 'Permintaan Dibatalkan',
+                'count' => $countPermintaanDibatalkan,
+                'iconColor' => 'white',
+            ],
+        ];
+
+        $tahun = request('tahun', date('Y'));
+        // Mendapatkan data pengajuan per bulan berdasarkan status dan tahun
+        $pengajuanPerBulan = Pengajuan::selectRaw("
+                MONTHNAME(created_at) as month, 
+                MONTH(created_at) as month_number,
+                SUM(CASE WHEN status = 'MENUNGGU KONFIRMASI' THEN 1 ELSE 0 END) as MENUNGGU_KONFIRMASI,
+                SUM(CASE WHEN status = 'PERMINTAAN DITERIMA' THEN 1 ELSE 0 END) as PERMINTAAN_DITERIMA,
+                SUM(CASE WHEN status = 'PERMINTAAN DITOLAK' THEN 1 ELSE 0 END) as PERMINTAAN_DITOLAK,
+                SUM(CASE WHEN status = 'PERMINTAAN DIBATALKAN' THEN 1 ELSE 0 END) as PERMINTAAN_DIBATALKAN
+            ")
+            ->whereYear('created_at', $tahun)
+            ->groupByRaw('month, month_number')
+            ->orderByRaw("month_number")
+            ->get()
+            ->keyBy('month_number');
+
+        // Template data untuk semua bulan
+        $allMonths = collect([
+            ['month' => 'Jan', 'month_number' => 1],
+            ['month' => 'Feb', 'month_number' => 2],
+            ['month' => 'Mar', 'month_number' => 3],
+            ['month' => 'Apr', 'month_number' => 4],
+            ['month' => 'Mei', 'month_number' => 5],
+            ['month' => 'Jun', 'month_number' => 6],
+            ['month' => 'Jul', 'month_number' => 7],
+            ['month' => 'Ags', 'month_number' => 8],
+            ['month' => 'Sep', 'month_number' => 9],
+            ['month' => 'Okt', 'month_number' => 10],
+            ['month' => 'Nov', 'month_number' => 11],
+            ['month' => 'Des', 'month_number' => 12],
+        ]);
+
+        // Gabungkan template dengan data dari query
+        $chartData = $allMonths->map(function ($month) use ($pengajuanPerBulan) {
+            $data = $pengajuanPerBulan->get($month['month_number'], [
+                'PERMINTAAN_DITERIMA' => 0,
+                'PERMINTAAN_DITOLAK' => 0,
+                'PERMINTAAN_DIBATALKAN' => 0,
+                'MENUNGGU_KONFIRMASI' =>  0
+            ]);
+
+            return [
+                'month' => $month['month'],
+                'MENUNGGU_KONFIRMASI' => (int) $data['MENUNGGU_KONFIRMASI'],
+                'PERMINTAAN_DITERIMA' => (int) $data['PERMINTAAN_DITERIMA'],
+                'PERMINTAAN_DITOLAK' => (int) $data['PERMINTAAN_DITOLAK'],
+                'PERMINTAAN_DIBATALKAN' => (int) $data['PERMINTAAN_DIBATALKAN'],
+            ];
+        });
+
+        $tahunTimKerja = request('tahun_tim_kerja', date('Y'));
+        $pengajuanPerTimKerja = Pengajuan::join('tim_kerja', 'pengajuan.tim_kerja_id', '=', 'tim_kerja.id')
+            ->selectRaw("
+            tim_kerja.nama as tim_kerja,
+            SUM(CASE WHEN pengajuan.status = 'MENUNGGU KONFIRMASI' THEN 1 ELSE 0 END) as MENUNGGU_KONFIRMASI,
+            SUM(CASE WHEN pengajuan.status = 'PERMINTAAN DITERIMA' THEN 1 ELSE 0 END) as PERMINTAAN_DITERIMA,
+            SUM(CASE WHEN pengajuan.status = 'PERMINTAAN DITOLAK' THEN 1 ELSE 0 END) as PERMINTAAN_DITOLAK,
+            SUM(CASE WHEN pengajuan.status = 'PERMINTAAN DIBATALKAN' THEN 1 ELSE 0 END) as PERMINTAAN_DIBATALKAN
+        ")
+            ->whereYear('pengajuan.created_at', $tahunTimKerja);
+
+        $bulanTimKerja = request('bulan_tim_kerja', 'all');
+        if ($bulanTimKerja !== 'all') {
+            $pengajuanPerTimKerja->whereMonth('pengajuan.created_at', $bulanTimKerja);
+        }
+        
+        $pengajuanPerTimKerja = $pengajuanPerTimKerja
+            ->groupBy('tim_kerja.nama')
+            ->orderBy('tim_kerja.nama')
+            ->get();
+
+            $allTeams = TimKerja::pluck('nama');
+            $chartDataTimKerja = $allTeams->map(function ($team) use ($pengajuanPerTimKerja) {
+                $data = $pengajuanPerTimKerja->firstWhere('tim_kerja', $team) ?? [
+                    'MENUNGGU_KONFIRMASI' => 0,
+                    'PERMINTAAN_DITERIMA' => 0,
+                    'PERMINTAAN_DITOLAK' => 0,
+                    'PERMINTAAN_DIBATALKAN' => 0,
+                ];
+                
+                return [
+                    'tim_kerja' => $team,
+                    'MENUNGGU_KONFIRMASI' => (int) $data['MENUNGGU_KONFIRMASI'],
+                    'PERMINTAAN_DITERIMA' => (int) $data['PERMINTAAN_DITERIMA'],
+                    'PERMINTAAN_DITOLAK' => (int) $data['PERMINTAAN_DITOLAK'],
+                    'PERMINTAAN_DIBATALKAN' => (int) $data['PERMINTAAN_DIBATALKAN'],
+                ];
+            });
+
         return Inertia::render('Admin/Dashboard', [
-            'user' => auth()->user()
+            'user' => $user,
+            'statusCardData' => $statusCardData,
+            'countTotal' => $countTotal,
+            'userData' => $userData,
+            'chartData' => $chartData,
+            'chartDataTimKerja' => $chartDataTimKerja
         ]);
     }
 
@@ -201,12 +345,10 @@ class AdminController extends Controller
     {
         $jenisBarangs = JenisBarang::select('id', 'kode', 'nama')->get();
         $satuanBarangs = SatuanBarang::select('id', 'nama')->get();
-        $existingBarangsKode = Barang::pluck('kode')->toArray();
         return Inertia::render('Admin/InventarisBarang/CreateBarang', [
             'user' => auth()->user(),
             'jenisBarangs' => $jenisBarangs,
             'satuanBarangs' => $satuanBarangs,
-            'existingBarangsKode' => $existingBarangsKode
         ]);
     }
 
@@ -215,14 +357,12 @@ class AdminController extends Controller
         $prevBarang = Barang::findOrFail($id);
         $jenisBarangs = JenisBarang::select('id', 'kode', 'nama')->get();
         $satuanBarangs = SatuanBarang::select('id', 'nama')->get();
-        $existingBarangsKode = Barang::where('id', '!=', $id)->pluck('kode')->toArray();
         $status = session('status');
         return Inertia::render('Admin/InventarisBarang/UpdateBarang', [
             'user' => auth()->user(),
             'jenisBarangs' => $jenisBarangs,
             'satuanBarangs' => $satuanBarangs,
             'prevBarang' => $prevBarang,
-            'existingBarangsKode' => $existingBarangsKode,
             'status' => $status
         ]);
     }
@@ -240,24 +380,18 @@ class AdminController extends Controller
     }
     public function renderAdminInventarisBarangJenisBarangCreate()
     {
-        $jenisBarangKode = JenisBarang::pluck('kode')->toArray();
         return Inertia::render('Admin/InventarisBarang/CreateJenisBarang', [
             'user' => auth()->user(),
-            'jenisBarangsKode' => $jenisBarangKode
         ]);
     }
 
 
     public function renderAdminInventarisBarangJenisBarangUpdate($id)
     {
-        $jenisBarangKode = JenisBarang::where('id', '!=', $id)
-            ->pluck('kode')
-            ->toArray();
         $jenisBarang = JenisBarang::find($id);
         return Inertia::render('Admin/InventarisBarang/UpdateJenisBarang', [
             'user' => auth()->user(),
             'prevJenisBarang' => $jenisBarang,
-            'jenisBarangsKode' => $jenisBarangKode
         ]);
     }
 

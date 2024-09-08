@@ -11,7 +11,6 @@ import { DataTable, useDataTableColumns } from 'mantine-datatable';
 import React, { useEffect, useRef, useState } from 'react'
 
 
-const key = 'table-perlu-tindakan-admin';
 const pageSize = 15;
 const PerluTindakan = ({ user, paginatedPengajuans, timKerja, filters }) => {
     const [page, setPage] = useState(paginatedPengajuans.current_page);
@@ -29,7 +28,6 @@ const PerluTindakan = ({ user, paginatedPengajuans, timKerja, filters }) => {
     }, [page, keyword]);
 
     const { effectiveColumns } = useDataTableColumns({
-        // key,
         columns: [
             {
                 accessor: 'no',
@@ -39,7 +37,7 @@ const PerluTindakan = ({ user, paginatedPengajuans, timKerja, filters }) => {
             },
             {
                 accessor: 'created_at',
-                width: 180,
+                width: 120,
                 title: 'Tanggal',
                 render: (row) => {
                     return formatTanggal(row.created_at);
@@ -63,6 +61,7 @@ const PerluTindakan = ({ user, paginatedPengajuans, timKerja, filters }) => {
             {
                 accessor: 'tim_kerja.nama',
                 title: "Tim Kerja",
+                width:100,
                 render: (row) => {
                     return (
                         <Badge variant='light' radius={'xs'} color='secondaryPurple'>{row.tim_kerja.nama}</Badge>
@@ -79,7 +78,9 @@ const PerluTindakan = ({ user, paginatedPengajuans, timKerja, filters }) => {
                 }
             },
             {
-                accessor: 'action', textAlign: 'center', width: 80,
+                accessor: 'action', textAlign: 'center', width: 75,
+                cellsStyle: () => ({ background: 'white' }),
+                titleStyle: () => ({ background: 'white' }),
                 render: (record) => (
                     <Link href={route('admin.pengajuan.perlu-tindakan.detail', { id: record.id })}>
                         <Button size='xs' variant='light'>Detail</Button>
@@ -117,8 +118,8 @@ const PerluTindakan = ({ user, paginatedPengajuans, timKerja, filters }) => {
             </Group>
             <DataTable
                 pinLastColumn
-                height={450}
-                fz="sm"
+                minHeight={300}
+                fz="xs"
                 records={records}
                 columns={effectiveColumns}
                 totalRecords={paginatedPengajuans.last_page}

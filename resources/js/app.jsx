@@ -5,6 +5,7 @@ import '@mantine/core/styles.layer.css';
 import 'mantine-datatable/styles.layer.css';
 import '@mantine/notifications/styles.css';
 import "@mantine/dates/styles.css";
+import '@mantine/charts/styles.css';
 
 
 import { createRoot } from 'react-dom/client';

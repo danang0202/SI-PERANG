@@ -2,12 +2,17 @@ import ButtonOutlineWithRoute from '@/Components/Commons/ButtonOutlineWithRoute'
 import AdminInventarisBarangLayout from '@/Layout/AdminInventarisBarangLayout';
 import UserLayout from '@/Layout/Layout';
 import { barangSchema } from '@/Schema/inventaris-barang.schema';
-import { router } from '@inertiajs/react';
-import { Button, Grid, Group, NumberInput, Select, Stack, Text, TextInput } from '@mantine/core';
+import { router, usePage } from '@inertiajs/react';
+import { Button, Grid, Group, NumberInput, Select, Stack, Text, TextInput, useMantineTheme } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
+import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 
-const CreateBarang = ({ jenisBarangs, satuanBarangs, existingBarangsKode }) => {
+const CreateBarang = ({ jenisBarangs, satuanBarangs }) => {
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+    const { errors } = usePage().props
+
     const [selectedJenisBarang, setSelectedJenisBarang] = useState();
     const jenisBarangOptions = jenisBarangs.map(item => ({
         value: item.id.toString(),
@@ -18,6 +23,18 @@ const CreateBarang = ({ jenisBarangs, satuanBarangs, existingBarangsKode }) => {
         value: item.id.toString(),
         label: item.nama
     }));
+
+    useEffect(() => {
+        if (errors) {
+            const formattedErrors = {};
+            Object.keys(errors).forEach((key) => {
+                formattedErrors[key] = errors[key];
+            });
+            form.setErrors(formattedErrors);
+            setLoading(false);
+        }
+    }, [errors]);
+
     const [loading, setLoading] = useState();
     const form = useForm({
         mode: 'controlled',
@@ -35,11 +52,6 @@ const CreateBarang = ({ jenisBarangs, satuanBarangs, existingBarangsKode }) => {
 
     const handleSubmit = (values) => {
         const temp = selectedJenisBarang.kode + values.kode;
-        if (existingBarangsKode.includes(temp)) {
-            form.setErrors({ kode: 'Kode sudah digunakan, silakan pilih kode lain.' });
-            setLoading(false);
-            return;
-        }
         values.kode = temp;
         setLoading(true)
         router.post(route('admin.inventaris-barang.create.action'), values, {
@@ -65,13 +77,12 @@ const CreateBarang = ({ jenisBarangs, satuanBarangs, existingBarangsKode }) => {
                     </Group>
                 </Group>
                 <Grid gutter={{ base: 'md', lg: "lg" }}>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={isMobile ? 12 : 7}>
                         <Stack gap={"lg"}>
                             <Grid>
                                 <Grid.Col span={5}>
                                     <TextInput
                                         label="Kode Jenis Barang"
-                                        description="Kode depan / kode jenis  barang"
                                         radius={"xs"}
                                         size='sm'
                                         value={selectedJenisBarang ? selectedJenisBarang.kode : ''}
@@ -82,7 +93,6 @@ const CreateBarang = ({ jenisBarangs, satuanBarangs, existingBarangsKode }) => {
                                     <TextInput
                                         label="Kode Barang"
                                         placeholder="Masukkan kode barang ..."
-                                        description="Kode barang terdiri dari 6 digit angka"
                                         radius={"xs"}
                                         size='sm'
                                         withAsterisk
@@ -93,17 +103,18 @@ const CreateBarang = ({ jenisBarangs, satuanBarangs, existingBarangsKode }) => {
                             </Grid>
                             <TextInput
                                 label="Nama Barang"
-                                description='Masukkan nama barang dengan sesuai'
                                 placeholder="Masukkan nama barang"
                                 radius={"xs"}
                                 withAsterisk
                                 key={form.key('nama')}
                                 {...form.getInputProps('nama')}
+                                onChange={(event) => {
+                                    form.setFieldValue('nama', event.currentTarget.value.toUpperCase());
+                                }}
                             />
                             <Select
                                 label="Jenis Barang"
                                 placeholder="Pilih jenis barang..."
-                                description='Pilih salah satu dari jenis barang yang tersedia'
                                 data={jenisBarangOptions} // Menggunakan data yang telah dipetakan
                                 searchable
                                 nothingFoundMessage="Nothing found..."
@@ -114,13 +125,12 @@ const CreateBarang = ({ jenisBarangs, satuanBarangs, existingBarangsKode }) => {
                             />
                         </Stack>
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={isMobile ? 12 : 5}>
                         <Stack gap={"lg"}>
                             <NumberInput
                                 withAsterisk
                                 label="Jumlah Barang"
                                 placeholder="Masukkan jumlah barang"
-                                description='Masukkan jumlah barang dalam angka'
                                 radius={"xs"}
                                 key={form.key('jumlah')}
                                 {...form.getInputProps('jumlah')}
@@ -129,8 +139,7 @@ const CreateBarang = ({ jenisBarangs, satuanBarangs, existingBarangsKode }) => {
                                 withAsterisk
                                 label="Satuan Barang"
                                 placeholder="Pilih satuan barang..."
-                                description='Pilih salah satu dari satuan barang yang tersedia'
-                                data={satuanBarangOptions} // Menggunakan data yang telah dipetakan
+                                data={satuanBarangOptions}
                                 searchable
                                 nothingFoundMessage="Nothing found..."
                                 radius={'xs'}

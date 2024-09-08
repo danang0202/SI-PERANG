@@ -6,6 +6,7 @@ import { DataTable, useDataTableColumns } from 'mantine-datatable'
 import { sortBy } from 'lodash'
 import SearchInput from '@/Components/Commons/SearchInput'
 import { filterBarangs } from '@/helper/table.helper'
+import { Head } from '@inertiajs/react'
 
 
 const PAGE_SIZES = [10, 15, 20];
@@ -29,7 +30,7 @@ const DaftarBarang = ({ user, barangs }) => {
     });
     const jenisBarang = useMemo(() => {
         const temp = new Set(barangs.map((e) => e.jenis_barang.nama));
-        return [...temp];p
+        return [...temp]; p
     }, []);
 
     const satuanBarang = useMemo(() => {
@@ -60,7 +61,7 @@ const DaftarBarang = ({ user, barangs }) => {
                 accessor: 'kode',
                 render: ({ kode }) => <strong>{kode}</strong>,
                 ...props,
-                width: 100,
+                width: 150,
                 textAlign: 'center'
             },
             { accessor: 'nama', ...props },
@@ -107,12 +108,13 @@ const DaftarBarang = ({ user, barangs }) => {
 
     return (
         <Stack gap={"md"}>
+            <Head title='Daftar Barang' />
             <Group align='center' justify='flex-end'>
                 <SearchInput keyword={keyword} setKeyword={setKeyword} />
             </Group>
             <DataTable
-                pinLastColumn
-                height={500}
+                verticalSpacing={"xs"}
+                minHeight={300}
                 fz="xs"
                 withColumnBorders
                 sortStatus={sortStatus}

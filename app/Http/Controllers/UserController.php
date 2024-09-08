@@ -15,11 +15,24 @@ class UserController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $userData = User::where('id', $user->id)->with(['timKerjas:id,nama,nama_ketua'])->first();
 
-        $countMenungguKonfirmasi = Pengajuan::where('status', 'MENUNGGU KONFIRMASI')->where('user_id', $user->id)->count();
-        $countPermintaanDiterima = Pengajuan::where('status', 'DITERIMA')->where('user_id', $user->id)->count();
-        $countPermintaanDitolak = Pengajuan::where('status', 'DITOLAK')->where('user_id', $user->id)->count();
-        $countPermintaanDibatalkan = Pengajuan::where('status', 'DIBATALKAN')->where('user_id', $user->id)->count();
+        $pengajuanCounts = Pengajuan::where('user_id', $user->id)
+            ->whereMonth('created_at', date('m'))
+            ->whereYear('created_at', date('Y'))
+            ->selectRaw('
+            COUNT(*) as countTotal,
+            SUM(CASE WHEN status = "MENUNGGU KONFIRMASI" THEN 1 ELSE 0 END) as countMenungguKonfirmasi,
+            SUM(CASE WHEN status = "PERMINTAAN DITERIMA" THEN 1 ELSE 0 END) as countPermintaanDiterima,
+            SUM(CASE WHEN status = "PERMINTAAN DITOLAK" THEN 1 ELSE 0 END) as countPermintaanDitolak,
+            SUM(CASE WHEN status = "PERMINTAAN DIBATALKAN" THEN 1 ELSE 0 END) as countPermintaanDibatalkan
+        ')->first();
+
+        $countTotal = $pengajuanCounts->countTotal;
+        $countMenungguKonfirmasi = (int) $pengajuanCounts->countMenungguKonfirmasi ?? 0;
+        $countPermintaanDiterima = (int) $pengajuanCounts->countPermintaanDiterima ?? 0;
+        $countPermintaanDitolak = (int) $pengajuanCounts->countPermintaanDitolak ?? 0;
+        $countPermintaanDibatalkan = (int) $pengajuanCounts->countPermintaanDibatalkan ?? 0;
 
         $statusCardData = [
             [
@@ -44,7 +57,7 @@ class UserController extends Controller
                 'iconColor' => 'white',
             ],
             [
-                'color' => 'secondaryPurple',
+                'color' => 'accent3',
                 'icon' => 'IconCancel',
                 'text' => 'Permintaan Dibatalkan',
                 'count' => $countPermintaanDibatalkan,
@@ -52,9 +65,63 @@ class UserController extends Controller
             ],
         ];
 
+        $tahun = request('tahun', date('Y'));
+        // Mendapatkan data pengajuan per bulan berdasarkan status dan tahun
+        $pengajuanPerBulan = Pengajuan::selectRaw("
+                MONTHNAME(created_at) as month, 
+                MONTH(created_at) as month_number,
+                SUM(CASE WHEN status = 'MENUNGGU KONFIRMASI' THEN 1 ELSE 0 END) as MENUNGGU_KONFIRMASI,
+                SUM(CASE WHEN status = 'PERMINTAAN DITERIMA' THEN 1 ELSE 0 END) as PERMINTAAN_DITERIMA,
+                SUM(CASE WHEN status = 'PERMINTAAN DITOLAK' THEN 1 ELSE 0 END) as PERMINTAAN_DITOLAK,
+                SUM(CASE WHEN status = 'PERMINTAAN DIBATALKAN' THEN 1 ELSE 0 END) as PERMINTAAN_DIBATALKAN
+            ")
+            ->whereYear('created_at', $tahun)
+            ->where('user_id', $user->id)
+            ->groupByRaw('month, month_number')
+            ->orderByRaw("month_number")
+            ->get()
+            ->keyBy('month_number');
+
+        // Template data untuk semua bulan
+        $allMonths = collect([
+            ['month' => 'Jan', 'month_number' => 1],
+            ['month' => 'Feb', 'month_number' => 2],
+            ['month' => 'Mar', 'month_number' => 3],
+            ['month' => 'Apr', 'month_number' => 4],
+            ['month' => 'Mei', 'month_number' => 5],
+            ['month' => 'Jun', 'month_number' => 6],
+            ['month' => 'Jul', 'month_number' => 7],
+            ['month' => 'Ags', 'month_number' => 8],
+            ['month' => 'Sep', 'month_number' => 9],
+            ['month' => 'Okt', 'month_number' => 10],
+            ['month' => 'Nov', 'month_number' => 11],
+            ['month' => 'Des', 'month_number' => 12],
+        ]);
+
+        // Gabungkan template dengan data dari query
+        $chartData = $allMonths->map(function ($month) use ($pengajuanPerBulan) {
+            $data = $pengajuanPerBulan->get($month['month_number'], [
+                'PERMINTAAN_DITERIMA' => 0,
+                'PERMINTAAN_DITOLAK' => 0,
+                'PERMINTAAN_DIBATALKAN' => 0,
+                'MENUNGGU_KONFIRMASI' =>  0
+            ]);
+
+            return [
+                'month' => $month['month'],
+                'MENUNGGU_KONFIRMASI' => (int) $data['MENUNGGU_KONFIRMASI'],
+                'PERMINTAAN_DITERIMA' => (int) $data['PERMINTAAN_DITERIMA'],
+                'PERMINTAAN_DITOLAK' => (int) $data['PERMINTAAN_DITOLAK'],
+                'PERMINTAAN_DIBATALKAN' => (int) $data['PERMINTAAN_DIBATALKAN'],
+            ];
+        });
+
         return Inertia::render('User/Dashboard', [
             'user' => $user,
             'statusCardData' => $statusCardData,
+            'countTotal' => $countTotal,
+            'userData' => $userData,
+            'chartData' => $chartData
         ]);
     }
 

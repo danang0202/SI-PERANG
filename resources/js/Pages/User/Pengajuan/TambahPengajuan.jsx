@@ -2,10 +2,11 @@ import { EXTENDED_COLOR } from '@/constan/mantine.constan';
 import { showFailNotification, showSuccesNotification } from '@/helper/notification.helper';
 import UserLayout from '@/Layout/Layout'
 import { itemPengajuanSchema, pengajuanSchema } from '@/Schema/Pengajuan.schema';
-import { router } from '@inertiajs/react';
-import { ActionIcon, Button, Grid, Group, Menu, NumberInput, Select, Stack, Text, Textarea, TextInput } from '@mantine/core'
+import { Head, router } from '@inertiajs/react';
+import { ActionIcon, Button, Grid, Group, Menu, NumberInput, Select, Stack, Text, Textarea, TextInput, useMantineTheme } from '@mantine/core'
 import { DateInput } from '@mantine/dates';
 import { useForm, zodResolver } from '@mantine/form';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconCalendar, IconDots, IconEdit, IconTrash } from '@tabler/icons-react';
 import { sortBy } from 'lodash';
 import { DataTable } from 'mantine-datatable';
@@ -15,6 +16,8 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
     const [loading, setLoading] = useState();
     const [satuanBarang, setSatuanBarang] = useState('');
     const [itemPengajuan, setItemPengajuan] = useState([]);
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
 
     useEffect(() => {
         if (status && status.type == 'fail') {
@@ -120,6 +123,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
 
     return (
         <Stack gap={"lg"} mb={"xl"}>
+            <Head title='Permintaan' />
             <form onSubmit={formPengajuan.onSubmit((values) => handleSubmitPengajuan(values))}>
                 <Stack>
                     <Group justify='space-between' align='center'>
@@ -132,7 +136,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
                     <Stack gap={'xs'}>
                         <Text size='base' fw={'bold'}>Informasi Permintaan</Text>
                         <Grid gutter={'lg'}>
-                            <Grid.Col span={4}>
+                            <Grid.Col span={isMobile ? 12 : 4}>
                                 <DateInput
                                     withAsterisk
                                     leftSection={<IconCalendar size={16} />}
@@ -142,9 +146,10 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
                                     size='sm'
                                     readOnly
                                     {...formPengajuan.getInputProps('tanggalPengajuan')}
+                                    variant='filled'
                                 />
                             </Grid.Col>
-                            <Grid.Col span={4}>
+                            <Grid.Col span={isMobile ? 12 : 4}>
                                 <TextInput
                                     readOnly
                                     label="Nama Pegawai"
@@ -155,7 +160,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
                                     value={user.nama}
                                 />
                             </Grid.Col>
-                            <Grid.Col span={4}>
+                            <Grid.Col span={isMobile ? 12 : 4}>
                                 <Select
                                     withAsterisk
                                     label="Tim Kerja"
@@ -173,9 +178,9 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
 
             <form onSubmit={formItemPengajuan.onSubmit((values) => handleSubmitFormItemPengajuan(values))}>
                 <Stack gap={'xs'}>
-                    <Text size='sm' fw={'bold'}>Item Permintaan</Text>
+                    <Text size='base' fw={'bold'}>Item Permintaan</Text>
                     <Grid>
-                        <Grid.Col span={6}>
+                        <Grid.Col span={isMobile ? 12 : 6}>
                             <Stack gap={"md"}>
                                 <Select
                                     withAsterisk
@@ -217,7 +222,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
 
                             </Stack>
                         </Grid.Col>
-                        <Grid.Col span={6}>
+                        <Grid.Col span={isMobile ? 12 : 6}>
                             <Textarea
                                 label={<div>Keterangan <span className='text-gray-400'>(jika ada)</span></div>}
                                 placeholder="Tuliskan keterangan..."
@@ -245,8 +250,9 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
             <Stack gap={'xs'}>
                 <Text size='base' fw={'bold'}>Tabel Item Permintaan</Text>
                 <DataTable
+                    pinLastColumn
                     mih={150}
-                    fz="sm"
+                    fz="xs"
                     withColumnBorders
                     records={itemPengajuan}
                     columns={[
@@ -278,7 +284,9 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
                         },
                         {
                             accessor: 'action', textAlign: 'center',
-                            width: 70,
+                            width: 60,
+                            cellsStyle: () => ({ background: 'white' }),
+                            titleStyle: () => ({ background: 'white' }),
                             render: (record) => (
                                 <Menu shadow="md" width={110} position="bottom-end" offset={-5}>
                                     <Menu.Target>

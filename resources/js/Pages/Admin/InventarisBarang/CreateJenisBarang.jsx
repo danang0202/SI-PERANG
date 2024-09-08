@@ -3,14 +3,15 @@ import AdminInventarisBarangLayout from '@/Layout/AdminInventarisBarangLayout'
 import UserLayout from '@/Layout/Layout'
 import { Button, Grid, Group, Stack, Text, TextInput } from '@mantine/core'
 import { useForm, zodResolver } from '@mantine/form'
-import React, { useState } from 'react'
-import { router } from '@inertiajs/react'
+import React, { useEffect, useState } from 'react'
+import { router, usePage } from '@inertiajs/react'
 import { jenisBarangSchema } from '@/Schema/inventaris-barang.schema'
 
-const CreateJenisBarang = ({ jenisBarangsKode }) => {
+const CreateJenisBarang = ({  }) => {
+    const { errors } = usePage().props
     const [loading, setLoading] = useState();
     const form = useForm({
-        mode: 'uncontrolled',
+        mode: 'controlled',
         initialValues: {
             kode: '',
             nama: '',
@@ -19,12 +20,18 @@ const CreateJenisBarang = ({ jenisBarangsKode }) => {
         validate: zodResolver(jenisBarangSchema)
     });
 
-    const handleSubmit = (values) => {
-        if (jenisBarangsKode.includes(values.kode)) {
-            form.setErrors({ kode: 'Kode sudah digunakan, silakan pilih kode lain.' });
+    useEffect(() => {
+        if (errors) {
+            const formattedErrors = {};
+            Object.keys(errors).forEach((key) => {
+                formattedErrors[key] = errors[key];
+            });
+            form.setErrors(formattedErrors);
             setLoading(false);
-            return;
         }
+    }, [errors]);
+
+    const handleSubmit = (values) => {
         setLoading(true)
         router.post(route('admin.inventaris-barang.jenis.create.action'), values, {
         });
@@ -35,7 +42,7 @@ const CreateJenisBarang = ({ jenisBarangsKode }) => {
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <Stack gap={"md"}>
                     <Group justify='space-between' align='center'>
-                        <Text size='sm'>Menambahkan Jenis Barang</Text>
+                        <Text size='sm'>Tambah Jenis Barang</Text>
                         <Group justify='flex-end'>
                             <ButtonOutlineWithRoute label={'Kembali'} route={route('admin.inventaris-barang.jenis')} />
                             <Button radius={'xs'} type='submit' loading={loading}>
@@ -54,11 +61,15 @@ const CreateJenisBarang = ({ jenisBarangsKode }) => {
                                 {...form.getInputProps('kode')}
                             />
                             <TextInput
+                                mt={"md"}
                                 withAsterisk
                                 label="Nama"
                                 placeholder="Masukkan jenis barang..."
                                 key={form.key('nama')}
                                 {...form.getInputProps('nama')}
+                                onChange={(event) => {
+                                    form.setFieldValue('nama', event.currentTarget.value.toUpperCase());
+                                }}
                             />
                         </Grid.Col>
                     </Grid>

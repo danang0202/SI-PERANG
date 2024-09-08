@@ -3,13 +3,18 @@ import { showFailNotification } from '@/helper/notification.helper';
 import AdminInventarisBarangLayout from '@/Layout/AdminInventarisBarangLayout';
 import UserLayout from '@/Layout/Layout';
 import { barangSchema } from '@/Schema/inventaris-barang.schema';
-import { router } from '@inertiajs/react';
-import { Button, Grid, Group, NumberInput, Select, Stack, Text, TextInput } from '@mantine/core';
+import { router, usePage } from '@inertiajs/react';
+import { Button, Grid, Group, NumberInput, Select, Stack, Text, TextInput, useMantineTheme } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
+import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 
-const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangsKode, status }) => {
+const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, status }) => {
     const [selectedJenisBarang, setSelectedJenisBarang] = useState();
+    const { errors } = usePage().props
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+
 
     useEffect(() => {
         if (status && status.type == 'fail') {
@@ -26,11 +31,22 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangs
         label: item.nama
     }));
 
+    useEffect(() => {
+        if (errors) {
+            const formattedErrors = {};
+            Object.keys(errors).forEach((key) => {
+                formattedErrors[key] = errors[key];
+            });
+            form.setErrors(formattedErrors);
+            setLoading(false);
+        }
+    }, [errors]);
+
     const [loading, setLoading] = useState();
     const form = useForm({
         mode: 'controlled',
         initialValues: {
-            kode: prevBarang.kode.slice(3),
+            kode: prevBarang.kode.slice(10),
             nama: prevBarang.nama,
             jenisBarangId: prevBarang.jenis_barang_id.toString(),
             satuanId: prevBarang.satuan_id.toString(),
@@ -43,11 +59,6 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangs
 
     const handleSubmit = (values) => {
         const temp = selectedJenisBarang.kode + values.kode;
-        if (existingBarangsKode.includes(temp)) {
-            form.setErrors({ kode: 'Kode sudah digunakan, silakan pilih kode lain.' });
-            setLoading(false);
-            return;
-        }
         values.kode = temp;
         setLoading(true)
         router.post(route('admin.inventaris-barang.update.action', { id: prevBarang.id }), values, {
@@ -79,13 +90,12 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangs
                     </Group>
                 </Group>
                 <Grid gutter={{ base: 'md', lg: "lg" }}>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={isMobile ? 12 : 7}>
                         <Stack gap={"lg"}>
                             <Grid>
                                 <Grid.Col span={5}>
                                     <TextInput
                                         label="Kode Jenis Barang"
-                                        description="Kode depan / kode jenis  barang"
                                         radius={"xs"}
                                         size='sm'
                                         value={selectedJenisBarang ? selectedJenisBarang.kode : ''}
@@ -96,7 +106,6 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangs
                                     <TextInput
                                         label="Kode Barang"
                                         placeholder="Masukkan kode barang ..."
-                                        description="Kode barang terdiri dari 6 digit angka"
                                         radius={"xs"}
                                         size='sm'
                                         withAsterisk
@@ -107,17 +116,18 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangs
                             </Grid>
                             <TextInput
                                 label="Nama Barang"
-                                description='Masukkan nama barang dengan sesuai'
                                 placeholder="Masukkan nama barang"
                                 radius={"xs"}
                                 withAsterisk
                                 key={form.key('nama')}
                                 {...form.getInputProps('nama')}
+                                onChange={(event) => {
+                                    form.setFieldValue('nama', event.currentTarget.value.toUpperCase());
+                                }}
                             />
                             <Select
                                 label="Jenis Barang"
                                 placeholder="Pilih jenis barang..."
-                                description='Pilih salah satu dari jenis barang yang tersedia'
                                 data={jenisBarangOptions} // Menggunakan data yang telah dipetakan
                                 searchable
                                 nothingFoundMessage="Nothing found..."
@@ -128,13 +138,12 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangs
                             />
                         </Stack>
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={isMobile ? 12 : 5}>
                         <Stack gap={"lg"}>
                             <NumberInput
                                 withAsterisk
                                 label="Jumlah Barang"
                                 placeholder="Masukkan jumlah barang"
-                                description='Masukkan jumlah barang dalam angka'
                                 radius={"xs"}
                                 key={form.key('jumlah')}
                                 {...form.getInputProps('jumlah')}
@@ -143,7 +152,6 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, existingBarangs
                                 withAsterisk
                                 label="Satuan Barang"
                                 placeholder="Pilih satuan barang..."
-                                description='Pilih salah satu dari satuan barang yang tersedia'
                                 data={satuanBarangOptions} // Menggunakan data yang telah dipetakan
                                 searchable
                                 nothingFoundMessage="Nothing found..."

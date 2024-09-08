@@ -3,13 +3,15 @@ import {
     IconBrandAirtable,
     IconClipboardData,
     IconLayoutBoard,
+    IconPower,
     IconUsers,
 } from "@tabler/icons-react";
-import { Stack } from '@mantine/core';
+import { ActionIcon, Group, Stack, Text, useMantineTheme } from '@mantine/core';
 import NavbarButton from './NavbarButton';
 import { findSelectedKey } from '@/helper/route.helper';
 import { useMenuContext } from '@/Provider/Menu';
-import ResponsiveNavLink from '../ResponsiveNavLink';
+import { useHover } from '@mantine/hooks';
+import { Link } from '@inertiajs/react';
 
 const menuItemsAdmin = [
     {
@@ -99,11 +101,14 @@ const menuItemsUser = [
         children: [],
     },
 ];
-export const NavbarMenu = ({ isAdmin }) => {
+export const NavbarMenu = ({ isAdmin, toggle}) => {
+    const theme = useMantineTheme();
+    const { hovered, ref } = useHover();
     const { selectedKey, setSelectedKey } = useMenuContext();
     useEffect(() => {
         setSelectedKey(findSelectedKey(isAdmin ? menuItemsAdmin : menuItemsUser, window.location.pathname));
     }, []);
+    const backgroundColor = hovered ? theme.colors.gray[0] : "";
 
     return (
         <Stack gap={4} mt={"lg"} mih="85vh" justify="space-between">
@@ -115,6 +120,7 @@ export const NavbarMenu = ({ isAdmin }) => {
                             key={i}
                             selectedKey={selectedKey}
                             setSelectedKey={setSelectedKey}
+                            toggle={toggle}
                         />
                     )) :
                     menuItemsUser.map((menuItem, i) => (
@@ -123,9 +129,39 @@ export const NavbarMenu = ({ isAdmin }) => {
                             key={i}
                             selectedKey={selectedKey}
                             setSelectedKey={setSelectedKey}
+                            toggle={toggle}
                         />
                     ))
                 }
+                <Link href={route('logout')} method="post">
+                    <Group
+                        bg={backgroundColor}
+                        style={{ borderRadius: "5px", cursor: "pointer" }}
+                        onClick={() => toggleSubMenu()}
+                        w="100%"
+                        py={"xs"}
+                        mt={"lg"}
+                    >
+                        <Group gap="xs" align="center" ml={"xs"} ref={ref}>
+                            <ActionIcon
+                                variant={'light'}
+                                color='accent6'
+                                aria-label="LOgout"
+                                size={"lg"}
+                            >
+                                <IconPower />
+                            </ActionIcon>
+
+                            <Text
+                                size="sm"
+                                pl={0}
+                                c={'accent6'}
+                            >
+                                Logout
+                            </Text>
+                        </Group>
+                    </Group>
+                </Link>
             </Stack>
         </Stack>
     );

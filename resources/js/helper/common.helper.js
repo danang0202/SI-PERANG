@@ -20,7 +20,7 @@ export const getStatusColor = (status) => {
     } else if (status == 'PERMINTAAN DITERIMA') {
         return 'accent5'
     } else if (status == 'PERMINTAAN DIBATALKAN') {
-        return 'secondaryPurple'
+        return 'accent3'
     } else {
         return 'accent6'
     }

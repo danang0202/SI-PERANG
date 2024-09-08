@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import {
     ActionIcon,
     AppShell,
@@ -6,7 +6,6 @@ import {
     Popover,
     Stack,
     Text,
-    Title,
     UnstyledButton,
     useMantineTheme,
 } from "@mantine/core";
@@ -76,7 +75,7 @@ const UserLayout = ({ children, session, title }) => {
                         </Group>
                         <Group>
                             <Popover
-                                width={300}
+                                width={250}
                                 position="bottom-end"
                                 withArrow
                                 shadow="md"
@@ -87,7 +86,10 @@ const UserLayout = ({ children, session, title }) => {
                                     </UnstyledButton>
                                 </Popover.Target>
                                 <Popover.Dropdown>
-                                    {/* <NotificationPopOver /> */}
+                                    <Stack align='center' gap={0}>
+                                        <Text fw={'bold'} c={'gray1'} size='sm'>Maaf</Text>
+                                        <Text size='sm' c={'gray1'}>Fitur ini belum tersedia</Text>
+                                    </Stack>
                                 </Popover.Dropdown>
                             </Popover>
                             <Popover
@@ -133,7 +135,7 @@ const UserLayout = ({ children, session, title }) => {
                             </ActionIcon>
                         )}
                     </Group>
-                    <NavbarMenu isAdmin={session.role === 'ADMIN'} />
+                    <NavbarMenu isAdmin={session.role === 'ADMIN'} toggle={toggle} />
                 </Stack>
             </AppShell.Navbar>
             <AppShell.Main mr={{ base: 0, lg: 'lg' }}>{children}</AppShell.Main>

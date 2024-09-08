@@ -71,7 +71,9 @@ const DaftarSatuanBarang = ({ satuanBarangs, status }) => {
             },
             { accessor: 'nama', ...props },
             {
-                accessor: 'action', textAlign: 'center', width: 70,
+                accessor: 'action', textAlign: 'center',   width: 60,
+                cellsStyle: () => ({ background: 'white' }),
+                titleStyle: () => ({ background: 'white' }),
                 render: (record) => (
                     <Menu shadow="md" width={110} position="bottom-end" offset={-5}>
                         <Menu.Target>
@@ -116,14 +118,9 @@ const DaftarSatuanBarang = ({ satuanBarangs, status }) => {
                 <ButtonWithRoute route={route('admin.inventaris-barang.satuan.create')} label={'Tambah'} leftSection={<IconPlus size={14} />} />
                 <SearchInput keyword={keyword} setKeyword={setKeyword} />
             </Group>
-            {keyword && (
-                <Group>
-                    <Badge radius={"xs"} variant='light' color={'gray'} rightSection={<IconX size={14} className='cursor-pointer hover:text-red-600' onClick={() => setKeyword('')} />} >Menampilkan hasil pencarian: "{keyword}"</Badge>
-                </Group>
-            )}
             <DataTable
-                height={450}
-                fz="sm"
+                minHeight={300}
+                fz="xs"
                 withColumnBorders
                 sortStatus={sortStatus}
                 onSortStatusChange={setSortStatus}
