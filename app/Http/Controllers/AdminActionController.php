@@ -364,6 +364,11 @@ class AdminActionController extends Controller
 
         try {
             $user = User::findOrFail($id);
+            $user->nama = $validatedData['nama'];
+            $user->username = $validatedData['username'];
+            $user->nip = $validatedData['nip'];
+            $user->role = $validatedData['role'];
+            $user->save(); 
             $user->timKerjas()->sync($validatedData['timKerjaId']);
             DB::commit();
             $status = [

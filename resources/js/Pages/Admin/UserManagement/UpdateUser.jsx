@@ -63,8 +63,7 @@ const UpdateUser = ({ user, timKerjas, status, prevUser }) => {
         router.post(route('admin.user-management.update.action', { id: prevUser.id }), values, {
         });
     };
-
-
+    
     return (
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
             <Stack gap={'xs'}>

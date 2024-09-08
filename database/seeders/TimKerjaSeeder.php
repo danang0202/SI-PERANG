@@ -8,28 +8,44 @@ use Illuminate\Database\Seeder;
 
 class TimKerjaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+   
+    
     public function run(): void
     {
-        $timKerjaData = [
-            "PIMPINAN",
-            "PRODUKSI",
-            "NWA",
-            "DISTRIBUSI",
-            "SOSIAL",
-            "IPDS",
-            "RB",
-            "UMUM",
-        ];
+        $csvFile = fopen(base_path("database/data/data-tim-kerja-seeders.csv"), "r");
 
-        foreach ($timKerjaData as $tim) {
-            TimKerja::create([
-                'nama' => $tim,
-                'nama_ketua' => 'Ketua ' . $tim,
-                'nip_ketua' => '198601092008012002'
-            ]);
+        $firstline = true;
+
+
+        while (($data = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
+            if (!$firstline) {
+                TimKerja::create([
+                    "nama" => $data['0'],
+                    "nama_ketua" => $data['2'],
+                    "nip_ketua" => $data['3'],
+                ]);
+            }
+            $firstline = false;
         }
+
+        fclose($csvFile);
+        // $timKerjaData = [
+        //     "PIMPINAN",
+        //     "PRODUKSI",
+        //     "NWA",
+        //     "DISTRIBUSI",
+        //     "SOSIAL",
+        //     "IPDS",
+        //     "RB",
+        //     "UMUM",
+        // ];
+
+        // foreach ($timKerjaData as $tim) {
+        //     TimKerja::create([
+        //         'nama' => $tim,
+        //         'nama_ketua' => 'Ketua ' . $tim,
+        //         'nip_ketua' => '198601092008012002'
+        //     ]);
+        // }
     }
 }
