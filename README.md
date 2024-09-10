@@ -1,4 +1,5 @@
-# (logo-HD.png)
+![logo-HD](https://github.com/user-attachments/assets/5e370bdc-1cb0-40cd-807b-38deaef2920e)
+
 
 > ### SI PERANG merupakan aplikasi yang bertujuan untuk mengekomodasi permintaan barang dari setiap tim Kerja ke bagian umum BPS Bantul. Pengguna aplikasi ini adalah admin dan user. Admin dapat melakukan inventaris barang (CRUD Barang, CRUD Jenis Barang, CRUD Satuan Barang), Melihat dashoard permintaan barang, menerima permintaan, membatalkna pmermintaan, melihat riwayat permintaan barang, manajemen user, dan manajemen tim kerja. Sementara itu, user dapat melihat dashboard permintaan barang mereka, menambah permintaan barang baru, melihat riwayat permintaan barang, dan melihat daftar barang. 
 
