@@ -72,7 +72,7 @@ const DaftarBarang = ({ user, barangs }) => {
                 filter: (
                     <MultiSelect
                         label="Jenis Barang"
-                        description="Tampilkan seluruh data barang pada jenis terpilih"
+                        description="Tampilkan seluruh barang pada jenis terpilih"
                         data={jenisBarang}
                         value={selectedJenisBarang}
                         onChange={setSelectedJenisBarang}
@@ -90,8 +90,8 @@ const DaftarBarang = ({ user, barangs }) => {
                 ...props,
                 filter: (
                     <MultiSelect
-                        label="Jenis Barang"
-                        description="Tampilkan seluruh data barang pada jenis terpilih"
+                        label="Satuan Barang"
+                        description="Tampilkan seluruh barang pada satuan terpilih"
                         data={satuanBarang}
                         value={selectedSatuanBarang}
                         onChange={setSelectedSatuanBarang}

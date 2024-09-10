@@ -18,6 +18,8 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
     const [itemPengajuan, setItemPengajuan] = useState([]);
     const theme = useMantineTheme();
     const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+    const [searchValue, setSearchValue] = useState('');
+
 
     useEffect(() => {
         if (status && status.type == 'fail') {
@@ -107,6 +109,7 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
             return updatedItems;
         });
         formItemPengajuan.reset();
+        setSearchValue('');
     };
 
     const handleSubmitPengajuan = (values) => {
@@ -188,6 +191,8 @@ const TambahPengajuan = ({ user, barangs, satuanBarangs, userProfile, status }) 
                                     placeholder="Pilih barang..."
                                     data={sortBy(barangOptions, 'label')}
                                     searchable
+                                    searchValue={searchValue}
+                                    onSearchChange={setSearchValue}
                                     nothingFoundMessage="Nothing found..."
                                     radius={'xs'}
                                     key={formItemPengajuan.key('barangId')}
