@@ -71,7 +71,7 @@
             @endforeach
         </tbody>
     </table>
-    <p> Bantul, {{ \Carbon\Carbon::now()->format('d M Y') }}<br /></p>
+    <p> Bantul, {{ \Carbon\Carbon::now()->format('d F Y') }}<br /></p>
     <div class="signature">
         <div>
             Penerima Barang<br /><br /><br /><br /><br />

@@ -17,6 +17,8 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $table = 'siperang_users';
+
     protected $fillable = [
         'nama',
         'nip',
@@ -50,6 +52,6 @@ class User extends Authenticatable
     }
     public function timKerjas()
     {
-        return $this->belongsToMany(TimKerja::class, 'user_has_tim_kerja', 'user_id', 'tim_kerja_id');
+        return $this->belongsToMany(TimKerja::class, 'siperang_user_has_tim_kerja', 'user_id', 'tim_kerja_id');
     }
 }

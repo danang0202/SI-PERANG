@@ -35,7 +35,7 @@ No,Nama,username,NIP Pegawai,Tim Kerja,Kode TIm Kerja,Role,Password
 34,"Nindya Purnama Sari, SST.,M.Si",nindyapurnama,198609122009022007,IPDS,6,USER,nindyapurnama123
 35,Rokhmi Juntari,rokhmi,197409171994022001,UMUM,8,USER,rokhmi123
 36,"Septiana Wulandari, SST, M.Ec.Dev",septiana,198209262004122001,NWA,3,USER,septiana123
-37,"Eka Dayana Putri, A.P.Kb.N.",ekadayana,200010022019122001,UMUM,8,ADMIN,ekadayana123
+37,"Eka Dayana Putri, A.P.Kb.N.",ekadayana,200010022019122001,UMUM,8,USER,ekadayana123
 38,"Arifah Ika Kusumastuti, SST",arifahika,199310032017012002,UMUM,8,USER,arifahika123
 39,"Prihantika Dian Rahmawati, SST",prihantika,198410092008012008,IPDS,6,USER,prihantika123
 40,"Reni Oktavia, SST, M.Si",renioktavia,198610172009022007,DISTRIBUSI,4,USER,renioktavia123
@@ -48,3 +48,4 @@ No,Nama,username,NIP Pegawai,Tim Kerja,Kode TIm Kerja,Role,Password
 47,A. Ridwan Afandi,ridwanafandi,196712262007011001,DISTRIBUSI,4,USER,ridwanafandi123
 48,"Tri Mulyani Widia Ningsih, A.Md.",trimulyani,198612282012122002,UMUM,8,USER,trimulyani123
 49,"Hentiek Puspitawati, SST,MSi.",hentiek,198011272003122002,RB,7,USER,hentiek123
+50,"Eka Dayana Putri, A.P.Kb.N.",admin,200010022019122000,UMUM,8,ADMIN,admin123

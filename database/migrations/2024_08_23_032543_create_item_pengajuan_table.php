@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('item_pengajuan', function (Blueprint $table) {
+        Schema::create('siperang_item_pengajuan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pengajuan_id')->constrained('pengajuan'); // Relasi ke tabel Pengajuan
-            $table->foreignId('barang_id')->constrained('barang'); // Relasi ke tabel Barang
+            $table->foreignId('pengajuan_id')->constrained('siperang_pengajuan'); // Relasi ke tabel Pengajuan
+            $table->foreignId('barang_id')->constrained('siperang_barang'); // Relasi ke tabel Barang
             $table->integer('jumlah');
             $table->text('keterangan')->nullable();
             $table->timestamps(); // created_at dan updated_at

@@ -25,8 +25,8 @@ class AdminActionController extends Controller
                 Rule::unique('barang', 'kode')->ignore($id),
             ],
             'nama' => 'required|string|max:255',
-            'jenisBarangId' => 'required|exists:jenis_barang,id',
-            'satuanId' => 'required|exists:satuan_barang,id',
+            'jenisBarangId' => 'required|exists:siperang_jenis_barang,id',
+            'satuanId' => 'required|exists:siperang_satuan_barang,id',
             'jumlah' => 'required|integer|min:1',
         ]);
 
@@ -251,12 +251,16 @@ class AdminActionController extends Controller
                 ->whereNotNull('no_pengajuan')
                 ->orderBy('no_pengajuan', 'desc')
                 ->first();
-
             if ($lastPengajuan) {
                 $lastNumber = (int) substr($lastPengajuan->no_pengajuan, 2, 3);
                 $nextNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
             } else {
-                $nextNumber = '001';
+                if ($tahun == 2024) {
+                    $lastPengajuan = env('LAST_REQUEST_2024', 0);
+                    $nextNumber = str_pad($lastPengajuan + 1, 3, '0', STR_PAD_LEFT);
+                } else {
+                    $nextNumber = '001';
+                }
             }
 
             $noPengajuan = "B-" . $nextNumber . "/34021/PL615/" . $tahun;
@@ -309,7 +313,7 @@ class AdminActionController extends Controller
             'role' => 'required|in:ADMIN,USER',
             'password' => 'required|string|min:8',
             'timKerjaId' => 'required|array',
-            'timKerjaId.*' => 'exists:tim_kerja,id',
+            'timKerjaId.*' => 'exists:siperang_tim_kerja,id',
         ], [
             'username.unique' => 'Username sudah terdaftar.',
             'nip.unique' => 'NIP sudah terdaftar.',
@@ -358,7 +362,7 @@ class AdminActionController extends Controller
             'role' => 'required|in:ADMIN,USER',
             'timKerjaId' => 'required|array',
             'password' => 'nullable|string|min:8',
-            'timKerjaId.*' => 'exists:tim_kerja,id',
+            'timKerjaId.*' => 'exists:siperang_tim_kerja,id',
         ]);
         DB::beginTransaction();
 
@@ -368,7 +372,10 @@ class AdminActionController extends Controller
             $user->username = $validatedData['username'];
             $user->nip = $validatedData['nip'];
             $user->role = $validatedData['role'];
-            $user->save(); 
+            if (!empty($validatedData['password'])) {
+                $user->password = Hash::make($validatedData['password']);
+            }
+            $user->save();
             $user->timKerjas()->sync($validatedData['timKerjaId']);
             DB::commit();
             $status = [
