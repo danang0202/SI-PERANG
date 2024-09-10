@@ -131,29 +131,29 @@ class AdminController extends Controller
         if ($bulanTimKerja !== 'all') {
             $pengajuanPerTimKerja->whereMonth('siperang_pengajuan.created_at', $bulanTimKerja);
         }
-        
+
         $pengajuanPerTimKerja = $pengajuanPerTimKerja
             ->groupBy('siperang_tim_kerja.nama')
             ->orderBy('siperang_tim_kerja.nama')
             ->get();
 
-            $allTeams = TimKerja::pluck('nama');
-            $chartDataTimKerja = $allTeams->map(function ($team) use ($pengajuanPerTimKerja) {
-                $data = $pengajuanPerTimKerja->firstWhere('tim_kerja', $team) ?? [
-                    'MENUNGGU_KONFIRMASI' => 0,
-                    'PERMINTAAN_DITERIMA' => 0,
-                    'PERMINTAAN_DITOLAK' => 0,
-                    'PERMINTAAN_DIBATALKAN' => 0,
-                ];
-                
-                return [
-                    'tim_kerja' => $team,
-                    'MENUNGGU_KONFIRMASI' => (int) $data['MENUNGGU_KONFIRMASI'],
-                    'PERMINTAAN_DITERIMA' => (int) $data['PERMINTAAN_DITERIMA'],
-                    'PERMINTAAN_DITOLAK' => (int) $data['PERMINTAAN_DITOLAK'],
-                    'PERMINTAAN_DIBATALKAN' => (int) $data['PERMINTAAN_DIBATALKAN'],
-                ];
-            });
+        $allTeams = TimKerja::pluck('nama');
+        $chartDataTimKerja = $allTeams->map(function ($team) use ($pengajuanPerTimKerja) {
+            $data = $pengajuanPerTimKerja->firstWhere('tim_kerja', $team) ?? [
+                'MENUNGGU_KONFIRMASI' => 0,
+                'PERMINTAAN_DITERIMA' => 0,
+                'PERMINTAAN_DITOLAK' => 0,
+                'PERMINTAAN_DIBATALKAN' => 0,
+            ];
+
+            return [
+                'tim_kerja' => $team,
+                'MENUNGGU_KONFIRMASI' => (int) $data['MENUNGGU_KONFIRMASI'],
+                'PERMINTAAN_DITERIMA' => (int) $data['PERMINTAAN_DITERIMA'],
+                'PERMINTAAN_DITOLAK' => (int) $data['PERMINTAAN_DITOLAK'],
+                'PERMINTAAN_DIBATALKAN' => (int) $data['PERMINTAAN_DIBATALKAN'],
+            ];
+        });
 
         return Inertia::render('Admin/Dashboard', [
             'user' => $user,
@@ -186,6 +186,7 @@ class AdminController extends Controller
         if (!empty($dateRange) && count($dateRange) === 2) {
             $startDate = Carbon::parse($dateRange[0])->startOfDay();
             $endDate = Carbon::parse($dateRange[1])->endOfDay();
+            $endDate->addDay();
             $query->whereBetween('created_at', [$startDate, $endDate]);
         }
 
@@ -265,6 +266,7 @@ class AdminController extends Controller
         if (!empty($dateRange) && count($dateRange) === 2) {
             $startDate = Carbon::parse($dateRange[0])->startOfDay();
             $endDate = Carbon::parse($dateRange[1])->endOfDay();
+            $endDate->addDay();
             $query->whereBetween('created_at', [$startDate, $endDate]);
         }
 

@@ -24,6 +24,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/pengajuan/{id}/stream-pdf', [PDFController::class, 'streamPDF'])->name('streamPDF');
 
+Route::get('/pengajuan/{id}/download-pdf', [PDFController::class, 'generatePDF'])->name('download-surat');
+
 Route::get('/pengajuan/{id}/cetak-surat', [PDFController::class, 'renderPDFPage'])->name('cetak-surat')->middleware(['auth']);
 
 

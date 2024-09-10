@@ -246,39 +246,43 @@ class AdminActionController extends Controller
     {
         try {
             $pengajuan = Pengajuan::findOrFail($id);
-            $tahun = now()->year;
-            $lastPengajuan = Pengajuan::whereYear('created_at', $tahun)
-                ->whereNotNull('no_pengajuan')
-                ->orderBy('no_pengajuan', 'desc')
-                ->first();
-            if ($lastPengajuan) {
-                $lastNumber = (int) substr($lastPengajuan->no_pengajuan, 2, 3);
-                $nextNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-            } else {
-                if ($tahun == 2024) {
-                    $lastPengajuan = env('LAST_REQUEST_2024', 0);
-                    $nextNumber = str_pad($lastPengajuan + 1, 3, '0', STR_PAD_LEFT);
+
+            if ($pengajuan->status == 'MENUNGGU KONFIRMASI') {
+                $tahun = now()->year;
+                $lastPengajuan = Pengajuan::whereYear('created_at', $tahun)
+                    ->whereNotNull('no_pengajuan')
+                    ->orderBy('no_pengajuan', 'desc')
+                    ->first();
+                if ($lastPengajuan) {
+                    $lastNumber = (int) substr($lastPengajuan->no_pengajuan, 2, 3);
+                    $nextNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
                 } else {
-                    $nextNumber = '001';
+                    if ($tahun == 2024) {
+                        $lastPengajuan = env('LAST_REQUEST_2024', 0);
+                        $nextNumber = str_pad($lastPengajuan + 1, 3, '0', STR_PAD_LEFT);
+                    } else {
+                        $nextNumber = '001';
+                    }
                 }
+
+                $noPengajuan = "B-" . $nextNumber . "/34021/PL615/" . $tahun;
+                $pengajuan->status = 'PERMINTAAN DITERIMA';
+                $pengajuan->no_pengajuan = $noPengajuan;
+                $pengajuan->save();
+
+                $status = [
+                    'type' => 'success',
+                    'message' => 'Permintaan telah diterima dengan nomor Permintaan: ' . $noPengajuan
+                ];
+            } else {
+                throw new \Exception('Permintaan hanya bisa diterima jika berstatus "MENUNGGU KONFIRMASI".');
             }
-
-            $noPengajuan = "B-" . $nextNumber . "/34021/PL615/" . $tahun;
-            $pengajuan->status = 'PERMINTAAN DITERIMA';
-            $pengajuan->no_pengajuan = $noPengajuan;
-            $pengajuan->save();
-
-            $status = [
-                'type' => 'success',
-                'message' => 'Permintaan telah diterima dengan nomor Permintaan: ' . $noPengajuan
-            ];
         } catch (\Exception $e) {
             $status = [
                 'type' => 'fail',
                 'message' => 'Terjadi kesalahan saat menerima Permintaan: ' . $e->getMessage()
             ];
         }
-
         return redirect()->back()->with('status', $status);
     }
 
@@ -286,12 +290,16 @@ class AdminActionController extends Controller
     {
         try {
             $pengajuan = Pengajuan::findOrFail($id);
-            $pengajuan->status = 'PERMINTAAN DITOLAK';
-            $pengajuan->save();
-            $status = [
-                'type' => 'success',
-                'message' => 'Permintaan telah ditolak.'
-            ];
+            if ($pengajuan->status == 'MENUNGGU KONFIRMASI') {
+                $pengajuan->status = 'PERMINTAAN DITOLAK';
+                $pengajuan->save();
+                $status = [
+                    'type' => 'success',
+                    'message' => 'Permintaan telah ditolak.'
+                ];
+            } else {
+                throw new \Exception('Permintaan hanya bisa ditolak jika berstatus "MENUNGGU KONFIRMASI".');
+            }
         } catch (\Exception $e) {
             $status = [
                 'type' => 'fail',
@@ -300,8 +308,8 @@ class AdminActionController extends Controller
         }
         return redirect()->back()->with('status', $status);
     }
-    // User
 
+    // User
 
     public function createUserAction(Request $request)
     {

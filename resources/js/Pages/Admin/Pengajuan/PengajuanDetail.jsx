@@ -4,10 +4,11 @@ import { getStatusColor, toTitleCase } from '@/helper/common.helper'
 import { formatDateTime } from '@/helper/date.helper'
 import { showFailNotification, showSuccesNotification } from '@/helper/notification.helper'
 import UserLayout from '@/Layout/Layout'
+import { Head, Link } from '@inertiajs/react'
 import { Badge, Box, Button, Grid, Group, rem, Stack, Stepper, Text, TextInput, useMantineTheme } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useDisclosure, useMediaQuery } from '@mantine/hooks'
-import { IconCalendar, IconPrinter, IconShieldCheck, IconUserCheck } from '@tabler/icons-react'
+import { IconCalendar, IconDownload, IconPrinter, IconShieldCheck, IconUserCheck } from '@tabler/icons-react'
 import { DataTable } from 'mantine-datatable'
 import React, { useEffect, useState } from 'react'
 
@@ -28,6 +29,7 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
 
     return (
         <Stack gap="md" mb={'lg'}>
+            <Head title='Detail Permintaan' />
             <Group justify='flex-start'>
                 <ButtonOutlineWithRoute label={'Kembali'} route={route(backUrl)} color={'red'} />
             </Group>
@@ -177,6 +179,11 @@ const PengajuanDetail = ({ user, pengajuan, status, backUrl }) => {
                                 <a href={route('cetak-surat', { id: pengajuan.id })} target="_blank" rel="noopener noreferrer">
                                     <Button radius='xs' leftSection={<IconPrinter size={18} />} className='hover:opacity-60 transition'>
                                         Cetak Surat
+                                    </Button>
+                                </a>
+                                <a href={route('download-surat', { id: pengajuan.id })}>
+                                    <Button radius='xs' color='secondaryPurple' leftSection={<IconDownload size={18} />} className='hover:opacity-60 transition'>
+                                        Download Surat
                                     </Button>
                                 </a>
                             </Group>

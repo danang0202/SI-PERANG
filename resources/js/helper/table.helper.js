@@ -11,6 +11,7 @@ export const filterDataRiwayatPengajuanUser = (data, keyword, dateRange, statusA
         if (startDate && endDate) {
             const start = new Date(startDate);
             const end = new Date(endDate);
+            end.setHours(23, 59, 59, 999);
             filteredData = filteredData.filter((item) => {
                 const createdAt = new Date(item.created_at);
                 return createdAt >= start && createdAt <= end;
