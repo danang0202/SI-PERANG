@@ -5,7 +5,11 @@
 # Ringkasan TechStack
 | **Kategori** 	| **Teknologi**              	| **Deskripsi**            	|
 |-------------	|----------------------------	|------------------	|
-| Frontend      | React              	        | JavaScript library for building user interfaces, integrated with Laravel via Inertia.js. 	|
+| Backend        | PHP Laravel 10.10             | Framework PHP populer untuk membangun aplikasi web. 	|
+| Frontend       | React 18.3.1                  | Library JavaScript untuk membangun antarmuka pengguna. 	|
+| Frontend       | Inertia.js 0.6.3              | Framework rendering server untuk Laravel, mengintegrasikan PHP dan React. 	|
+| Database         | MySQL                         | Sistem manajemen basis data relasional untuk menyimpan data aplikasi. 	|
+| UI Components       | Mantine UI                         | Kumpulan komponen React untuk membangun antarmuka pengguna modern. 	|
 
 # Getting started
 
