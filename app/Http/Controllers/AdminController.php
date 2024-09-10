@@ -117,24 +117,24 @@ class AdminController extends Controller
         });
 
         $tahunTimKerja = request('tahun_tim_kerja', date('Y'));
-        $pengajuanPerTimKerja = Pengajuan::join('tim_kerja', 'pengajuan.tim_kerja_id', '=', 'tim_kerja.id')
+        $pengajuanPerTimKerja = Pengajuan::join('siperang_tim_kerja', 'siperang_pengajuan.tim_kerja_id', '=', 'siperang_tim_kerja.id')
             ->selectRaw("
-            tim_kerja.nama as tim_kerja,
-            SUM(CASE WHEN pengajuan.status = 'MENUNGGU KONFIRMASI' THEN 1 ELSE 0 END) as MENUNGGU_KONFIRMASI,
-            SUM(CASE WHEN pengajuan.status = 'PERMINTAAN DITERIMA' THEN 1 ELSE 0 END) as PERMINTAAN_DITERIMA,
-            SUM(CASE WHEN pengajuan.status = 'PERMINTAAN DITOLAK' THEN 1 ELSE 0 END) as PERMINTAAN_DITOLAK,
-            SUM(CASE WHEN pengajuan.status = 'PERMINTAAN DIBATALKAN' THEN 1 ELSE 0 END) as PERMINTAAN_DIBATALKAN
+            siperang_tim_kerja.nama as tim_kerja,
+            SUM(CASE WHEN siperang_pengajuan.status = 'MENUNGGU KONFIRMASI' THEN 1 ELSE 0 END) as MENUNGGU_KONFIRMASI,
+            SUM(CASE WHEN siperang_pengajuan.status = 'PERMINTAAN DITERIMA' THEN 1 ELSE 0 END) as PERMINTAAN_DITERIMA,
+            SUM(CASE WHEN siperang_pengajuan.status = 'PERMINTAAN DITOLAK' THEN 1 ELSE 0 END) as PERMINTAAN_DITOLAK,
+            SUM(CASE WHEN siperang_pengajuan.status = 'PERMINTAAN DIBATALKAN' THEN 1 ELSE 0 END) as PERMINTAAN_DIBATALKAN
         ")
-            ->whereYear('pengajuan.created_at', $tahunTimKerja);
+            ->whereYear('siperang_pengajuan.created_at', $tahunTimKerja);
 
         $bulanTimKerja = request('bulan_tim_kerja', 'all');
         if ($bulanTimKerja !== 'all') {
-            $pengajuanPerTimKerja->whereMonth('pengajuan.created_at', $bulanTimKerja);
+            $pengajuanPerTimKerja->whereMonth('siperang_pengajuan.created_at', $bulanTimKerja);
         }
         
         $pengajuanPerTimKerja = $pengajuanPerTimKerja
-            ->groupBy('tim_kerja.nama')
-            ->orderBy('tim_kerja.nama')
+            ->groupBy('siperang_tim_kerja.nama')
+            ->orderBy('siperang_tim_kerja.nama')
             ->get();
 
             $allTeams = TimKerja::pluck('nama');

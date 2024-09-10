@@ -85,9 +85,6 @@ const CreateTimKerja = ({ user, users, status }) => {
                                 radius={"xs"}
                                 size='sm'
                                 {...form.getInputProps('nama')}
-                                onChange={(event) => {
-                                    form.setFieldValue('nama', event.currentTarget.value.toUpperCase());
-                                }}
                             />
                             <Select
                                 label="Ketua Tim Kerja"

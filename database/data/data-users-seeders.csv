@@ -1,0 +1,51 @@
+No,Nama,username,NIP Pegawai,Tim Kerja,Kode TIm Kerja,Role,Password
+1,"Dedi Cahyono, SE, MA, M.S.E.",dedicahyono,197410051999031004,PIMPINAN,1,USER,dedicahyono123
+2,Fauzie,fauzie,197901042006041003,PRODUKSI,2,USER,fauzie123
+3,"Esthisatari Nawangsih, SST.,M.Si",esthisatari,198601092008012002,PRODUKSI,2,USER,esthisatari123
+4,"Ratna Kurniawati, SE",ratnakurniawati,197901172002122003,NWA,3,USER,ratnakurniawati123
+5,"Fara Fajar Wicaksono, S.ST",farafajar,198701282009122002,NWA,3,USER,farafajar123
+6,"Anggi Vivi Febrianti, A.Md.",anggivivi,199902062022032013,DISTRIBUSI,4,USER,anggivivi123
+7,Zainal Suripta,zainalsuripta,197802102009011009,PRODUKSI,2,USER,zainalsuripta123
+8,"Ponco Pratomo, SE.",poncopratomo,197102111998031003,NWA,3,USER,poncopratomo123
+9,"Maria Noviana Ida Budiningsih, MT, MA",marianoviana,197202131999032002,DISTRIBUSI,4,USER,marianoviana123
+10,"Sariman, S.Sos.",sariman,196702131999031002,PRODUKSI,2,USER,sariman123
+11,"Heru Kusharjanto, MA, M.Eng",herukusharjanto,197502242000031001,SOSIAL,5,USER,herukusharjanto123
+12,"Marlina Primasari, SST",marlinap,199003102014102001,IPDS,6,USER,marlinap123
+13,"Wulan Novi Andari, A.Md.",wulannovi,198803142011012018,SOSIAL,5,USER,wulannovi123
+14,"Hesti Widiastuti, STP",hestiwidi,198204082006042020,DISTRIBUSI,4,USER,hestiwidi123
+15,"Catur Setyawati, A.Md",catursetyawati,198504132010032002,IPDS,6,USER,catursetyawati123
+16,Akbar Sergio Abdul gawang,akbarsergio,199604232019011001,IPDS,6,USER,akbarsergio123
+17,"Catur Didi Wahyudi, SST., M.Si",caturdidi,198105042003121004,RB,7,USER,caturdidi123
+18,"Dedek Meilinda Navlin, A.Md",dedekmeilinda,199805052022032018,PRODUKSI,2,USER,dedekmeilinda123
+19,Anna Kristiana Yunita,annakristiana,198705102009122002,SOSIAL,5,USER,annakristiana123
+20,Yitmo Yuwono,yitmoyuwono,196905111992111001,UMUM,8,USER,yitmoyuwono123
+21,"Slamet Murdaniasih, S.E",slametmurdania,197305231994022002,DISTRIBUSI,4,USER,slametmurdania123
+22,"Triana Setyaningsih, SE",trianas,197505261994022001,NWA,3,USER,trianas123
+23,"Rio Jakaria, SST., M.Stat",riojakaria,197505301999121001,NWA,3,USER,riojakaria123
+24,"Ria Nurullina, S.Si.",rianurullina,198506022019032001,SOSIAL,5,USER,rianurullina123
+25,"Metha Setyoaji Wedhaninggar, S.Si., M.Sc.",methasetyoaji,198406022010032005,IPDS,6,USER,methasetyoaji123
+26,"Andriana Nurmahmud, SST, SSi,MPA",andriananurmahmud,197611181997121001,IPDS,6,USER,andriananurmahmud123
+27,"Sukisno, A.Md.",sukisno,198206242011011010,PRODUKSI,2,USER,sukisno123
+28,"Sugiarti, S.Si",sugiarti,197206262002122001,DISTRIBUSI,4,USER,sugiarti123
+29,"Sumaryati, SST, M.Ec.Dev",sumaryati,198206292007012006,SOSIAL,5,USER,sumaryati123
+30,"Rusdiah Agustina, S.Psi., M.I.Kom.",rusdiah,198208012011012013,UMUM,8,USER,rusdiah123
+31,"Trisia Agustiana, S.E",trisiasiwi,197108081994012001,UMUM,8,USER,trisiasiwi123
+32,"Agustina Siwi Dharmayati, SST., M.M.",agustinasiwi,197908182002122003,PRODUKSI,2,USER,agustinasiwi123
+33,Sri Giri Nugroho Hendro Pranoto,srigirin,197709052006041011,DISTRIBUSI,4,USER,srigirin123
+34,"Nindya Purnama Sari, SST.,M.Si",nindyapurnama,198609122009022007,IPDS,6,USER,nindyapurnama123
+35,Rokhmi Juntari,rokhmi,197409171994022001,UMUM,8,USER,rokhmi123
+36,"Septiana Wulandari, SST, M.Ec.Dev",septiana,198209262004122001,NWA,3,USER,septiana123
+37,"Eka Dayana Putri, A.P.Kb.N.",ekadayana,200010022019122001,UMUM,8,USER,ekadayana123
+38,"Arifah Ika Kusumastuti, SST",arifahika,199310032017012002,UMUM,8,USER,arifahika123
+39,"Prihantika Dian Rahmawati, SST",prihantika,198410092008012008,IPDS,6,USER,prihantika123
+40,"Reni Oktavia, SST, M.Si",renioktavia,198610172009022007,DISTRIBUSI,4,USER,renioktavia123
+41,"Achmad Basuki Adibrata, SE, M.Acc",achmadbasuki,198411132009021001,UMUM,8,USER,achmadbasuki123
+42,"Dita Andian, SE",ditaandian,198011162002122002,PRODUKSI,2,USER,ditaandian123
+43,"Yayi Purnaning Saputri, SST",yayipurnaning,198212062004122002,SOSIAL,5,USER,yayipurnaning123
+44,"Christiani Pandiangan, SST",christianip,198312112007012006,PRODUKSI,2,USER,christianip123
+45,"Briliana Wellyanti, SST, M.Si",brilianawellyanti,198612142009022008,DISTRIBUSI,4,USER,brilianawellyanti123
+46,"Deddy Aryanto, SST.,M.Si",deddyaryanto,198212242006021003,PRODUKSI,2,USER,deddyaryanto123
+47,A. Ridwan Afandi,ridwanafandi,196712262007011001,DISTRIBUSI,4,USER,ridwanafandi123
+48,"Tri Mulyani Widia Ningsih, A.Md.",trimulyani,198612282012122002,UMUM,8,USER,trimulyani123
+49,"Hentiek Puspitawati, SST,MSi.",hentiek,198011272003122002,RB,7,USER,hentiek123
+50,"Eka Dayana Putri, A.P.Kb.N.",admin,200010022019122000,UMUM,8,ADMIN,admin123

@@ -71,15 +71,15 @@
             @endforeach
         </tbody>
     </table>
-    <p> Bantul, {{ \Carbon\Carbon::now()->format('d M Y') }}<br /></p>
+    <p> Bantul, {{ \Carbon\Carbon::now()->format('d F Y') }}<br /></p>
     <div class="signature">
         <div>
-            Penerima Barang<br /><br /><br /><br />
+            Penerima Barang<br /><br /><br /><br /><br />
             {{ $pengajuan->user->nama }}
         </div>
         <div>
             Mengetahui,<br />
-            Kepala Subbag/Ketua Tim<br /><br /><br /><br />
+            Kepala Subbag/Ketua Tim<br /><br /><br /><br /><br />
             {{ $pengajuan->timKerja->nama_ketua }}
         </div>
     </div>
@@ -87,11 +87,11 @@
     <div class="signature">
         <div>
             Menyetujui,<br />
-            Kepala Subbagian Umum<br /><br /><br /><br />
+            Kepala Subbagian Umum<br /><br /><br /><br /><br />
             {{ $ketuaSubbagUmum->nama_ketua }}
         </div>
         <div>
-            Petugas Penyimpanan Barang<br /><br /><br /><br />
+            Petugas Penyimpanan Barang<br /><br /><br /><br /><br />
             {{ $namaAdmin->nama }}
         </div>
     </div>

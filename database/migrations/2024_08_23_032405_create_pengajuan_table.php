@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pengajuan', function (Blueprint $table) {
+        Schema::create('siperang_pengajuan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('siperang_users');
             $table->string('no_pengajuan', 50)->nullable();
-            $table->foreignId('tim_kerja_id')->constrained('tim_kerja');
+            $table->foreignId('tim_kerja_id')->constrained('siperang_tim_kerja');
             $table->enum('status', ['PERMINTAAN DITERIMA', 'PERMINTAAN DITOLAK', 'MENUNGGU KONFIRMASI', 'PERMINTAAN DIBATALKAN'])->default('MENUNGGU KONFIRMASI');
             $table->timestamps();
         });

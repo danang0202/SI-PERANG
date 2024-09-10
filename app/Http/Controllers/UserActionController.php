@@ -21,7 +21,7 @@ class UserActionController extends Controller
             'namaPengaju' => 'required|string|max:255',
             'timKerjaId' => 'required|string',
             'itemPengajuan' => 'required|array',
-            'itemPengajuan.*.barangId' => 'required|exists:barang,id',
+            'itemPengajuan.*.barangId' => 'required|exists:siperang_barang,id',
             'itemPengajuan.*.jumlah' => 'required|integer|min:1',
             'itemPengajuan.*.keterangan' => 'nullable|string',
         ]);
