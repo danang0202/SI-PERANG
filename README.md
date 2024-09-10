@@ -10,6 +10,7 @@
 | Frontend       | Inertia.js 0.6.3              | Framework rendering server untuk Laravel, mengintegrasikan PHP dan React. 	|
 | Database         | MySQL                         | Sistem manajemen basis data relasional untuk menyimpan data aplikasi. 	|
 | UI Components       | Mantine UI                         | Kumpulan komponen React untuk membangun antarmuka pengguna modern. 	|
+| CSS       | Tailwind                         | Framework CSS familiar untu antarmuka pengguna modern 	|
 
 # Getting started
 
@@ -24,11 +25,11 @@ Beralih ke folder repo:
 
     cd SI-PERANG
 
-Install semua dependensi menggunakan composer:
+Install semua dependensi laravel menggunakan composer:
 
     npm install
 
-Install semua dependensi frontend menggunakan composer:
+Install semua dependensi frontend menggunakan npm:
 
     composer install
 
