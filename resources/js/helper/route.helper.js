@@ -1,6 +1,6 @@
 export const findSelectedKey = (menuItems, path) => {
     for (let menuItem of menuItems) {
-        if (path.startsWith(menuItem.href)) {
+        if (path.includes(menuItem.href)) {
             return menuItem.key;
         }
         if (menuItem.children && menuItem.children.length > 0) {
