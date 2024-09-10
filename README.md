@@ -18,7 +18,7 @@ Pastikan Anda memeriksa panduan instalasi Laravel resmi untuk mengetahui persyar
 
 Clone repositori ini:
 
-    git clone git@github.com:gothinkster/laravel-realworld-example-app.git
+    git clone https://github.com/danang0202/SI-PERANG
 
 Beralih ke folder repo:
 
