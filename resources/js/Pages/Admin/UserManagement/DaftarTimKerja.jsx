@@ -49,7 +49,7 @@ const DaftarTimKerja = ({ user, status, timKerjas }) => {
 
     useEffect(() => {
         setPage(1)
-    }, [pageSize])
+    }, [pageSize, keyword])
 
     useEffect(() => {
         const filteredData = filterTimKerja(timKerjas, keyword);

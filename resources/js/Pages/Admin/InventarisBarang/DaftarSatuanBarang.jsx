@@ -44,7 +44,7 @@ const DaftarSatuanBarang = ({ satuanBarangs, status }) => {
     }, [])
     useEffect(() => {
         setPage(1);
-    }, [pageSize]);
+    }, [pageSize, keyword]);
 
     useEffect(() => {
         const filteredData = satuanBarangs.filter((item) =>
@@ -71,7 +71,7 @@ const DaftarSatuanBarang = ({ satuanBarangs, status }) => {
             },
             { accessor: 'nama', ...props },
             {
-                accessor: 'action', textAlign: 'center',   width: 60,
+                accessor: 'action', textAlign: 'center', width: 60,
                 cellsStyle: () => ({ background: 'white' }),
                 titleStyle: () => ({ background: 'white' }),
                 render: (record) => (
@@ -83,7 +83,7 @@ const DaftarSatuanBarang = ({ satuanBarangs, status }) => {
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Link href={`/admin/inventaris-barang/satuan-barang/${record.id}/update`}>
+                            <Link href={route('admin.inventaris-barang.satuan.update', { id: record.id ? record.id : '' })}>
                                 <Menu.Item
                                     leftSection={
                                         <IconEdit size={16} color={EXTENDED_COLOR.accent5} />

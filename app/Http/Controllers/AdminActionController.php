@@ -22,7 +22,7 @@ class AdminActionController extends Controller
             'kode' => [
                 'required',
                 'digits:16',
-                Rule::unique('barang', 'kode')->ignore($id),
+                Rule::unique('siperang_barang', 'kode')->ignore($id),
             ],
             'nama' => 'required|string|max:255',
             'jenisBarangId' => 'required|exists:siperang_jenis_barang,id',
@@ -117,7 +117,7 @@ class AdminActionController extends Controller
             'kode' => [
                 'required',
                 'digits:10',
-                Rule::unique('jenis_barang')->ignore($id),
+                Rule::unique('siperang_jenis_barang')->ignore($id),
             ],
             'nama' => 'required|string|max:255',
         ]);
@@ -316,8 +316,8 @@ class AdminActionController extends Controller
         // Validasi data yang masuk
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users',
-            'nip' => 'required|string|size:18|unique:users',
+            'username' => 'required|string|max:255|unique:siperang_users',
+            'nip' => 'required|string|size:18|unique:siperang_users',
             'role' => 'required|in:ADMIN,USER',
             'password' => 'required|string|min:8',
             'timKerjaId' => 'required|array',
@@ -364,7 +364,7 @@ class AdminActionController extends Controller
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('users')->ignore($id),
+                Rule::unique('siperang_users')->ignore($id),
             ],
             'nip' => 'required|string|size:18',
             'role' => 'required|in:ADMIN,USER',
@@ -425,7 +425,7 @@ class AdminActionController extends Controller
     public function createTimKerjaAction(Request $request)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string|max:256|unique:tim_kerja',
+            'nama' => 'required|string|max:256|unique:siperang_tim_kerja',
             'namaKetua' => 'required|string|max:256',
             'nipKetua' => 'required|string|max:256',
         ]);
