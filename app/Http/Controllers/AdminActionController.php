@@ -27,7 +27,7 @@ class AdminActionController extends Controller
             'nama' => 'required|string|max:255',
             'jenisBarangId' => 'required|exists:siperang_jenis_barang,id',
             'satuanId' => 'required|exists:siperang_satuan_barang,id',
-            'jumlah' => 'required|integer|min:1',
+            'jumlah' => 'required|integer|min:0',
         ]);
 
         try {
