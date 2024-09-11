@@ -81,7 +81,7 @@ const UpdateBarang = ({ jenisBarangs, satuanBarangs, prevBarang, status }) => {
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
             <Stack gap={"md"}>
                 <Group justify='space-between' align='center'>
-                    <Text size='sm'>Menambahkan Barang</Text>
+                    <Text size='sm'>Update Barang</Text>
                     <Group justify='flex-end'>
                         <ButtonOutlineWithRoute label={'Kembali'} route={route('admin.inventaris-barang')} />
                         <Button radius={'xs'} type='submit' loading={loading}>

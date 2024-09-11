@@ -15,6 +15,5 @@ export const barangSchema = z.object({
     satuanId: z.string()
         .min(1, 'Satuan barang tidak boleh kosong'),
     jumlah: z.number()
-        .min(1, 'Jumlah tidak boleh kosong')
-        .refine(value => value, 10 >= 0, 'Jumlah tidak boleh negatif')
+        .min(0, 'Jumlah tidak boleh negatif')
 });
