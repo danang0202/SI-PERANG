@@ -35,12 +35,6 @@ const UpdateJenisBarang = ({ prevJenisBarang }) => {
     const handleSubmit = (values) => {
         setLoading(true);
         Inertia.post(route('admin.inventaris-barang.jenis.update.action', { id: prevJenisBarang.id }), values, {
-            onSuccess: () => {
-                console.log('Data berhasil disimpan');
-            },
-            onError: (errors) => {
-                console.error(errors);
-            }
         });
     };
 
