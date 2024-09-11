@@ -62,7 +62,7 @@ const DaftarBarang = ({ barangs, status }) => {
 
     useEffect(() => {
         setPage(1);
-    }, [pageSize, selectedJenisBarang, selectedSatuanBarang]);
+    }, [pageSize, selectedJenisBarang, selectedSatuanBarang, keyword]);
 
     useEffect(() => {
         const filteredData = filterBarangs(barangs, keyword, selectedJenisBarang, selectedSatuanBarang);
@@ -128,7 +128,7 @@ const DaftarBarang = ({ barangs, status }) => {
                 width: 200
             },
             {
-                accessor: 'action', textAlign: 'center',  width: 60,
+                accessor: 'action', textAlign: 'center', width: 60,
                 cellsStyle: () => ({ background: 'white' }),
                 titleStyle: () => ({ background: 'white' }),
                 render: (record) => (
@@ -151,7 +151,7 @@ const DaftarBarang = ({ barangs, status }) => {
                             >
                                 <Text size="sm" c={'accent5'}>Stock</Text>
                             </Menu.Item>
-                            <Link href={`/admin/inventaris-barang/${record.id}/update`}>
+                            <Link href={route('admin.inventaris-barang.update', { id: record.id ? record.id : '' })}>
                                 <Menu.Item
                                     leftSection={
                                         <IconEdit size={16} color={EXTENDED_COLOR.accent3} />

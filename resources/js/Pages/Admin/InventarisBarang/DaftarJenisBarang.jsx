@@ -45,7 +45,7 @@ const DaftarJenisBarang = ({ jenisBarangs, status }) => {
     }, [])
     useEffect(() => {
         setPage(1);
-    }, [pageSize]);
+    }, [pageSize, keyword]);
 
     useEffect(() => {
         const filteredData = jenisBarangs.filter((item) =>
@@ -86,7 +86,7 @@ const DaftarJenisBarang = ({ jenisBarangs, status }) => {
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Link href={`/admin/inventaris-barang/jenis-barang/${record.id}/update`}>
+                            <Link href={route('admin.inventaris-barang.jenis.update', { id: record.id ? record.id : '' })}>
                                 <Menu.Item
                                     leftSection={
                                         <IconEdit size={16} color={EXTENDED_COLOR.accent5} />
