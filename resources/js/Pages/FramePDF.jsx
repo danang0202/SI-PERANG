@@ -7,7 +7,7 @@ const FramePDF = ({ pengajuanId }) => {
         <Box h={'100vh'}>
             <Head title='Cetak Surat' />
             <iframe
-                src={`/pengajuan/${pengajuanId}/stream-pdf`}
+                src={route('streamPDF', { id: pengajuanId ? pengajuanId : '' })}
                 width="100%"
                 height="100%"
                 title="PDF Viewer"

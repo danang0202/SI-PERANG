@@ -398,7 +398,6 @@ class AdminController extends Controller
     }
 
     // Satuan barang
-
     public function renderAdminInventarisBarangSatuanBarang()
     {
         $satuanBarang = SatuanBarang::all();
