@@ -288,11 +288,19 @@ class AdminActionController extends Controller
 
     public function tolakPengajuanAction(Request $request, $id)
     {
+        DB::beginTransaction();
         try {
             $pengajuan = Pengajuan::findOrFail($id);
             if ($pengajuan->status == 'MENUNGGU KONFIRMASI') {
                 $pengajuan->status = 'PERMINTAAN DITOLAK';
                 $pengajuan->save();
+                foreach ($pengajuan->items as $item) {
+                    $barang = $item->barang;
+                    if ($barang) {
+                        $barang->increment('jumlah', $item->jumlah);
+                    }
+                }
+                DB::commit();
                 $status = [
                     'type' => 'success',
                     'message' => 'Permintaan telah ditolak.'
